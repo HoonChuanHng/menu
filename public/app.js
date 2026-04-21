@@ -1,6 +1,8 @@
 let deferredPrompt
 
 window.addEventListener("beforeinstallprompt", (e) => {
+  console.log("INSTALL PROMPT FIRED")
+
   e.preventDefault()
   deferredPrompt = e
 
@@ -16,15 +18,17 @@ window.addEventListener("DOMContentLoaded", () => {
       if (!deferredPrompt) return
 
       deferredPrompt.prompt()
-      const choice = await deferredPrompt.userChoice
-      deferredPrompt = null
+      await deferredPrompt.userChoice
 
+      deferredPrompt = null
       btn.style.display = "none"
     })
   }
 })
 
 window.addEventListener("appinstalled", () => {
+  console.log("APP INSTALLED")
+
   const btn = document.getElementById("installBtn")
   if (btn) btn.style.display = "none"
 })

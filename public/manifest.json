@@ -1,6 +1,6 @@
 {
-  "name": "Restaurant System",
-  "short_name": "Restaurant",
+  "name": "Menu System",
+  "short_name": "Menu",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
