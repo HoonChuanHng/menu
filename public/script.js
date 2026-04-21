@@ -1,5 +1,5 @@
 let menuData = []
-let cart = []
+let cart = {}
 
 function loadMenu() {
   fetch("/api/menu")
@@ -41,7 +41,7 @@ function renderMenu() {
         </div>
 
         <button onclick="addToCart(${item.id})">
-          Add
+          +
         </button>
       </div>
     `
@@ -54,7 +54,29 @@ function addToCart(id) {
   let item = menuData.find(i => i.id === id)
   if (!item) return
 
-  cart.push(item)
+  if (!cart[id]) {
+    cart[id] = { item, qty: 1 }
+  } else {
+    cart[id].qty++
+  }
+
+  renderCart()
+}
+
+function changeQty(id, delta) {
+  if (!cart[id]) return
+
+  cart[id].qty += delta
+
+  if (cart[id].qty <= 0) {
+    delete cart[id]
+  }
+
+  renderCart()
+}
+
+function removeItem(id) {
+  delete cart[id]
   renderCart()
 }
 
@@ -62,33 +84,52 @@ function renderCart() {
   let html = ""
   let total = 0
 
-  cart.forEach(item => {
-    html += `<p>${item.name} - RM${item.price}</p>`
-    total += item.price
+  Object.values(cart).forEach(entry => {
+    const { item, qty } = entry
+
+    total += item.price * qty
+
+    html += `
+      <div style="margin:10px 0; padding:10px; background:#f4f4f4; border-radius:10px;">
+        <b>${item.name}</b> - RM${item.price}
+
+        <div style="margin-top:5px;">
+          <button onclick="changeQty(${item.id}, -1)">-</button>
+          <span style="margin:0 10px;">${qty}</span>
+          <button onclick="changeQty(${item.id}, 1)">+</button>
+          <button onclick="removeItem(${item.id})">Remove</button>
+        </div>
+      </div>
+    `
   })
 
   html += `<h3>Total: RM${total}</h3>`
-
   document.getElementById("cart").innerHTML = html
 }
 
 function placeOrder() {
+  const orderItems = Object.values(cart).map(e => ({
+    id: e.item.id,
+    name: e.item.name,
+    price: e.item.price,
+    qty: e.qty
+  }))
+
   fetch("/api/order", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ items: cart })
+    body: JSON.stringify({ items: orderItems })
   })
   .then(res => res.json())
   .then(() => {
     alert("Order placed!")
-    cart = []
+    cart = {}
     renderCart()
   })
 }
 
-/* 🌙 DARK MODE (SAFE VERSION) */
 window.addEventListener("DOMContentLoaded", () => {
   const toggle = document.getElementById("darkToggle")
 
