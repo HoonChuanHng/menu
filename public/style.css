@@ -102,6 +102,19 @@ header button {
   opacity: 0.95;
 }
 
+#installBtn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: #00c853;
+  color: white;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 9999;
+}
+
 /* 📱 MOBILE */
 @media (max-width: 768px) {
   .container {
