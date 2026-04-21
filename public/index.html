@@ -4,27 +4,31 @@
   <title>Restaurant System</title>
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="/manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-<button id="installBtn" style="position:fixed; top:10px; right:10px; display:none;">
-  Install App
-</button>
-<h1 style="color:red;">TEST UPDATE VERSION 1</h1>
-<h1>🍽️ Restaurant System</h1>
+<header>
+  <h1>🍽️ Restaurant System</h1>
+  <button onclick="loadMenu()">Load Menu</button>
+   <button id="darkToggle">🌙 Dark Mode</button>
+</header>
 
-<button onclick="loadMenu()">Load Menu</button>
+<main class="container">
 
-<h2>Menu</h2>
-<div id="menu"></div>
+  <section class="panel">
+    <h2>Menu</h2>
+    <div id="menu"></div>
+  </section>
 
-<h2>Cart 🛒</h2>
-<div id="cart"></div>
+  <section class="panel">
+    <h2>Cart 🛒</h2>
+    <div id="cart"></div>
+    <button class="order-btn" onclick="placeOrder()">Place Order</button>
+  </section>
 
-<button onclick="placeOrder()">Place Order</button>
+</main>
 
-<script src="/script.js"></script>
-<script src="/app.js"></script>
-
+<script src="script.js"></script>
 </body>
 </html>
