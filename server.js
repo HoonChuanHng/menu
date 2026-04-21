@@ -3,7 +3,6 @@ const express = require("express")
 const app = express()
 
 app.use(express.static("public"))
-
 app.use(express.json())
 
 const menu = [
@@ -21,15 +20,16 @@ app.get("/api/menu", (req, res) => {
 })
 
 app.post("/api/order", (req, res) => {
-  const order = req.body
-  orders.push(order)
-  res.json({ message: "Order received", order })
+  orders.push(req.body)
+  res.json({ message: "Order received" })
 })
 
 app.get("/api/orders", (req, res) => {
   res.json(orders)
 })
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000")
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+  console.log("Server running")
 })
