@@ -14,18 +14,54 @@ const menu = [
 ]
 
 let orders = []
+let orderCounter = 100
 
 app.get("/api/menu", (req, res) => {
   res.json(menu)
 })
 
 app.post("/api/order", (req, res) => {
-  orders.push(req.body)
-  res.json({ message: "Order received" })
+  const items = req.body.items
+
+  const newOrder = {
+    id: orderCounter++,
+    items,
+    time: new Date()
+  }
+
+  orders.push(newOrder)
+
+  res.json({ orderId: newOrder.id })
 })
 
 app.get("/api/orders", (req, res) => {
   res.json(orders)
+})
+
+app.get("/api/stats/summary", (req, res) => {
+  let totalOrders = orders.length
+  let totalRevenue = 0
+
+  orders.forEach(o => {
+    o.items.forEach(i => {
+      totalRevenue += i.price * i.qty
+    })
+  })
+
+  res.json({ totalOrders, totalRevenue })
+})
+
+app.get("/api/stats/popular", (req, res) => {
+  let map = {}
+
+  orders.forEach(order => {
+    order.items.forEach(item => {
+      if (!map[item.name]) map[item.name] = 0
+      map[item.name] += item.qty
+    })
+  })
+
+  res.json(map)
 })
 
 const PORT = process.env.PORT || 3000
