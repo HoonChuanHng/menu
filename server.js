@@ -1,20 +1,23 @@
 const express = require("express")
+const http = require("http")
+const { Server } = require("socket.io")
 
 const app = express()
+const server = http.createServer(app)
+const io = new Server(server)
 
 app.use(express.static("public"))
 app.use(express.json())
 
 const menu = [
-  { id: 1, name: "Nasi Lemak", category: "Food", price: 6 },
-  { id: 2, name: "Mee Goreng", category: "Food", price: 5 },
-  { id: 3, name: "Teh Tarik", category: "Drink", price: 2 },
-  { id: 4, name: "Coffee", category: "Drink", price: 3 },
-  { id: 5, name: "Ice Cream", category: "Dessert", price: 4 }
+  { id: 1, name: "Nasi Lemak", price: 6 },
+  { id: 2, name: "Mee Goreng", price: 5 },
+  { id: 3, name: "Teh Tarik", price: 2 },
+  { id: 4, name: "Coffee", price: 3 }
 ]
 
 let orders = []
-let orderCounter = 100
+let orderId = 100
 
 app.get("/api/menu", (req, res) => {
   res.json(menu)
@@ -23,49 +26,57 @@ app.get("/api/menu", (req, res) => {
 app.post("/api/order", (req, res) => {
   const items = req.body.items
 
-  const newOrder = {
-    id: orderCounter++,
+  const order = {
+    id: orderId++,
     items,
+    status: "NEW",
     time: new Date()
   }
 
-  orders.push(newOrder)
+  orders.push(order)
 
-  res.json({ orderId: newOrder.id })
+  io.emit("new-order", order)
+
+  res.json({ orderId: order.id })
 })
 
 app.get("/api/orders", (req, res) => {
   res.json(orders)
 })
 
-app.get("/api/stats/summary", (req, res) => {
-  let totalOrders = orders.length
-  let totalRevenue = 0
+app.post("/api/status", (req, res) => {
+  const { id, status } = req.body
+
+  const order = orders.find(o => o.id === id)
+  if (order) order.status = status
+
+  io.emit("update-order", order)
+
+  res.json({ success: true })
+})
+
+app.get("/api/stats", (req, res) => {
+  let revenue = 0
+  let map = {}
 
   orders.forEach(o => {
     o.items.forEach(i => {
-      totalRevenue += i.price * i.qty
+      revenue += i.price * i.qty
+      map[i.name] = (map[i.name] || 0) + i.qty
     })
   })
 
-  res.json({ totalOrders, totalRevenue })
-})
-
-app.get("/api/stats/popular", (req, res) => {
-  let map = {}
-
-  orders.forEach(order => {
-    order.items.forEach(item => {
-      if (!map[item.name]) map[item.name] = 0
-      map[item.name] += item.qty
-    })
+  res.json({
+    totalOrders: orders.length,
+    revenue,
+    popular: map
   })
-
-  res.json(map)
 })
 
-const PORT = process.env.PORT || 3000
+io.on("connection", (socket) => {
+  console.log("User connected")
+})
 
-app.listen(PORT, () => {
-  console.log("Server running")
+server.listen(3000, () => {
+  console.log("POS running on http://localhost:3000")
 })
