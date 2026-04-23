@@ -10,7 +10,7 @@ app.use(express.static("public"))
 app.use(express.json())
 
 const menu = [
-  { id: 1, name: "Nasi Lemak", price: 6 },
+  { id: 1, name: "Egg fried Rice", price: 6, img: "/image/egg-fried-rice.png"},
   { id: 2, name: "Mee Goreng", price: 5 },
   { id: 3, name: "Teh Tarik", price: 2 },
   { id: 4, name: "Coffee", price: 3 }
