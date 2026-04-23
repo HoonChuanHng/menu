@@ -10,12 +10,22 @@ app.use(express.static("public"))
 app.use(express.json())
 
 const menu = [
-  { id: 1, name: "Egg fried Rice", price: 6, img: "/image/egg-fried-rice.png"},
-  { id: 2, name: "Mee Goreng", price: 5 },
-  { id: 3, name: "Teh Tarik", price: 2 },
-  { id: 4, name: "Coffee", price: 3 }
+  { id: 1, name: "Egg Fried Rice", price: 6, img: "/image/egg-fried-rice" },
+  { id: 2, name: "Vegetable Fried Rice", price: 6, img: "/image/vegetable-fried-rice" },
+  { id: 3, name: "Mushroom Pasta", price: 7, img: "/image/mushroom-pasta" },
+  { id: 4, name: "Carbonara Pasta", price: 8, img: "/image/carbonara-pasta" },
+  { id: 5, name: "Tomato Pasta", price: 7, img: "/image/tomato-pasta" },
+  { id: 6, name: "Grilled Cheese Sandwich", price: 5, img: "/image/grilled-cheese-sandwich" },
+  { id: 7, name: "Egg Sandwich", price: 4, img: "/image/egg-sandwich" },
+  { id: 8, name: "French Fries", price: 4, img: "/image/french-fries" },
+  { id: 9, name: "Vegetable Nuggets", price: 5, img: "/image/vegetable-nuggets" },
+  { id: 10, name: "Garden Salad", price: 5, img: "/image/garden-salad" },
+  { id: 11, name: "Iced Tea", price: 3, img: "/image/iced-tea" },
+  { id: 12, name: "Hot Tea", price: 2, img: "/image/hot-tea" },
+  { id: 13, name: "Iced Coffee", price: 4, img: "/image/iced-coffee" },
+  { id: 14, name: "Hot Coffee", price: 3, img: "/image/hot-coffee" },
+  { id: 15, name: "Chocolate Milk", price: 4, img: "/image/chocolate-milk" }
 ]
-
 let orders = []
 let orderId = 100
 
