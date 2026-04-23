@@ -132,3 +132,12 @@ header button {
     gap: 8px;
   }
 }
+
+body.dark {
+  background: #121212;
+  color: white;
+}
+
+body.dark .panel {
+  background: #1e1e1e;
+}

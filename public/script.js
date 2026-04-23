@@ -19,13 +19,28 @@ function loadMenu() {
 function renderMenu() {
   let html = ""
 
-  menu.forEach(m => {
-    html += `
-      <div>
-        <b>${m.name}</b> RM${m.price}
-        <button onclick="add(${m.id})">+</button>
-      </div>
-    `
+  menu.forEach(section => {
+    html += `<h2 style="margin-top:20px;">${section.category}</h2>`
+    html += `<div style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:20px;">`
+
+    section.items.forEach(m => {
+      html += `
+        <div style="
+          border:1px solid #ccc;
+          padding:10px;
+          width:160px;
+          border-radius:10px;
+          text-align:center;
+        ">
+          <img src="${m.img}" width="100" style="display:block; margin:auto;">
+          <b>${m.name}</b><br>
+          RM${m.price}<br>
+          <button onclick="add(${m.id})">+</button>
+        </div>
+      `
+    })
+
+    html += `</div>`
   })
 
   document.getElementById("menu").innerHTML = html
