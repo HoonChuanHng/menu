@@ -33,6 +33,15 @@ window.addEventListener("appinstalled", () => {
   if (btn) btn.style.display = "none"
 })
 
-document.getElementById("darkToggle").addEventListener("change", (e) => {
-  document.body.classList.toggle("dark", e.target.checked)
+window.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.getElementById("darkToggle")
+
+  if (!toggle) return
+
+  toggle.addEventListener("change", (e) => {
+    document.body.classList.toggle("dark", e.target.checked)
+  })
 })
+
+
+
