@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kitchen Display</title>
+</head>
+<body>
+<h1>Kitchen</h1>
+<div id="orders"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io()
+let orders = []
+
+socket.on("new-order", (order) => {
+  orders.push(order)
+  render()
+})
+
+socket.on("update-order", (updated) => {
+  orders = orders.map(o => o.id === updated.id ? updated : o)
+  render()
+})
+
+function render() {
+  let html = ""
+
+  orders.forEach(o => {
+    html += `
+      <div style="border:1px solid black;margin:10px;padding:10px;">
+        <h3>Order #${o.id} (${o.status})</h3>
+
+        ${o.items.map(i => `<p>${i.name} x ${i.qty}</p>`).join("")}
+
+        <button onclick="status(${o.id}, 'PREPARING')">Preparing</button>
+        <button onclick="status(${o.id}, 'DONE')">Done</button>
+      </div>
+    `
+  })
+
+  document.getElementById("orders").innerHTML = html
+}
+
+function status(id, status) {
+  fetch("/api/status", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ id, status })
+  })
+}
+
+</script>
+</body>
+</html>

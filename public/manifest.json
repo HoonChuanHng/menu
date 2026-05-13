@@ -1,0 +1,21 @@
+{
+  "name": "Quick Plate Cafe",
+  "short_name": "Quick Plate",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/image/app-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/image/app-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

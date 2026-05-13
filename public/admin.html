@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>POS Analytics</title>
+</head>
+<body>
+<h1>Analytics</h1>
+
+<div id="stats"></div>
+
+<script>
+function load() {
+  fetch("/api/stats")
+    .then(r => r.json())
+    .then(s => {
+      let html = `
+        <h3>Orders: ${s.totalOrders}</h3>
+        <h3>Revenue: RM${s.revenue}</h3>
+        <h2>Popular Items</h2>
+      `
+
+      for (let k in s.popular) {
+        html += `<p>${k}: ${s.popular[k]}</p>`
+      }
+
+      document.getElementById("stats").innerHTML = html
+    })
+}
+
+setInterval(load, 2000)
+load()
+</script>
+</body>
+</html>
