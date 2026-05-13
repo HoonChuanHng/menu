@@ -4,88 +4,210 @@ let cart = {}
 const socket = io()
 
 socket.on("new-order", () => {
-  console.log("Order sent to kitchen")
+  console.log("New order received")
 })
 
-function loadMenu() {
-  fetch("/api/menu")
-    .then(r => r.json())
-    .then(d => {
-      menu = d
-      renderMenu()
-    })
+fetch("/api/menu")
+  .then(res => res.json())
+  .then(data => {
+    menu = data
+    renderCategories()
+    renderMenu()
+  })
+
+function renderCategories() {
+  let html = ""
+
+  menu.forEach(section => {
+    html += `
+      <button 
+        class="category-btn"
+        onclick="scrollToCategory('${section.category}')"
+      >
+        ${section.category}
+      </button>
+    `
+  })
+
+  document.getElementById("categoryBar").innerHTML = html
 }
 
 function renderMenu() {
   let html = ""
 
   menu.forEach(section => {
-    html += `<h2 style="margin-top:20px;">${section.category}</h2>`
-    html += `<div style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:20px;">`
 
-    section.items.forEach(m => {
+    html += `
+      <section 
+        class="category-section"
+        id="${section.category}"
+      >
+
+        <h2 class="category-title">
+          ${section.category}
+        </h2>
+
+        <div class="food-grid">
+    `
+
+    section.items.forEach(item => {
+
       html += `
-        <div style="
-          border:1px solid #ccc;
-          padding:10px;
-          width:160px;
-          border-radius:10px;
-          text-align:center;
-        ">
-          <img src="${m.img}" width="100" style="display:block; margin:auto;">
-          <b>${m.name}</b><br>
-          RM${m.price}<br>
-          <button onclick="add(${m.id})">+</button>
+        <div class="food-card">
+
+          <img src="${item.img}" alt="${item.name}">
+
+          <div class="food-info">
+
+            <h3 class="food-name">
+              ${item.name}
+            </h3>
+
+            <div class="food-price">
+              RM${item.price}
+            </div>
+
+            <button 
+              class="add-btn"
+              onclick="addToCart(${item.id})"
+            >
+              Add to Cart
+            </button>
+
+          </div>
+
         </div>
       `
     })
 
-    html += `</div>`
+    html += `
+        </div>
+      </section>
+    `
   })
 
   document.getElementById("menu").innerHTML = html
 }
 
-function add(id) {
-  let item = menu.find(i => i.id === id)
+function scrollToCategory(category) {
+  document.getElementById(category).scrollIntoView({
+    behavior: "smooth"
+  })
+}
 
-  if (!cart[id]) cart[id] = { item, qty: 1 }
-  else cart[id].qty++
+function addToCart(id) {
+
+  let foundItem = null
+
+  menu.forEach(section => {
+    section.items.forEach(item => {
+      if (item.id === id) {
+        foundItem = item
+      }
+    })
+  })
+
+  if (!foundItem) return
+
+  if (!cart[id]) {
+    cart[id] = {
+      item: foundItem,
+      qty: 1
+    }
+  } else {
+    cart[id].qty++
+  }
 
   renderCart()
 }
 
-function change(id, d) {
+function changeQty(id, amount) {
+
   if (!cart[id]) return
 
-  cart[id].qty += d
-  if (cart[id].qty <= 0) delete cart[id]
+  cart[id].qty += amount
+
+  if (cart[id].qty <= 0) {
+    delete cart[id]
+  }
 
   renderCart()
 }
 
 function renderCart() {
+
   let html = ""
   let total = 0
+  let totalItems = 0
 
   Object.values(cart).forEach(c => {
+
     total += c.item.price * c.qty
+    totalItems += c.qty
 
     html += `
-      <div>
-        ${c.item.name}
-        <button onclick="change(${c.item.id}, -1)">-</button>
-        ${c.qty}
-        <button onclick="change(${c.item.id}, 1)">+</button>
+      <div class="cart-item">
+
+        <img src="${c.item.img}">
+
+        <div class="cart-item-info">
+
+          <div class="cart-item-name">
+            ${c.item.name}
+          </div>
+
+          <div class="cart-item-price">
+            RM${c.item.price}
+          </div>
+
+          <div class="qty-controls">
+
+            <button 
+              class="qty-btn"
+              onclick="changeQty(${c.item.id}, -1)"
+            >
+              -
+            </button>
+
+            <span>${c.qty}</span>
+
+            <button 
+              class="qty-btn"
+              onclick="changeQty(${c.item.id}, 1)"
+            >
+              +
+            </button>
+
+          </div>
+
+        </div>
+
       </div>
     `
   })
 
-  html += `<h3>Total RM${total}</h3>`
-  document.getElementById("cart").innerHTML = html
+  if (html === "") {
+    html = "<p>Your cart is empty</p>"
+  }
+
+  document.getElementById("cartItems").innerHTML = html
+
+  document.getElementById("cartTotal").innerText =
+    `Total: RM${total.toFixed(2)}`
+
+  document.getElementById("cartButton").innerText =
+    `View Cart (${totalItems})`
+}
+
+function toggleCart() {
+  document
+    .getElementById("cartModal")
+    .classList
+    .toggle("show")
 }
 
 function placeOrder() {
+
   const items = Object.values(cart).map(c => ({
     id: c.item.id,
     name: c.item.name,
@@ -93,19 +215,27 @@ function placeOrder() {
     qty: c.qty
   }))
 
+  if (items.length === 0) {
+    alert("Cart is empty")
+    return
+  }
+
   fetch("/api/order", {
     method: "POST",
-    headers: {"Content-Type":"application/json"},
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ items })
   })
   .then(r => r.json())
-  .then(d => {
-    alert("Order #" + d.orderId)
+  .then(data => {
+
+    alert("Order #" + data.orderId + " placed!")
+
     cart = {}
+
     renderCart()
+
+    toggleCart()
   })
 }
-
-document.getElementById("darkToggle").addEventListener("click", () => {
-  document.body.classList.toggle("dark")
-})

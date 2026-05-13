@@ -1,150 +1,307 @@
-body {
-  font-family: Arial;
+* {
   margin: 0;
-  background: #f4f6f8;
-  color: #333;
-  transition: 0.3s ease;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-header {
-  background: #111;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  position: relative;
+html {
+  scroll-behavior: smooth;
 }
 
-/* layout */
-.container {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  color: #222;
+  transition: 0.3s;
+  padding-bottom: 100px;
 }
 
-.panel {
-  flex: 1;
+/* HEADER */
+
+.header {
   background: white;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #ddd;
 }
 
-/* MENU */
-#menu p {
+.header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 16px;
+}
+
+.header-top h1 {
+  font-size: 24px;
+}
+
+/* CATEGORY BAR */
+
+.category-bar {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
   padding: 12px;
   background: #fafafa;
-  margin: 8px 0;
-  border-radius: 10px;
 }
 
-#menu button {
-  background: #2196f3;
-  color: white;
+.category-btn {
   border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
+  background: #00c853;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 999px;
   cursor: pointer;
+  white-space: nowrap;
+  font-weight: bold;
 }
 
-/* CART */
-.order-btn {
+/* MENU */
+
+.menu-container {
+  padding: 16px;
+}
+
+.category-section {
+  margin-bottom: 40px;
+}
+
+.category-title {
+  margin-bottom: 18px;
+  font-size: 24px;
+}
+
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.food-card {
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.food-card img {
   width: 100%;
-  margin-top: 10px;
-  padding: 12px;
-  background: #ff3d00;
-  color: white;
-  border: none;
-  border-radius: 8px;
+  height: 150px;
+  object-fit: cover;
 }
 
-/* INSTALL BUTTON */
-#installBtn {
+.food-info {
+  padding: 14px;
+}
+
+.food-name {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.food-price {
+  color: #00a63e;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.add-btn {
+  width: 100%;
+  border: none;
+  background: #00c853;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* CART BUTTON */
+
+.cart-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
   background: #00c853;
   color: white;
   border: none;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 16px;
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 999;
+}
+
+/* CART MODAL */
+
+.cart-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 2000;
+}
+
+.cart-modal.show {
+  display: flex;
+}
+
+.cart-content {
+  background: white;
+  width: 100%;
+  max-height: 85vh;
+  border-radius: 24px 24px 0 0;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  border: none;
+  background: none;
+  font-size: 22px;
   cursor: pointer;
 }
 
-/* 🌙 DARK MODE */
+.cart-item {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+
+.cart-item img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.cart-item-name {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.cart-item-price {
+  color: #00a63e;
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.qty-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: #00c853;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.cart-footer {
+  margin-top: 20px;
+}
+
+.checkout-btn {
+  width: 100%;
+  margin-top: 14px;
+  border: none;
+  background: #00c853;
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* DARK MODE */
+
 body.dark {
   background: #121212;
   color: white;
 }
 
-body.dark .panel {
+body.dark .header {
+  background: #1e1e1e;
+  border-bottom: 1px solid #333;
+}
+
+body.dark .category-bar {
   background: #1e1e1e;
 }
 
-body.dark header {
-  background: #1a1a1a;
+body.dark .food-card {
+  background: #1f1f1f;
 }
 
-body.dark #menu p {
-  background: #2a2a2a;
+body.dark .cart-content {
+  background: #1f1f1f;
 }
 
-/* 🌗 TOGGLE SWITCH */
-.top-right {
-  position: absolute;
-  top: 12px;
-  right: 15px;
+body.dark .close-btn {
+  color: white;
 }
+
+/* TOGGLE */
 
 .switch {
   position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 26px;
+  width: 55px;
+  height: 28px;
 }
 
 .switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+  display: none;
 }
 
 .slider {
   position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 999px;
   cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 34px;
+  transition: 0.3s;
 }
 
-.slider:before {
-  position: absolute;
+.slider::before {
   content: "";
-  height: 18px;
-  width: 18px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  left: 3px;
+  top: 3px;
+  background: white;
   border-radius: 50%;
+  transition: 0.3s;
 }
 
-input:checked + .slider {
-  background-color: #222;
+.switch input:checked + .slider {
+  background: #00c853;
 }
 
-input:checked + .slider:before {
-  transform: translateX(24px);
-}
-
-/* 📱 MOBILE */
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    padding: 10px;
-  }
-
-  header h1 {
-    font-size: 20px;
-  }
+.switch input:checked + .slider::before {
+  transform: translateX(27px);
 }
