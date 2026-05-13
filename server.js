@@ -1,10 +1,5 @@
 const express = require("express")
-const http = require("http")
-const { Server } = require("socket.io")
-
 const app = express()
-const server = http.createServer(app)
-const io = new Server(server)
 
 app.use(express.static("public"))
 app.use(express.json())
@@ -55,7 +50,7 @@ app.get("/api/menu", (req, res) => {
 })
 
 app.post("/api/order", (req, res) => {
-  const items = req.body.items
+  const items = req.body.items || []
 
   const order = {
     id: orderId++,
@@ -65,8 +60,6 @@ app.post("/api/order", (req, res) => {
   }
 
   orders.push(order)
-
-  io.emit("new-order", order)
 
   res.json({ orderId: order.id })
 })
@@ -81,8 +74,6 @@ app.post("/api/status", (req, res) => {
   const order = orders.find(o => o.id === id)
   if (order) order.status = status
 
-  io.emit("update-order", order)
-
   res.json({ success: true })
 })
 
@@ -92,8 +83,9 @@ app.get("/api/stats", (req, res) => {
 
   orders.forEach(o => {
     o.items.forEach(i => {
-      revenue += i.price * i.qty
-      map[i.name] = (map[i.name] || 0) + i.qty
+      const qty = i.qty || 0
+      revenue += i.price * qty
+      map[i.name] = (map[i.name] || 0) + qty
     })
   })
 
@@ -104,12 +96,6 @@ app.get("/api/stats", (req, res) => {
   })
 })
 
-io.on("connection", (socket) => {
-  console.log("User connected")
-})
-
-server.listen(3000, () => {
+app.listen(3000, () => {
   console.log("POS running on http://localhost:3000")
 })
-
-loadMenu()
