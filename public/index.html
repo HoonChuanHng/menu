@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quick Plate Cafe</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<header>
+  <h1>🍽️ Quick Plate Cafe</h1>
+
+  <div class="top-right">
+    <label class="switch">
+      <input type="checkbox" id="darkToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div style="position:absolute; top:10px; right:70px;">
+    <button id="installBtn" style="display:none;">
+      ⬇ Install App
+    </button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="panel">
+    <h2>Menu</h2>
+    <div id="menu"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Cart 🛒</h2>
+    <div id="cart"></div>
+    <button class="order-btn" onclick="placeOrder()">Place Order</button>
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
