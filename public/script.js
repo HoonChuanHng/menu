@@ -1,5 +1,10 @@
+const urlParams = new URLSearchParams(window.location.search)
+const tableId = urlParams.get("table") || "0"
+
+document.title = "Table " + tableId + " - Quick Plate"
+
 let menu = []
-let cart = JSON.parse(localStorage.getItem("cart")) || {}
+let cart = JSON.parse(localStorage.getItem("cart_" + tableId)) || {}
 
 fetch("/api/menu")
   .then(res => res.json())
@@ -92,7 +97,7 @@ function changeQty(id, amount) {
 }
 
 function saveCart() {
-  localStorage.setItem("cart", JSON.stringify(cart))
+  localStorage.setItem("cart_" + tableId, JSON.stringify(cart))
 }
 
 function renderCart() {
@@ -144,7 +149,10 @@ function placeOrder() {
   fetch("/api/order", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ items })
+    body: JSON.stringify({
+      tableId,
+      items
+    })
   })
   .then(r => r.json())
   .then(data => {

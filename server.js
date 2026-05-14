@@ -24,20 +24,14 @@ const menu = [
     category: "🥪 Snacks",
     items: [
       { id: 6, name: "Grilled Cheese Sandwich", price: 5, img: "/image/grilled-cheese-sandwich.png" },
-      { id: 7, name: "Egg Sandwich", price: 4, img: "/image/egg-sandwich.png" },
-      { id: 8, name: "French Fries", price: 4, img: "/image/french-fries.png" },
-      { id: 9, name: "Vegetable Nuggets", price: 5, img: "/image/vegetable-nuggets.png" },
-      { id: 10, name: "Garden Salad", price: 5, img: "/image/garden-salad.png" }
+      { id: 7, name: "Egg Sandwich", price: 4, img: "/image/egg-sandwich.png" }
     ]
   },
   {
     category: "🥤 Drinks",
     items: [
       { id: 11, name: "Iced Tea", price: 3, img: "/image/iced-tea.png" },
-      { id: 12, name: "Hot Tea", price: 2, img: "/image/hot-tea.png" },
-      { id: 13, name: "Iced Coffee", price: 4, img: "/image/iced-coffee.png" },
-      { id: 14, name: "Hot Coffee", price: 3, img: "/image/hot-coffee.png" },
-      { id: 15, name: "Chocolate Milk", price: 4, img: "/image/chocolate-milk.png" }
+      { id: 12, name: "Hot Tea", price: 2, img: "/image/hot-tea.png" }
     ]
   }
 ]
@@ -50,10 +44,11 @@ app.get("/api/menu", (req, res) => {
 })
 
 app.post("/api/order", (req, res) => {
-  const items = req.body.items || []
+  const { tableId, items } = req.body
 
   const order = {
     id: orderId++,
+    tableId,
     items,
     status: "NEW",
     time: new Date()
@@ -77,27 +72,15 @@ app.post("/api/status", (req, res) => {
   res.json({ success: true })
 })
 
-app.get("/api/stats", (req, res) => {
-  let revenue = 0
-  let map = {}
-
-  orders.forEach(o => {
-    o.items.forEach(i => {
-      const qty = i.qty || 0
-      revenue += i.price * qty
-      map[i.name] = (map[i.name] || 0) + qty
-    })
-  })
-
+app.get("/api/dashboard", (req, res) => {
   res.json({
-    totalOrders: orders.length,
-    revenue,
-    popular: map
+    activeOrders: orders.filter(o => o.status !== "DONE"),
+    allOrders: orders
   })
 })
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  console.log("Server running on port " + PORT)
+})
