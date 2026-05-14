@@ -105,9 +105,11 @@ body {
 
   display: flex;
 
-  gap: 8px;
+  justify-content: center;
 
-  padding: 10px 12px;
+  gap: 10px;
+
+  padding: 12px;
 
   overflow-x: auto;
 
@@ -118,22 +120,6 @@ body {
   display: none;
 }
 
-.add-btn,
-.checkout-btn,
-.category-btn,
-.cart-button,
-#installBtn {
-  transition: 0.2s;
-}
-
-.add-btn:hover,
-.checkout-btn:hover,
-.category-btn:hover,
-.cart-button:hover,
-#installBtn:hover {
-  opacity: 0.9;
-}
-
 .category-btn {
   border: none;
 
@@ -141,7 +127,7 @@ body {
 
   color: white;
 
-  padding: 12px 18px;
+  padding: 14px 26px;
 
   border-radius: 999px;
 
@@ -151,7 +137,11 @@ body {
 
   font-weight: bold;
 
-  flex: unset;
+  min-width: 120px;
+
+  text-align: center;
+
+  flex-shrink: 0;
 }
 
 /* MENU */
@@ -340,6 +330,38 @@ body.dark .cart-item {
   font-weight: bold;
 }
 
+.checkout-btn {
+  width: 100%;
+
+  margin-top: 14px;
+
+  border: none;
+
+  background: #00c853;
+
+  color: white;
+
+  padding: 18px;
+
+  border-radius: 16px;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0,200,83,0.3);
+
+  transition: 0.2s;
+}
+
+.checkout-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 6px 18px rgba(0,200,83,0.4);
+}
+
 /* RESTAURANT INFO */
 .restaurant-info {
   background: white;
@@ -373,3 +395,18 @@ body.dark .category-bar {
   background: #1e1e1e;
 }
 
+.add-btn,
+.checkout-btn,
+.category-btn,
+.cart-button,
+#installBtn {
+  transition: 0.2s;
+}
+
+.add-btn:hover,
+.checkout-btn:hover,
+.category-btn:hover,
+.cart-button:hover,
+#installBtn:hover {
+  opacity: 0.9;
+}
