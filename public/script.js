@@ -1,5 +1,5 @@
 let menu = []
-let cart = {}
+let cart = JSON.parse(localStorage.getItem("cart")) || {}
 
 fetch("/api/menu")
   .then(res => res.json())
@@ -7,6 +7,7 @@ fetch("/api/menu")
     menu = data
     renderCategories()
     renderMenu()
+    renderCart()
   })
 
 function renderCategories() {
@@ -75,6 +76,7 @@ function addToCart(id) {
     cart[id].qty++
   }
 
+  saveCart()
   renderCart()
 }
 
@@ -85,7 +87,12 @@ function changeQty(id, amount) {
 
   if (cart[id].qty <= 0) delete cart[id]
 
+  saveCart()
   renderCart()
+}
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart))
 }
 
 function renderCart() {
@@ -132,10 +139,7 @@ function placeOrder() {
     qty: c.qty
   }))
 
-  if (!items.length) {
-    alert("Cart is empty")
-    return
-  }
+  if (!items.length) return alert("Cart is empty")
 
   fetch("/api/order", {
     method: "POST",
@@ -144,8 +148,9 @@ function placeOrder() {
   })
   .then(r => r.json())
   .then(data => {
-    alert("Order #" + data.orderId + " placed!")
+    alert(`Order #${data.orderId} placed successfully!`)
     cart = {}
+    localStorage.removeItem("cart")
     renderCart()
     toggleCart()
   })

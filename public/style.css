@@ -28,13 +28,36 @@ body {
 
 .header-top {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  position: relative;
   padding: 16px;
 }
 
 .header-top h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 24px;
+}
+
+/* INSTALL BUTTON */
+#installBtn {
+  position: absolute;
+  right: 70px;
+  top: 16px;
+  padding: 8px 12px;
+  border: none;
+  background: #00c853;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* DARK MODE TOGGLE POSITION */
+.switch {
+  position: absolute;
+  right: 16px;
 }
 
 /* CATEGORY BAR */
@@ -87,7 +110,6 @@ body {
 
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
 .food-card img {
@@ -99,7 +121,6 @@ body {
 
 .food-info {
   padding: 14px;
-
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -125,12 +146,10 @@ body {
   border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
-  font-weight: bold;
-
   margin-top: auto;
 }
 
-/* CART BUTTON */
+/* CART */
 
 .cart-button {
   position: fixed;
@@ -147,8 +166,6 @@ body {
   cursor: pointer;
   z-index: 999;
 }
-
-/* CART MODAL */
 
 .cart-modal {
   position: fixed;
@@ -173,79 +190,12 @@ body {
   overflow-y: auto;
 }
 
-.cart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.close-btn {
-  border: none;
-  background: none;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-.cart-item {
-  display: flex;
-  gap: 14px;
-  margin-bottom: 18px;
-  align-items: center;
-}
-
-.cart-item img {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.cart-item-info {
-  flex: 1;
-}
-
-.cart-item-name {
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.cart-item-price {
-  color: #00a63e;
-}
-
-.qty-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.qty-btn {
-  width: 30px;
-  height: 30px;
-  border: none;
-  border-radius: 50%;
-  background: #00c853;
-  color: white;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.cart-footer {
-  margin-top: 20px;
-}
-
-.checkout-btn {
-  width: 100%;
-  margin-top: 14px;
-  border: none;
-  background: #00c853;
-  color: white;
+/* RESTAURANT INFO */
+.restaurant-info {
+  background: white;
+  margin: 16px;
   padding: 16px;
   border-radius: 12px;
-  font-size: 18px;
-  cursor: pointer;
 }
 
 /* DARK MODE */
@@ -255,64 +205,12 @@ body.dark {
   color: white;
 }
 
-body.dark .header {
+body.dark .header,
+body.dark .restaurant-info,
+body.dark .cart-content {
   background: #1e1e1e;
-  border-bottom: 1px solid #333;
 }
 
 body.dark .category-bar {
   background: #1e1e1e;
-}
-
-body.dark .food-card {
-  background: #1f1f1f;
-}
-
-body.dark .cart-content {
-  background: #1f1f1f;
-}
-
-body.dark .close-btn {
-  color: white;
-}
-
-/* TOGGLE */
-
-.switch {
-  position: relative;
-  width: 55px;
-  height: 28px;
-}
-
-.switch input {
-  display: none;
-}
-
-.slider {
-  position: absolute;
-  inset: 0;
-  background: #ccc;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.slider::before {
-  content: "";
-  position: absolute;
-  width: 22px;
-  height: 22px;
-  left: 3px;
-  top: 3px;
-  background: white;
-  border-radius: 50%;
-  transition: 0.3s;
-}
-
-.switch input:checked + .slider {
-  background: #00c853;
-}
-
-.switch input:checked + .slider::before {
-  transform: translateX(27px);
 }
