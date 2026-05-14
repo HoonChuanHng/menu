@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 6px 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    .danger {
+      background: red;
+      color: white;
+      border: none;
+    }
+
+    .green {
+      background: #00c853;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🧾 Admin Dashboard</h1>
+
+<h2 id="revenue"></h2>
+
+<h2>📍 Table Earnings</h2>
+<div id="tables"></div>
+
+<h2>🍽️ Food Sold</h2>
+<div id="food"></div>
+
+<h2>📦 Orders</h2>
+<div id="orders"></div>
+
+<script>
+async function load() {
+  const res = await fetch("/api/admin")
+  const data = await res.json()
+
+  document.getElementById("revenue").innerText =
+    "Total Revenue: RM " + data.revenue.toFixed(2)
+
+  // TABLES
+  let t = ""
+  for (let k in data.tableTotals) {
+    t += `<div class="card">Table ${k} → RM ${data.tableTotals[k].toFixed(2)}</div>`
+  }
+  document.getElementById("tables").innerHTML = t
+
+  // FOOD SOLD
+  let f = ""
+  for (let k in data.foodCount) {
+    f += `<div class="card">${k} → ${data.foodCount[k]} sold</div>`
+  }
+  document.getElementById("food").innerHTML = f
+
+  // ORDERS
+  let o = ""
+  data.orders.forEach(order => {
+    o += `
+      <div class="card">
+        <h3>Order #${order.id} (Table ${order.tableId})</h3>
+        <p>Status: ${order.status}</p>
+
+        ${order.items.map(i =>
+          `<div>${i.name} x ${i.qty}</div>`
+        ).join("")}
+
+        <button class="danger" onclick="del(${order.id})">
+          Delete
+        </button>
+      </div>
+    `
+  })
+
+  document.getElementById("orders").innerHTML = o
+}
+
+async function del(id) {
+  await fetch("/api/order/" + id, { method: "DELETE" })
+  load()
+}
+
+load()
+setInterval(load, 3000)
+</script>
+
+</body>
+</html>

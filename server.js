@@ -4,6 +4,9 @@ const app = express()
 app.use(express.static("public"))
 app.use(express.json())
 
+let orders = []
+let orderId = 100
+
 const menu = [
   {
     category: "🍚 Rice",
@@ -36,9 +39,6 @@ const menu = [
   }
 ]
 
-let orders = []
-let orderId = 100
-
 app.get("/api/menu", (req, res) => {
   res.json(menu)
 })
@@ -70,6 +70,53 @@ app.post("/api/status", (req, res) => {
   if (order) order.status = status
 
   res.json({ success: true })
+})
+
+app.get("/api/admin", (req, res) => {
+
+  let tableTotals = {}
+  let foodCount = {}
+  let revenue = 0
+
+  orders.forEach(o => {
+
+    let tableTotal = 0
+
+    o.items.forEach(i => {
+
+      const qty = i.qty || 0
+      const total = i.price * qty
+
+      tableTotal += total
+      revenue += total
+
+      foodCount[i.name] =
+        (foodCount[i.name] || 0) + qty
+
+    })
+
+    tableTotals[o.tableId] =
+      (tableTotals[o.tableId] || 0) + tableTotal
+
+  })
+
+  res.json({
+    orders,
+    tableTotals,
+    foodCount,
+    revenue
+  })
+
+})
+
+app.delete("/api/order/:id", (req, res) => {
+
+  const id = parseInt(req.params.id)
+
+  orders = orders.filter(o => o.id !== id)
+
+  res.json({ success: true })
+
 })
 
 app.get("/api/dashboard", (req, res) => {
