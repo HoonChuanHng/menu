@@ -5,7 +5,7 @@ app.use(express.static("public"))
 app.use(express.json())
 
 let orders = []
-let orderId = 100
+let orderId = 0
 
 const menu = [
   {
