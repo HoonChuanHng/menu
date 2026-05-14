@@ -44,15 +44,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   flex: 1;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 30px;
+  font-weight: 800;
 }
 
 .logo-title img {
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
 }
 
@@ -68,12 +68,11 @@ body {
 }
 
 /* DARK Toggle */
-
 .switch {
   position: relative;
   display: inline-block;
-  width: 55px;
-  height: 28px;
+  width: 62px;
+  height: 32px;
 }
 
 .switch input {
@@ -90,19 +89,14 @@ body {
 }
 
 .slider::before {
-  content: "";
-  position: absolute;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   left: 3px;
   top: 3px;
-  background: white;
-  border-radius: 50%;
-  transition: 0.3s;
 }
 
-.switch input:checked + .slider {
-  background: #00c853;
+.switch input:checked + .slider::before {
+  transform: translateX(30px);
 }
 
 .switch input:checked + .slider::before {
@@ -112,18 +106,12 @@ body {
 /* CATEGORY BAR */
 
 .category-bar {
-  margin-top: 8px;
-
+  margin-top: 10px;
   display: flex;
-
   justify-content: center;
-
-  gap: 10px;
-
-  padding: 12px;
-
+  gap: 12px;
+  padding: 14px;
   overflow-x: auto;
-
   background: #fafafa;
 }
 
@@ -133,26 +121,17 @@ body {
 
 .category-btn {
   border: none;
-
   background: #00c853;
-
   color: white;
-
-  padding: 14px 26px;
-
+  padding: 16px 34px;
   border-radius: 999px;
-
   cursor: pointer;
-
   white-space: nowrap;
-
   font-weight: bold;
-
-  min-width: 120px;
-
+  min-width: 150px;
   text-align: center;
-
   flex-shrink: 0;
+  font-size: 15px;
 }
 
 /* MENU */
