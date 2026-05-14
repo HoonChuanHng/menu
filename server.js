@@ -11,8 +11,8 @@ const menu = [
   {
     category: "🍚 Rice",
     items: [
-      { id: 1, name: "Egg Fried Rice", price: 6, img: "/image/egg-fried-rice.png" },
-      { id: 2, name: "Vegetable Fried Rice", price: 6, img: "/image/vegetable-fried-rice.png" }
+      { id: 1, name: "Egg Fried Rice", price: 9, img: "/image/egg-fried-rice.png" },
+      { id: 2, name: "Vegetable Fried Rice", price: 8, img: "/image/vegetable-fried-rice.png" }
     ]
   },
   {
@@ -20,7 +20,7 @@ const menu = [
     items: [
       { id: 3, name: "Mushroom Pasta", price: 7, img: "/image/mushroom-pasta.png" },
       { id: 4, name: "Carbonara Pasta", price: 8, img: "/image/carbonara-pasta.png" },
-      { id: 5, name: "Tomato Pasta", price: 7, img: "/image/tomato-pasta.png" }
+      { id: 5, name: "Tomato Pasta", price: 9, img: "/image/tomato-pasta.png" }
     ]
   },
   {
@@ -34,7 +34,10 @@ const menu = [
     category: "🥤 Drinks",
     items: [
       { id: 11, name: "Iced Tea", price: 3, img: "/image/iced-tea.png" },
-      { id: 12, name: "Hot Tea", price: 2, img: "/image/hot-tea.png" }
+      { id: 12, name: "Iced Coffee", price: 2, img: "/image/iced-coffee.png" },
+      { id: 13, name: "Hot Tea", price: 3, img: "/image/hot-tea.png" },
+      { id: 14, name: "Hot Coffee", price: 2, img: "/image/hot-coffee.png" },
+      { id: 15, name: "Chocolate Milk", price: 5, img: "/image/chocolate-milk.png" }
     ]
   }
 ]
