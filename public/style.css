@@ -70,6 +70,8 @@ body {
 /* DARK Toggle */
 
 .switch {
+  position: relative;
+  display: inline-block;
   width: 55px;
   height: 28px;
 }
