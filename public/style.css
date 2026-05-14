@@ -18,45 +18,55 @@ body {
 
 /* HEADER */
 
-.header {
-  background: white;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  border-bottom: 1px solid #ddd;
-}
-
 .header-top {
   display: flex;
-  justify-content: center;
   align-items: center;
-  position: relative;
-  padding: 22px 16px;
+  justify-content: space-between;
+  padding: 16px;
 }
 
 .header-top h1 {
-  font-size: 30px;
+  font-size: 24px;
   font-weight: bold;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  text-align: center;
+  flex: 1;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Logos */
+.logo-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex: 1;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.logo-title img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
 
 /* INSTALL BUTTON */
 #installBtn {
-  position: absolute;
-  right: 95px;
-  top: 18px;
   padding: 8px 12px;
   border: none;
   background: #00c853;
   color: white;
   border-radius: 8px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
-/* DARK MODE TOGGLE POSITION */
-/* TOGGLE DESIGN */
+/* DARK Toggle */
 
 .switch {
   position: absolute;
@@ -395,18 +405,35 @@ body.dark .category-bar {
   background: #1e1e1e;
 }
 
-.add-btn,
-.checkout-btn,
-.category-btn,
-.cart-button,
-#installBtn {
-  transition: 0.2s;
+@media (hover: hover) {
+  .add-btn,
+  .checkout-btn,
+  .category-btn,
+  .cart-button,
+  #installBtn {
+    transition: 0.2s;
+  }
+
+  .add-btn:hover,
+  .checkout-btn:hover,
+  .category-btn:hover,
+  .cart-button:hover,
+  #installBtn:hover {
+    opacity: 0.9;
+  }
 }
 
-.add-btn:hover,
-.checkout-btn:hover,
-.category-btn:hover,
-.cart-button:hover,
-#installBtn:hover {
-  opacity: 0.9;
+@media (max-width: 600px) {
+  .header-top h1 {
+    font-size: 18px;
+  }
+
+  #installBtn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .switch {
+    transform: scale(0.9);
+  }
 }
