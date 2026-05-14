@@ -23,13 +23,14 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 16px;
+  gap: 10px;
 }
 
 .header-top h1 {
+  flex: 1;
+  text-align: center;
   font-size: 24px;
   font-weight: bold;
-  text-align: center;
-  flex: 1;
 }
 
 .header-right {
@@ -69,8 +70,6 @@ body {
 /* DARK Toggle */
 
 .switch {
-  position: absolute;
-  right: 16px;
   width: 55px;
   height: 28px;
 }
@@ -370,6 +369,31 @@ body.dark .cart-item {
   transform: translateY(-2px);
 
   box-shadow: 0 6px 18px rgba(0,200,83,0.4);
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #f1f1f1;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  background: #e0e0e0;
+  transform: scale(1.05);
+}
+
+body.dark .close-btn {
+  background: #333;
+  color: white;
 }
 
 /* RESTAURANT INFO */
