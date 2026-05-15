@@ -156,7 +156,7 @@ function placeOrder() {
   })
   .then(r => r.json())
   .then(data => {
-    alert(`Order #${data.orderId}: tableID placed successfully!`)
+    alert(`Order #${data.orderId}: Table ${data.tableId} placed successfully!`)
     cart = {}
     localStorage.removeItem("cart_" + tableId)
     renderCart()

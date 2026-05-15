@@ -58,6 +58,7 @@ app.get("/api/menu", (req, res) => {
   res.json(menu)
 })
 
+
 app.post("/api/order", async (req, res) => {
   const { tableId, items } = req.body
 
@@ -68,7 +69,10 @@ app.post("/api/order", async (req, res) => {
     time: new Date()
   })
 
-  res.json({ orderId: order._id })
+  res.json({
+    orderId: order._id,
+    tableId
+  })
 })
 
 app.get("/api/orders", async (req, res) => {
