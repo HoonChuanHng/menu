@@ -125,7 +125,7 @@ function renderCart() {
     `
   })
 
-  if (!html) html = "<p>Your cart is empty</p>"
+  if (!html) html = "<p>Please select a food/drinks.</p>"
 
   document.getElementById("cartItems").innerHTML = html
   document.getElementById("cartTotal").innerText = `Total: RM${total.toFixed(2)}`
@@ -156,7 +156,7 @@ function placeOrder() {
   })
   .then(r => r.json())
   .then(data => {
-    alert(`Order #${data.orderId} placed successfully!`)
+    alert(`Order #${data.orderId}: tableID placed successfully!`)
     cart = {}
     localStorage.removeItem("cart_" + tableId)
     renderCart()
