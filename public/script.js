@@ -158,7 +158,7 @@ function placeOrder() {
   .then(data => {
     alert(`Order #${data.orderId} placed successfully!`)
     cart = {}
-    localStorage.removeItem("cart")
+    localStorage.removeItem("cart_" + tableId)
     renderCart()
     toggleCart()
   })
