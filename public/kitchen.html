@@ -22,14 +22,15 @@ async function loadOrders() {
   data.activeOrders.forEach(o => {
     html += `
       <div class="order">
-        <h3>Table ${o.tableId} | Order #${o.id}</h3>
+        <h3>Table ${o.tableId} | Order #${o._id}</h3>
         <p>Status: ${o.status}</p>
+
         <ul>
           ${o.items.map(i => `<li>${i.name} x ${i.qty}</li>`).join("")}
         </ul>
 
-        <button onclick="update(${o.id}, 'PREPARING')">Preparing</button>
-        <button onclick="update(${o.id}, 'DONE')">Done</button>
+        <button onclick="update('${o._id}', 'PREPARING')">Preparing</button>
+        <button onclick="update('${o._id}', 'DONE')">Done</button>
       </div>
     `
   })
@@ -41,7 +42,7 @@ async function update(id, status) {
   await fetch("/api/status", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({id, status})
+    body: JSON.stringify({ id, status })
   })
 
   loadOrders()
