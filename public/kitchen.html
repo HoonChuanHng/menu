@@ -39,11 +39,11 @@ async function loadOrders() {
   document.getElementById("orders").innerHTML = html
 }
 
-async function update(id, status) {
+async function update(orderNumber, status) {
   await fetch("/api/status", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ id, status })
+    body: JSON.stringify({ orderNumber, status })
   })
 
   loadOrders()

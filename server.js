@@ -115,13 +115,17 @@ app.get("/api/orders", async (req, res) => {
 })
 
 app.post("/api/status", async (req, res) => {
-  const { id, status } = req.body
+  const { orderNumber, status } = req.body
 
-  await Order.findByIdAndUpdate(id, { status })
+  await Order.findOneAndUpdate(
+    { orderNumber },
+    { status }
+  )
 
+  await Order.findOneAndDelete({ orderNumber })
+  
   res.json({ success: true })
 })
-
 
 app.get("/api/admin", async (req, res) => {
   const orders = await Order.find()
@@ -155,8 +159,8 @@ app.get("/api/admin", async (req, res) => {
   })
 })
 
-app.delete("/api/order/:id", async (req, res) => {
-  await Order.findByIdAndDelete(req.params.id)
+app.delete("/api/order/:orderNumber", async (req, res) => {
+  await Order.findOneAndDelete({ orderNumber: req.params.orderNumber })
   res.json({ success: true })
 })
 
