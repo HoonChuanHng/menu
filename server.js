@@ -122,8 +122,6 @@ app.post("/api/status", async (req, res) => {
     { status }
   )
 
-  await Order.findOneAndDelete({ orderNumber })
-  
   res.json({ success: true })
 })
 
