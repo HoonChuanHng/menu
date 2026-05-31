@@ -189,7 +189,7 @@ app.get("/api/dashboard", async (req, res) => {
   }))
 
   res.json({
-    activeOrders: formatted.filter(o => o.status !== "DONE"),
+    activeOrders: formatted,
     allOrders: formatted
   })
 })

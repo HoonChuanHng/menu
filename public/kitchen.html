@@ -24,7 +24,7 @@ async function loadOrders() {
       <div class="order">
         <h3>Table ${o.tableId} | Order #${o.orderNumber}</h3>
         <p>Ordered at: ${o.time}</p>
-        <p>Status: ${o.status}</p>
+        <p>Status: <b>${o.status}</b></p>
 
         <ul>
           ${o.items.map(i => `<li>${i.name} x ${i.qty}</li>`).join("")}
@@ -32,7 +32,7 @@ async function loadOrders() {
 
         <button onclick="update(${Number(o.orderNumber)}, 'PREPARING')">Preparing</button>
         <button onclick="update(${Number(o.orderNumber)}, 'DONE')">Done</button>
-        <button onclick="deleteOrder(${Number(o.orderNumber)})">Delete</button>
+        <button class="delete-btn" onclick="deleteOrder(${Number(o.orderNumber)})">Delete</button>
       </div>
     `
   })
@@ -51,8 +51,6 @@ async function update(orderNumber, status) {
 }
 
 async function deleteOrder(orderNumber) {
-  if (!confirm("Delete this order?")) return
-
   await fetch("/api/order/" + Number(orderNumber), {
     method: "DELETE"
   })

@@ -537,6 +537,11 @@ body.dark .category-bar {
   opacity: 0.85;
 }
 
+.delete-btn {
+  background: red;
+  color: white;
+}
+
 @media (hover: hover) {
   .add-btn,
   .checkout-btn,
