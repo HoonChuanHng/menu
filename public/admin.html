@@ -3,6 +3,7 @@
 <head>
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="admin-body">
@@ -22,12 +23,13 @@
 <div id="tables" class="grid"></div>
 
 <h2>🍽️ Food Sold</h2>
-<div id="food" class="grid"></div>
+<canvas id="foodChart"></canvas>
 
 <h2>📦 Orders</h2>
 <div id="orders"></div>
 
 <script>
+
 async function load() {
   const res = await fetch("/api/admin")
   const data = await res.json()
@@ -52,11 +54,33 @@ async function load() {
 
   document.getElementById("tables").innerHTML = t
 
-  let f = ""
-  for (let k in data.foodCount) {
-    f += `<div class="card">${k} → ${data.foodCount[k]} sold</div>`
+  let labels = Object.keys(data.foodCount)
+  let values = Object.values(data.foodCount)
+
+  const ctx = document.getElementById("foodChart").getContext("2d")
+
+  if (window.foodChartInstance) {
+    window.foodChartInstance.destroy()
   }
-  document.getElementById("food").innerHTML = f
+
+  window.foodChartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Food Sold",
+        data: values
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  })
 
   let o = ""
   data.orders.forEach(order => {
