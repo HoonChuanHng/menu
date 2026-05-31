@@ -180,6 +180,14 @@ app.delete("/api/order/:orderNumber", async (req, res) => {
   res.json({ success: true })
 })
 
+app.delete("/api/checkout/:tableId", async (req, res) => {
+
+  await Order.deleteMany({ tableId: req.params.tableId })
+
+  res.json({ success: true })
+
+})
+
 app.get("/api/dashboard", async (req, res) => {
   const orders = await Order.find().lean()
 
