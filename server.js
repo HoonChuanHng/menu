@@ -17,7 +17,8 @@ const orderSchema = new mongoose.Schema({
   tableId: String,
   items: Array,
   status: String,
-  time: Date
+  time: Date,
+  paid: { type: Boolean, default: false }
 })
 
 const Order = mongoose.model("Order", orderSchema)
@@ -156,8 +157,10 @@ app.get("/api/admin", async (req, res) => {
       foodCount[i.name] = (foodCount[i.name] || 0) + qty
     })
 
-    tableTotals[o.tableId] =
-      (tableTotals[o.tableId] || 0) + tableTotal
+    if (!o.paid) {
+      tableTotals[o.tableId] =
+        (tableTotals[o.tableId] || 0) + tableTotal
+    }
   })
 
   const formattedOrders = orders.map(o => ({
@@ -180,12 +183,13 @@ app.delete("/api/order/:orderNumber", async (req, res) => {
   res.json({ success: true })
 })
 
-app.delete("/api/checkout/:tableId", async (req, res) => {
-
-  await Order.deleteMany({ tableId: req.params.tableId })
+app.post("/api/checkout/:tableId", async (req, res) => {
+  await Order.updateMany(
+    { tableId: req.params.tableId },
+    { $set: { paid: true } }
+  )
 
   res.json({ success: true })
-
 })
 
 app.get("/api/dashboard", async (req, res) => {

@@ -87,7 +87,7 @@ async function delOrder(id) {
 
 async function checkoutTable(tableId) {
   await fetch("/api/checkout/" + tableId, {
-    method: "DELETE"
+    method: "POST"
   })
 
   load()
