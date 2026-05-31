@@ -125,7 +125,7 @@ function renderCart() {
     `
   })
 
-  if (!html) html = "<p>Please select a food/drinks.</p>"
+  if (!html) html = "<p>Cart is empty.</p>"
 
   document.getElementById("cartItems").innerHTML = html
   document.getElementById("cartTotal").innerText = `Total: RM${total.toFixed(2)}`
@@ -144,7 +144,7 @@ function placeOrder() {
     qty: c.qty
   }))
 
-  if (!items.length) return alert("Cart is empty")
+  if (!items.length) return alert("Please select a food/drinks.")
 
   fetch("/api/order", {
     method: "POST",
@@ -156,7 +156,7 @@ function placeOrder() {
   })
   .then(r => r.json())
   .then(data => {
-    alert(`Order #${data.orderId}: Table ${data.tableId} placed successfully!`)
+    alert(`Order #${data.orderId}: Table ${data.tableId} placed orders successfully!`)
     cart = {}
     localStorage.removeItem("cart_" + tableId)
     renderCart()
