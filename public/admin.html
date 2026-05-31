@@ -52,6 +52,7 @@ async function load() {
     o += `
       <div class="card">
         <h3>Order #${order.orderNumber} (Table ${order.tableId})</h3>
+        <p>Time: ${order.time}</p>
         <p>Status: ${order.status}</p>
 
         ${order.items.map(i =>
