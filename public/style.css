@@ -435,10 +435,11 @@ body.dark .category-bar {
 }
 
 .order {
-  background: #1f1f1f;
+  background: white;
   padding: 16px;
   border-radius: 12px;
-  border: 1px solid #333;
+  border: 1px solid #ddd;
+  color: #222;
 }
 
 .order h3 {
