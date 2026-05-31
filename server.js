@@ -3,11 +3,6 @@ const mongoose = require("mongoose")
 
 const app = express()
 
-app.use((req, res, next) => {
-  console.log(req.method, req.url)
-  next()
-})
-
 mongoose.connect("mongodb+srv://admin:12345678asd@cluster0.i0rmibh.mongodb.net/quickplate")
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err))

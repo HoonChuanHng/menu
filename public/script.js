@@ -154,12 +154,20 @@ function placeOrder() {
       items
     })
   })
-  .then(r => r.json())
+  .then(async r => {
+    const data = await r.json()
+    if (!r.ok) throw data
+    return data
+  })
   .then(data => {
     alert(`Order #${data.orderId}: Table ${data.tableId} placed orders successfully!`)
     cart = {}
     localStorage.removeItem("cart_" + tableId)
     renderCart()
     toggleCart()
+  })
+  .catch(err => {
+    console.log("ORDER ERROR:", err)
+    alert("Order failed")
   })
 }
