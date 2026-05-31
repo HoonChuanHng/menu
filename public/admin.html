@@ -22,23 +22,34 @@
 <h2>💳 Checkout Tables</h2>
 <div id="tables" class="grid"></div>
 
-<h2>🍽️ Food Sold</h2>
-<canvas id="foodChart"></canvas>
-
 <h2>📦 Orders</h2>
 <div id="orders"></div>
 
+<h2>📊 Food Sold</h2>
+
+<div class="chart-controls">
+  <button onclick="changeChart('bar')">Bar</button>
+  <button onclick="changeChart('pie')">Pie</button>
+  <button onclick="changeChart('line')">Line</button>
+</div>
+
+<canvas id="foodChart"></canvas>
+
 <script>
+let chartType = "bar"
+window.foodChartInstance = null
+window.lastAdminData = null
 
 async function load() {
   const res = await fetch("/api/admin")
   const data = await res.json()
 
+  window.lastAdminData = data
+
   document.getElementById("revenue").innerText =
     "Total Revenue: RM " + data.revenue.toFixed(2)
 
   let t = ""
-
   for (let k in data.tableTotals) {
     t += `
       <div class="card">
@@ -51,36 +62,7 @@ async function load() {
       </div>
     `
   }
-
   document.getElementById("tables").innerHTML = t
-
-  let labels = Object.keys(data.foodCount)
-  let values = Object.values(data.foodCount)
-
-  const ctx = document.getElementById("foodChart").getContext("2d")
-
-  if (window.foodChartInstance) {
-    window.foodChartInstance.destroy()
-  }
-
-  window.foodChartInstance = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "Food Sold",
-        data: values
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  })
 
   let o = ""
   data.orders.forEach(order => {
@@ -102,6 +84,43 @@ async function load() {
   })
 
   document.getElementById("orders").innerHTML = o
+
+  renderChart(data)
+}
+
+function renderChart(data) {
+  let labels = Object.keys(data.foodCount)
+  let values = Object.values(data.foodCount)
+
+  const ctx = document.getElementById("foodChart").getContext("2d")
+
+  if (window.foodChartInstance) {
+    window.foodChartInstance.destroy()
+  }
+
+  window.foodChartInstance = new Chart(ctx, {
+    type: chartType,
+    data: {
+      labels,
+      datasets: [{
+        label: "Food Sold",
+        data: values
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: (chartType === "bar" || chartType === "line") ? {
+        y: { beginAtZero: true }
+      } : {}
+    }
+  })
+}
+
+function changeChart(type) {
+  chartType = type
+  if (window.lastAdminData) {
+    renderChart(window.lastAdminData)
+  }
 }
 
 async function delOrder(id) {
@@ -113,7 +132,6 @@ async function checkoutTable(tableId) {
   await fetch("/api/checkout/" + tableId, {
     method: "POST"
   })
-
   load()
 }
 

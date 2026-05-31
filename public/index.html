@@ -1,154 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Admin Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quick Plate Cafe</title>
+
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="manifest" href="/manifest.json">
 </head>
 
-<body class="admin-body">
+<body>
 
-<div class="kitchen-header">
-  <h1 class="admin-title">🧾 Admin Dashboard</h1>
+  <header class="header">
 
-  <label class="switch">
-    <input type="checkbox" id="darkToggle">
-    <span class="slider"></span>
-  </label>
-</div>
+    <div class="header-top">
 
-<h2 id="revenue" class="revenue"></h2>
+      <h1 class="logo-title">
+        Quick Plate Cafe
+        <img src="/image/app-logo.png" alt="logo">
+      </h1>
 
-<!-- 1. CHECKOUT FIRST -->
-<h2>💳 Checkout Tables</h2>
-<div id="tables" class="grid"></div>
+      <div class="header-right">
+        <button id="installBtn">Install</button>
 
-<!-- 2. ORDERS SECOND -->
-<h2>📦 Orders</h2>
-<div id="orders"></div>
+        <label class="switch">
+          <input type="checkbox" id="darkToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
 
-<!-- 3. FOOD SOLD LAST -->
-<h2>📊 Food Sold</h2>
+    </div>
 
-<div class="chart-controls">
-  <button onclick="changeChart('bar')">Bar</button>
-  <button onclick="changeChart('pie')">Pie</button>
-  <button onclick="changeChart('line')">Line</button>
-</div>
+    <div class="category-bar" id="categoryBar"></div>
 
-<canvas id="foodChart"></canvas>
+  </header>
 
-<script>
-let chartType = "bar"
-window.foodChartInstance = null
+  <main>
 
-async function load() {
-  const res = await fetch("/api/admin")
-  const data = await res.json()
+    <section class="restaurant-info">
+      <h2>Restaurant Info</h2>
+      <p>🕒 Opening Hours: 9:00 AM – 9:00 PM</p>
+      <p>📍 Location: Quick Plate Cafe</p>
+      <p>📞 Contact: 012-345 6789</p>
+    </section>
 
-  document.getElementById("revenue").innerText =
-    "Total Revenue: RM " + data.revenue.toFixed(2)
+    <section id="menu" class="menu-container"></section>
 
-  let t = ""
-  for (let k in data.tableTotals) {
-    t += `
-      <div class="card">
-        <h3>Table ${k}</h3>
-        <p>Total: RM ${data.tableTotals[k].toFixed(2)}</p>
+  </main>
 
-        <button class="danger" onclick="checkoutTable('${k}')">
-          Checkout
+  <button id="cartButton" class="cart-button" onclick="toggleCart()">
+    View Cart (0)
+  </button>
+
+  <div id="cartModal" class="cart-modal">
+
+    <div class="cart-content">
+
+      <div class="cart-header">
+        <h2>Your Cart</h2>
+        <button class="close-btn" onclick="toggleCart()">✕</button>
+      </div>
+
+      <div id="cartItems"></div>
+
+      <div class="cart-footer">
+        <h3 id="cartTotal">Total: RM0</h3>
+        <button class="checkout-btn" onclick="placeOrder()">
+          Place Order
         </button>
       </div>
-    `
-  }
-  document.getElementById("tables").innerHTML = t
 
-  let o = ""
-  data.orders.forEach(order => {
-    o += `
-      <div class="card">
-        <h3>Order #${order.orderNumber} (Table ${order.tableId})</h3>
-        <p>Time: ${order.time}</p>
-        <p>Status: ${order.status}</p>
+    </div>
 
-        ${order.items.map(i =>
-          `<div>${i.name} x ${i.qty || 1}</div>`
-        ).join("")}
+  </div>
 
-        <button class="danger" onclick="delOrder('${order.orderNumber}')">
-          Delete
-        </button>
-      </div>
-    `
-  })
-
-  document.getElementById("orders").innerHTML = o
-
-  renderChart(data)
-}
-
-function renderChart(data) {
-  let labels = Object.keys(data.foodCount)
-  let values = Object.values(data.foodCount)
-
-  const ctx = document.getElementById("foodChart").getContext("2d")
-
-  if (window.foodChartInstance) {
-    window.foodChartInstance.destroy()
-  }
-
-  window.foodChartInstance = new Chart(ctx, {
-    type: chartType,
-    data: {
-      labels,
-      datasets: [{
-        label: "Food Sold",
-        data: values
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: chartType === "pie" ? {} : {
-        y: { beginAtZero: true }
-      }
-    }
-  })
-}
-
-function changeChart(type) {
-  chartType = type
-  load()
-}
-
-async function delOrder(id) {
-  await fetch("/api/order/" + id, { method: "DELETE" })
-  load()
-}
-
-async function checkoutTable(tableId) {
-  await fetch("/api/checkout/" + tableId, {
-    method: "POST"
-  })
-  load()
-}
-
-/* DARK MODE */
-const toggle = document.getElementById("darkToggle")
-
-if (localStorage.getItem("dark") === "true") {
-  document.body.classList.add("dark")
-  toggle.checked = true
-}
-
-toggle.addEventListener("change", () => {
-  document.body.classList.toggle("dark")
-  localStorage.setItem("dark", document.body.classList.contains("dark"))
-})
-
-load()
-setInterval(load, 3000)
-</script>
-
+  <script src="script.js"></script>
+  <script src="app.js"></script>
+  
 </body>
 </html>
