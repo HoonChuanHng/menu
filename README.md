@@ -26,19 +26,19 @@ Admin Dashboard:
 Run server locally:
 ```bash
 node server.js
-```bash
+```
 
 Server runs on:
 ```bash
 http://localhost:3000
+```
 
 ##📡 API Endpoints
-```bash
 
 ###Menu
 ```bash
 GET /api/menu
-```bash
+```
 Returns all food categories and items.
 
 ###Orders
@@ -46,24 +46,24 @@ Returns all food categories and items.
 GET /api/orders
 POST /api/order
 DELETE /api/order/:orderNumber
-```bash
+```
 
 ###Status Update
 ```bash
 POST /api/status
-```bash
+```
 
 ###Checkout Table
 ```bash
 POST /api/checkout/:tableId
-```bash
+```
 
 Marks all orders from a table as paid.
 
 ###Admin Analytics
 ```bash
 GET /api/admin
-```bash
+```
 
 Returns:
 
