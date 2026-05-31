@@ -157,8 +157,15 @@ app.get("/api/admin", async (req, res) => {
       (tableTotals[o.tableId] || 0) + tableTotal
   })
 
+  const formattedOrders = orders.map(o => ({
+    ...o._doc,
+    time: new Date(o.time).toLocaleString("en-MY", {
+      timeZone: "Asia/Kuala_Lumpur"
+    })
+  }))
+
   res.json({
-    orders,
+    orders: formattedOrders,
     tableTotals,
     foodCount,
     revenue
@@ -173,9 +180,16 @@ app.delete("/api/order/:orderNumber", async (req, res) => {
 app.get("/api/dashboard", async (req, res) => {
   const orders = await Order.find()
 
+  const formatted = orders.map(o => ({
+    ...o._doc,
+    time: new Date(o.time).toLocaleString("en-MY", {
+      timeZone: "Asia/Kuala_Lumpur"
+    })
+  }))
+
   res.json({
-    activeOrders: orders.filter(o => o.status !== "DONE"),
-    allOrders: orders
+    activeOrders: formatted.filter(o => o.status !== "DONE"),
+    allOrders: formatted
   })
 })
 
