@@ -447,6 +447,13 @@ body.dark .category-bar {
   border-radius: 12px;
   border: 1px solid #ddd;
   color: #222;
+  transition: 0.3s;
+}
+
+body.dark .order {
+  background: #1f1f1f;
+  border: 1px solid #333;
+  color: white;
 }
 
 .order h3 {
@@ -455,8 +462,7 @@ body.dark .category-bar {
 }
 
 .order p {
-  margin-bottom: 10px;
-  color: #aaa;
+  color: inherit;
 }
 
 .order ul {
