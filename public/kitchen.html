@@ -9,7 +9,7 @@
 <body class="kitchen-body">
 
 <h1 class="kitchen-title">Kitchen Orders</h1>
-
+<button id="darkBtn">Toggle Dark Mode</button>
 <div id="orders" class="kitchen-orders"></div>
 
 <script>
@@ -60,6 +60,18 @@ async function deleteOrder(orderNumber) {
 
 loadOrders()
 setInterval(loadOrders, 3000)
+
+const btn = document.getElementById("darkBtn")
+
+if (localStorage.getItem("dark") === "true") {
+  document.body.classList.add("dark")
+}
+
+btn.addEventListener("click", () => {
+  document.body.classList.toggle("dark")
+  localStorage.setItem("dark", document.body.classList.contains("dark"))
+})
+
 </script>
 
 </body>
