@@ -4,13 +4,10 @@ const mongoose = require("mongoose")
 const app = express()
 
 mongoose.connect("mongodb+srv://admin:12345678asd@cluster0.i0rmibh.mongodb.net/quickplate")
-  .then(() => {
-    console.log("MongoDB Connected")
-    app.listen(PORT, () => {
-      console.log("Server running on port " + PORT)
-    })
-  })
-  .catch(err => console.log("MongoDB Error:", err))
+
+  .then(() => console.log("MongoDB Connected"))
+
+  .catch(err => console.log(err))
 
 app.use(express.static("public"))
 app.use(express.json())
@@ -128,7 +125,8 @@ app.get("/api/orders", async (req, res) => {
 })
 
 app.post("/api/status", async (req, res) => {
-  const { orderNumber, status } = req.body
+  const orderNumber = Number(req.body.orderNumber)
+  const status = req.body.status
 
   await Order.findOneAndUpdate(
     { orderNumber },
@@ -183,13 +181,11 @@ app.delete("/api/order/:orderNumber", async (req, res) => {
 })
 
 app.get("/api/dashboard", async (req, res) => {
-  const orders = await Order.find()
+  const orders = await Order.find().lean()
 
   const formatted = orders.map(o => ({
-    ...o._doc,
-    time: new Date(o.time).toLocaleString("en-MY", {
-      timeZone: "Asia/Kuala_Lumpur"
-    })
+    ...o,
+    time: o.time
   }))
 
   res.json({

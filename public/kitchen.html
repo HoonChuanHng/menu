@@ -23,15 +23,15 @@ async function loadOrders() {
     html += `
       <div class="order">
         <h3>Table ${o.tableId} | Order #${o.orderNumber}</h3>
-        <p>Ordered at: ${new Date(o.time).toLocaleString()}</p>
+        <p>Ordered at: ${o.time}</p>
         <p>Status: ${o.status}</p>
 
         <ul>
           ${o.items.map(i => `<li>${i.name} x ${i.qty}</li>`).join("")}
         </ul>
 
-        <button onclick="update('${o.orderNumber}', 'PREPARING')">Preparing</button>
-        <button onclick="update('${o.orderNumber}', 'DONE')">Done</button>
+        <button onclick="update('${Number(o.orderNumber)}', 'PREPARING')">Preparing</button>
+        <button onclick="update(${Number(o.orderNumber)}, 'DONE')">Done</button>
       </div>
     `
   })
