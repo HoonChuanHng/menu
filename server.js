@@ -185,7 +185,9 @@ app.get("/api/dashboard", async (req, res) => {
 
   const formatted = orders.map(o => ({
     ...o,
-    time: o.time
+    time: new Date(o.time).toLocaleString("en-MY", {
+      timeZone: "Asia/Kuala_Lumpur"
+    })
   }))
 
   res.json({
