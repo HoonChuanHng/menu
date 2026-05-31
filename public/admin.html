@@ -44,14 +44,14 @@ async function load() {
   data.orders.forEach(order => {
     o += `
       <div class="card">
-        <h3>Order #${order._id} (Table ${order.tableId})</h3>
+        <h3>Order #${order.orderNumber} (Table ${order.tableId})</h3>
         <p>Status: ${order.status}</p>
 
         ${order.items.map(i =>
           `<div>${i.name} x ${i.qty || 1}</div>`
         ).join("")}
 
-        <button class="danger" onclick="delOrder('${order._id}')">
+        <button class="danger" onclick="delOrder('${order.orderNumber}')">
           Delete
         </button>
       </div>

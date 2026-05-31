@@ -23,6 +23,7 @@ async function loadOrders() {
     html += `
       <div class="order">
         <h3>Table ${o.tableId} | Order #${o.orderNumber}</h3>
+        <p>Ordered at: ${new Date(o.time).toLocaleString()}</p>
         <p>Status: ${o.status}</p>
 
         <ul>
