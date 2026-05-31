@@ -60,19 +60,31 @@ app.get("/api/menu", (req, res) => {
 
 
 app.post("/api/order", async (req, res) => {
-  const { tableId, items } = req.body
+  try {
+    const { tableId, items } = req.body
 
-  const order = await Order.create({
-    tableId,
-    items,
-    status: "NEW",
-    time: new Date()
-  })
+    console.log("ORDER RECEIVED:", req.body)
 
-  res.json({
-    orderId: order._id,
-    tableId
-  })
+    if (!tableId || !items) {
+      return res.status(400).json({ error: "Missing data" })
+    }
+
+    const order = await Order.create({
+      tableId,
+      items,
+      status: "NEW",
+      time: new Date()
+    })
+
+    res.json({
+      orderId: order._id,
+      tableId
+    })
+
+  } catch (err) {
+    console.log("ERROR:", err)
+    res.status(500).json({ error: "Server error" })
+  }
 })
 
 app.get("/api/orders", async (req, res) => {
@@ -87,6 +99,7 @@ app.post("/api/status", async (req, res) => {
 
   res.json({ success: true })
 })
+
 
 app.get("/api/admin", async (req, res) => {
   const orders = await Order.find()
