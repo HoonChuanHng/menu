@@ -111,7 +111,15 @@ app.post("/api/order", async (req, res) => {
 
 app.get("/api/orders", async (req, res) => {
   const orders = await Order.find()
-  res.json(orders)
+
+  const formatted = orders.map(o => ({
+    ...o._doc,
+    time: new Date(o.time).toLocaleString("en-MY", {
+      timeZone: "Asia/Kuala_Lumpur"
+    })
+  }))
+
+  res.json(formatted)
 })
 
 app.post("/api/status", async (req, res) => {
