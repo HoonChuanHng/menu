@@ -4,8 +4,13 @@ const mongoose = require("mongoose")
 const app = express()
 
 mongoose.connect("mongodb+srv://admin:12345678asd@cluster0.i0rmibh.mongodb.net/quickplate")
-  .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log(err))
+  .then(() => {
+    console.log("MongoDB Connected")
+    app.listen(PORT, () => {
+      console.log("Server running on port " + PORT)
+    })
+  })
+  .catch(err => console.log("MongoDB Error:", err))
 
 app.use(express.static("public"))
 app.use(express.json())
