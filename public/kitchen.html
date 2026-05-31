@@ -30,8 +30,9 @@ async function loadOrders() {
           ${o.items.map(i => `<li>${i.name} x ${i.qty}</li>`).join("")}
         </ul>
 
-        <button onclick="update('${Number(o.orderNumber)}', 'PREPARING')">Preparing</button>
+        <button onclick="update(${Number(o.orderNumber)}, 'PREPARING')">Preparing</button>
         <button onclick="update(${Number(o.orderNumber)}, 'DONE')">Done</button>
+        <button onclick="deleteOrder(${Number(o.orderNumber)})">Delete</button>
       </div>
     `
   })
@@ -44,6 +45,16 @@ async function update(orderNumber, status) {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ orderNumber, status })
+  })
+
+  loadOrders()
+}
+
+async function deleteOrder(orderNumber) {
+  if (!confirm("Delete this order?")) return
+
+  await fetch("/api/order/" + Number(orderNumber), {
+    method: "DELETE"
   })
 
   loadOrders()
