@@ -7,7 +7,14 @@
 
 <body class="admin-body">
 
-<h1 class="admin-title">🧾 Admin Dashboard</h1>
+<div class="kitchen-header">
+  <h1 class="admin-title">🧾 Admin Dashboard</h1>
+
+  <label class="switch">
+    <input type="checkbox" id="darkToggle">
+    <span class="slider"></span>
+  </label>
+</div>
 
 <h2 id="revenue" class="revenue"></h2>
 
@@ -65,6 +72,19 @@ async function delOrder(id) {
   await fetch("/api/order/" + id, { method: "DELETE" })
   load()
 }
+
+/* DARK MODE */
+const toggle = document.getElementById("darkToggle")
+
+if (localStorage.getItem("dark") === "true") {
+  document.body.classList.add("dark")
+  toggle.checked = true
+}
+
+toggle.addEventListener("change", () => {
+  document.body.classList.toggle("dark")
+  localStorage.setItem("dark", document.body.classList.contains("dark"))
+})
 
 load()
 setInterval(load, 3000)
