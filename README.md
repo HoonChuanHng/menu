@@ -26,28 +26,44 @@ Admin Dashboard:
 Run server locally:
 ```bash
 node server.js
+```bash
+
 Server runs on:
-
+```bash
 http://localhost:3000
-📡 API Endpoints
-Menu
-GET /api/menu
 
+##📡 API Endpoints
+```bash
+
+###Menu
+```bash
+GET /api/menu
+```bash
 Returns all food categories and items.
 
-Orders
+###Orders
+```bash
 GET /api/orders
 POST /api/order
 DELETE /api/order/:orderNumber
-Status Update
+```bash
+
+###Status Update
+```bash
 POST /api/status
-Checkout Table
+```bash
+
+###Checkout Table
+```bash
 POST /api/checkout/:tableId
+```bash
 
 Marks all orders from a table as paid.
 
-Admin Analytics
+###Admin Analytics
+```bash
 GET /api/admin
+```bash
 
 Returns:
 
@@ -55,7 +71,8 @@ total revenue
 table totals
 food sold count
 all orders
-🧠 Features
+
+###🧠 Features
 QR Table System (table=1 to table=5)
 Real production-style URL routing
 Installable web app (PWA ready concept)
