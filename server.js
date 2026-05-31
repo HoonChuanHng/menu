@@ -11,6 +11,7 @@ app.use(express.static("public"))
 app.use(express.json())
 
 const orderSchema = new mongoose.Schema({
+  orderNumber: Number,
   tableId: String,
   items: Array,
   status: String,
@@ -18,6 +19,23 @@ const orderSchema = new mongoose.Schema({
 })
 
 const Order = mongoose.model("Order", orderSchema)
+
+const counterSchema = new mongoose.Schema({
+  name: String,
+  value: Number
+})
+
+const Counter = mongoose.model("Counter", counterSchema)
+
+async function getNextOrderId() {
+  const result = await Counter.findOneAndUpdate(
+    { name: "order" },
+    { $inc: { value: 1 } },
+    { new: true, upsert: true }
+  )
+
+  return result.value
+}
 
 const menu = [
   {
@@ -69,15 +87,19 @@ app.post("/api/order", async (req, res) => {
       return res.status(400).json({ error: "Missing data" })
     }
 
+    
+    const numericId = await getNextOrderId()
+
     const order = await Order.create({
       tableId,
       items,
       status: "NEW",
-      time: new Date()
+      time: new Date(),
+      orderNumber: numericId
     })
 
     res.json({
-      orderId: order._id,
+      orderId: numericId,
       tableId
     })
 
