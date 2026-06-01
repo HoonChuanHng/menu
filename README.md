@@ -17,9 +17,8 @@ node server.js
 3. Go to:
    http://localhost:3000
 
-
 ---
-## 🌐 Live Demo (No Installation Required)
+## Live Demo (No Installation Required)
 Customer (QR Table Access):
 - https://online-ordering-system-3il6.onrender.com/?table=1
 - https://online-ordering-system-3il6.onrender.com/?table=2
@@ -27,14 +26,47 @@ Customer (QR Table Access):
 - https://online-ordering-system-3il6.onrender.com/?table=4
 - https://online-ordering-system-3il6.onrender.com/?table=5
 
-
 Kitchen Dashboard:
 - https://online-ordering-system-3il6.onrender.com/kitchen.html
-
 
 Admin Dashboard:
 - https://online-ordering-system-3il6.onrender.com/admin.html
 
+---
+## What This System Does
+Customer Side
+- Customers scan a QR code or open a table link (table 1–5)
+- They browse a digital menu
+- They add items to a cart with quantity and price calculation
+- They submit an order to the system
+
+Kitchen Side
+- Kitchen staff view all orders in real time
+- Orders are displayed with items, table number, and time
+- Change status (Preparing / Done)
+
+Admin Side
+- Admin can view total revenue
+- Track food sold statistics
+- View payment for each table
+- Monitor all orders in the system
+
+Backend System
+- Orders are stored permanently in MongoDB Atlas
+- Each order has a unique Order ID
+- Status updates are saved real time
+
+Other Features
+- QR table system (table=1 to table=5)
+- Real production-style URL routing
+- Real-time order processing workflow
+- Multi-role system (Customer / Kitchen / Admin)
+- Cart persists on refresh (no reset)
+- Database (MongoDB)
+- Cross-device support (phone + laptop)
+- Installable web app (PWA ready concept)
+- Dark mode toggle button
+- Data visualization using charts
 
 ---
 ## System Workflow
@@ -53,9 +85,9 @@ Order status updated (/api/status)
 Admin monitors revenue + analytics
         ↓
 Checkout marks table as paid
-```
-## Database
 
+---
+## Database
 MongoDB Atlas cloud database that stores:
 - Order Number
 - Table ID
@@ -64,15 +96,17 @@ MongoDB Atlas cloud database that stores:
 - Time
 - Payment Status
 
+---
 ## Tech Stack
 Node.js
 Express.js
-MongoDB (Mongoose)
-HTML / CSS / JavaScript
+MongoDB 
+HTML 
+CSS 
+JavaScript
 Chart.js 
 
-
-
+---
 ## API Endpoints
 
 ### Menu
@@ -97,40 +131,18 @@ POST /api/status
 ```bash
 POST /api/checkout/:tableId
 ```
-
 Marks all orders from a table as paid.
 
 ### Admin Analytics
 ```bash
 GET /api/admin
 ```
-
 Returns:
-
-total revenue
-table totals
-food sold count
-all orders
-
-## Features
-QR Table System (table=1 to table=5)
-Real production-style URL routing
-Installable web app (PWA ready concept)
-Cart persists on refresh (no reset)
-Unique Order ID system (MongoDB counter)
-Dark mode toggle
-Quantity + price calculation
-Admin + Kitchen dashboards
-MongoDB cloud storage
-Cross-device support (phone + laptop)
-QuickPlate branding/logo system
-Full navigation system (menu → cart → checkout)
+- Total revenue
+- Table total
+- Food sold
+- All orders 
 
 
 
 
-## Notes
-Backend is REST API based
-Frontend is static served via Express
-Data is stored permanently in MongoDB
-Designed for real-world restaurant workflow simulation
