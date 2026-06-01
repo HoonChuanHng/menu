@@ -21,10 +21,46 @@ Admin Dashboard:
 
 ---
 
-## Backend (Node.js)
+## System Workflow
 
-Run server locally:
 ```bash
+Customer scans QR / opens table link
+        ↓
+Browse menu & add items to cart
+        ↓
+POST /api/order (order sent to backend)
+        ↓
+MongoDB stores order permanently
+        ↓
+Kitchen dashboard processes order
+        ↓
+Order status updated (/api/status)
+        ↓
+Admin monitors revenue + analytics
+        ↓
+Checkout marks table as paid
+```
+## Database
+
+- MongoDB Atlas
+- Stores:
+- Orders
+- Order items
+- Table ID
+- Status
+Paid state
+Timestamp
+
+## Tech Stack
+Node.js
+Express.js
+MongoDB (Mongoose)
+HTML / CSS / JavaScript
+Chart.js (Admin analytics)
+
+## Installation
+```bash
+npm install
 node server.js
 ```
 
@@ -72,7 +108,7 @@ table totals
 food sold count
 all orders
 
-### Features
+## Features
 QR Table System (table=1 to table=5)
 Real production-style URL routing
 Installable web app (PWA ready concept)
@@ -86,32 +122,10 @@ Cross-device support (phone + laptop)
 QuickPlate branding/logo system
 Full navigation system (menu → cart → checkout)
 
-### Database
-MongoDB Atlas
-Stores:
-Orders
-Order items
-Table ID
-Status
-Paid state
-Timestamp
 
-### Tech Stack
-Node.js
-Express.js
-MongoDB (Mongoose)
-HTML / CSS / JavaScript
-Chart.js (Admin analytics)
 
-### Usage Flow
-User scans QR or opens table link
-Select food → add to cart
-Submit order
-Kitchen updates status
-Admin monitors orders + revenue
-Cashier uses checkout system per table
 
-### Notes
+## Notes
 Backend is REST API based
 Frontend is static served via Express
 Data is stored permanently in MongoDB
