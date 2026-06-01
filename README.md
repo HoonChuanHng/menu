@@ -2,6 +2,7 @@
 
 A system inspired by real-world restaurant systems that support online ordering, QR table access, kitchen management, and admin analytics.
 
+
 ## Installation & Setup
 ### 1. Install Node.js
 Install Node.js from:
@@ -17,9 +18,11 @@ npm install
 node server.js
 ```
 
+
 ### 3. Open Browser
 Go to:
 http://localhost:3000
+
 
 ## 🌐 Live Demo (No Installation Required)
 
