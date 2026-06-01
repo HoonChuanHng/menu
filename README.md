@@ -1,16 +1,12 @@
 # Online Food Ordering System (Quick Plate Cafe)
-
 A system inspired by real-world restaurant systems that support online ordering, QR table access, kitchen management, and admin analytics.
 
 ---
 ## Installation & Setup
-### 1. Install Node.js
-Install Node.js from:
-https://nodejs.org/
+1. Install Node.js from:
+   https://nodejs.org/
 
-
-### 2. Open Terminal 
-Run the commands:
+2. Open Terminal and run the commands:
 ```bash
 git clone <your-repo-url>
 cd online-ordering-system
@@ -18,14 +14,12 @@ npm install
 node server.js
 ```
 
+3. Go to:
+   http://localhost:3000
 
-### 3. Open Browser
-Go to:
-http://localhost:3000
 
 ---
 ## 🌐 Live Demo (No Installation Required)
-
 Customer (QR Table Access):
 - https://online-ordering-system-3il6.onrender.com/?table=1
 - https://online-ordering-system-3il6.onrender.com/?table=2
@@ -33,15 +27,17 @@ Customer (QR Table Access):
 - https://online-ordering-system-3il6.onrender.com/?table=4
 - https://online-ordering-system-3il6.onrender.com/?table=5
 
+
 Kitchen Dashboard:
 - https://online-ordering-system-3il6.onrender.com/kitchen.html
+
 
 Admin Dashboard:
 - https://online-ordering-system-3il6.onrender.com/admin.html
 
-## System Workflow
 
-```bash
+---
+## System Workflow
 Customer scans QR / opens table link
         ↓
 Browse menu & add items to cart
