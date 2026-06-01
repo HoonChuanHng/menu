@@ -2,22 +2,6 @@
 A system inspired by real-world restaurant systems that support online ordering, QR table access, kitchen management, and admin analytics.
 
 ---
-## Installation & Setup
-1. Install Node.js from:
-   https://nodejs.org/
-
-2. Open Terminal and run the commands:
-```bash
-git clone <your-repo-url>
-cd <project-folder>
-npm install
-node server.js
-```
-
-3. Go to:
-   http://localhost:3000
-
----
 ## Live Demo (No Installation Required)
 Customer (QR Table Access):
 - https://online-ordering-system-3il6.onrender.com/?table=1
@@ -37,19 +21,19 @@ Admin Dashboard:
 Customer Side
 - Customers scan a QR code or open a table link (table 1–5)
 - They browse a digital menu
-- They add items to a cart with quantity and price calculation
+- They add items to a cart with quantity and price calculated automatically
 - They submit an order to the system
 
 Kitchen Side
 - Kitchen staff view all orders in real time
-- Orders are displayed with items, table number, and time
-- Change status (Preparing / Done)
+- Orders are displayed with table id, order number, time ordered, and food items
+- They can change status (Preparing / Done)
 
 Admin Side
 - Admin can view total revenue
-- Track food sold statistics
-- View payment for each table
-- Monitor all orders in the system
+- They can view payment for each table and checkout
+- View all orders details (table id, order number, time ordered, and food items)
+- Track food sold 
 
 Backend System
 - Orders are stored permanently in MongoDB Atlas
@@ -60,7 +44,6 @@ Other Features
 - QR table system (table=1 to table=5)
 - Real production-style URL routing
 - Real-time order processing workflow
-- Multi-role system (Customer / Kitchen / Admin)
 - Cart persists on refresh (no reset)
 - Database (MongoDB)
 - Cross-device support (phone + laptop)
@@ -100,42 +83,3 @@ MongoDB Atlas cloud database that stores:
 - Chart.js 
 
 ---
-## API Endpoints
-
-### Menu
-```bash
-GET /api/menu
-```
-Returns all food categories and items.
-
-### Orders
-```bash
-GET /api/orders
-POST /api/order
-DELETE /api/order/:orderNumber
-```
-
-### Status Update
-```bash
-POST /api/status
-```
-
-### Checkout Table
-```bash
-POST /api/checkout/:tableId
-```
-Marks all orders from a table as paid.
-
-### Admin Analytics
-```bash
-GET /api/admin
-```
-Returns:
-- Total revenue
-- Table total
-- Food sold
-- All orders 
-
-
-
-
