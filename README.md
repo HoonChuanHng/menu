@@ -70,21 +70,14 @@ Other Features
 
 ---
 ## System Workflow
-Customer scans QR / opens table link
-        ↓
-Browse menu & add items to cart
-        ↓
-POST /api/order (order sent to backend)
-        ↓
-MongoDB stores order permanently
-        ↓
-Kitchen dashboard processes order
-        ↓
-Order status updated (/api/status)
-        ↓
-Admin monitors revenue + analytics
-        ↓
-Checkout marks table as paid
+1. Customer scans QR / opens table link
+2. Browse menu & add items to cart
+3. POST /api/order (order sent to backend)
+4. MongoDB stores order permanently
+5. Kitchen dashboard processes order
+6. Order status updated (/api/status)
+7. Admin monitors revenue + analytics
+8. Checkout marks table as paid
 
 ---
 ## Database
