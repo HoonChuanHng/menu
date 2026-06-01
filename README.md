@@ -91,13 +91,13 @@ MongoDB Atlas cloud database that stores:
 
 ---
 ## Tech Stack
-Node.js
-Express.js
-MongoDB 
-HTML 
-CSS 
-JavaScript
-Chart.js 
+- Node.js
+- Express.js
+- MongoDB 
+- HTML 
+- CSS 
+- JavaScript
+- Chart.js 
 
 ---
 ## API Endpoints
