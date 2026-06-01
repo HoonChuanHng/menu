@@ -1,10 +1,29 @@
 # Online Food Ordering System (Quick Plate Cafe)
 
-A restaurant ordering system featuring QR table access, kitchen dashboard, admin analytics, and MongoDB backend.
+A system inspired by real-world restaurant systems that support online ordering, QR table access, kitchen management, and admin analytics.
 
 ---
 
-## Live Demo
+## Installation
+### 1. Install Node.js
+Install Node.js from:
+https://nodejs.org/
+
+
+### 2. Open Terminal 
+Run the commands:
+```bash
+git clone <your-repo-url>
+cd online-ordering-system
+npm install
+node server.js
+```
+
+### 3. Open Browser
+Go to:
+http://localhost:3000
+
+## 🌐 Live Demo (No Installation Required)
 
 Customer (QR Table Access):
 - https://online-ordering-system-3il6.onrender.com/?table=1
@@ -42,32 +61,22 @@ Checkout marks table as paid
 ```
 ## Database
 
-- MongoDB Atlas
-- Stores:
-- Orders
-- Order items
+MongoDB Atlas cloud database that stores:
+- Order Number
 - Table ID
+- Items
 - Status
-Paid state
-Timestamp
+- Time
+- Payment Status
 
 ## Tech Stack
 Node.js
 Express.js
 MongoDB (Mongoose)
 HTML / CSS / JavaScript
-Chart.js (Admin analytics)
+Chart.js 
 
-## Installation
-```bash
-npm install
-node server.js
-```
 
-Server runs on:
-```bash
-http://localhost:3000
-```
 
 ## API Endpoints
 
