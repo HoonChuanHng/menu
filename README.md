@@ -2,9 +2,7 @@
 
 A system inspired by real-world restaurant systems that support online ordering, QR table access, kitchen management, and admin analytics.
 
----
-
-## Installation
+## Installation & Setup
 ### 1. Install Node.js
 Install Node.js from:
 https://nodejs.org/
@@ -37,8 +35,6 @@ Kitchen Dashboard:
 
 Admin Dashboard:
 - https://online-ordering-system-3il6.onrender.com/admin.html
-
----
 
 ## System Workflow
 
