@@ -9,7 +9,7 @@ A system inspired by real-world restaurant systems that support online ordering,
 2. Open Terminal and run the commands:
 ```bash
 git clone <your-repo-url>
-cd online-ordering-system
+cd <project-folder>
 npm install
 node server.js
 ```
