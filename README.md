@@ -23,7 +23,7 @@ node server.js
 Go to:
 http://localhost:3000
 
-
+---
 ## 🌐 Live Demo (No Installation Required)
 
 Customer (QR Table Access):
