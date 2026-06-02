@@ -690,7 +690,7 @@ body.login-page .header-top {
 }
 
 body.login-page .logo-title {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -699,12 +699,7 @@ body.login-page .logo-title {
 }
 
 body.login-page .logo-title img {
-  width: 28px;
-  height: 28px;
-}
-
-body.login-page .switch {
-  width: 62px;
+  width: 32px;
   height: 32px;
 }
 
