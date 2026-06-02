@@ -602,6 +602,101 @@ body.dark .cart-item {
   white-space: nowrap;
 }
 
+/* Management Login Design*/
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  transition: 0.3s;
+}
+
+/* Center login page */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Login box */
+.login-box {
+  width: 340px;
+  padding: 30px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+/* Title */
+.login-box h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+/* Inputs + select */
+.login-box input,
+.login-box select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Login button */
+.login-box button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.login-box button:hover {
+  opacity: 0.85;
+}
+
+/* Error message */
+#msg {
+  margin-top: 10px;
+  color: red;
+  font-size: 13px;
+}
+
+/* Dark mode */
+.dark {
+  background: #121212;
+  color: white;
+}
+
+/* Dark login box */
+.dark .login-box {
+  background: #1e1e1e;
+  color: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+/* Dark inputs */
+.dark .login-box input,
+.dark .login-box select {
+  background: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+}
+
+/* Toggle button position */
+.dark-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
 @media (hover: hover) {
   .add-btn,
   .checkout-btn,

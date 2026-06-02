@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script>
+
+<!-- Admin login restriction -->
+<script>
   if (localStorage.getItem("role") !== "admin") {
   window.location.replace("management.html")
   }
 </script>
+
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
    <!-- Charts library-->
@@ -14,8 +17,6 @@
 
 
 <body class="admin-body">
-
-
 
 <div class="kitchen-header">
   <h1 class="admin-title">🧾 Admin Dashboard</h1>
