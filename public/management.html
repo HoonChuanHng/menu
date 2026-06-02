@@ -8,45 +8,72 @@
 
 <body class="login-page">
 
-<h2>Login</h2>
+<div class="login-container">
 
-<select id="role">
-<option value="admin">Admin</option>
-<option value="kitchen">Kitchen</option>
-</select>
+  <div class="login-box">
 
-<br><br>
+    <h2>Login</h2>
 
-<input id="username" placeholder="ID">
-<br><br>
+    <select id="role">
+      <option value="" disabled selected>Select Role</option>
+      <option value="admin">Admin</option>
+      <option value="kitchen">Kitchen</option>
+    </select>
 
-<input id="password" type="password" placeholder="Password">
-<br><br>
+    <input id="username" placeholder="User ID">
 
-<button onclick="login()">Login</button>
+    <input id="password" type="password" placeholder="Password">
 
-<p id="msg"></p>
+    <button onclick="login()">Login</button>
+
+    <p id="msg"></p>
+
+  </div>
+
+</div>
 
 <script>
 function login() {
-const role = document.getElementById("role").value
-const username = document.getElementById("username").value
-const password = document.getElementById("password").value
-const msg = document.getElementById("msg")
+  const role = document.getElementById("role").value
+  const username = document.getElementById("username").value
+  const password = document.getElementById("password").value
 
-if (role === "admin" && username === "admin" && password === "1234") {
-window.location.href = "admin.html"
-localStorage.setItem("role", "admin")
-return
+if (
+  role === "admin" &&
+  (
+    (username === "a1" && password === "123") ||
+    (username === "a2" && password === "789")
+  )
+) {
+  const session = {
+    role: "admin",
+    expiry: Date.now() + 15 * 60 * 1000
+  }
+
+  localStorage.setItem("session", JSON.stringify(session))
+  window.location.href = "admin.html"
+  return
 }
 
-if (role === "kitchen" && username === "kitchen" && password === "1234") {
-window.location.href = "kitchen.html"
-localStorage.setItem("role", "kitchen")
-return
+if (
+  role === "kitchen" &&
+  (
+    (username === "k1" && password === "123") ||
+    (username === "k2" && password === "789")
+  )
+) {
+  const session = {
+    role: "kitchen",
+    expiry: Date.now() + 15 * 60 * 1000
+  }
+
+  localStorage.setItem("session", JSON.stringify(session))
+  window.location.href = "kitchen.html"
+  return
 }
 
-msg.innerText = "Invalid login"
+  document.getElementById("msg").innerText = 
+  "Incorrect username or password\nPlease try again"
 }
 </script>
 
