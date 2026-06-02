@@ -612,14 +612,19 @@ body.login-page {
   align-items: center;
 }
 
-/* Center login page */
-.login-container {
+.page-wrapper {
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-  padding-top: 10px;
+  gap: 12px;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Login box */
