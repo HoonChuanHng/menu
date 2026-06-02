@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script>
+  if (localStorage.getItem("role") !== "admin") {
+  window.location.replace("management.html")
+  }
+</script>
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
    <!-- Charts library-->
@@ -10,11 +15,7 @@
 
 <body class="admin-body">
 
-<script>
-if (localStorage.getItem("role") !== "admin") {
-window.location.href = "management.html"
-}
-</script>
+
 
 <div class="kitchen-header">
   <h1 class="admin-title">🧾 Admin Dashboard</h1>
