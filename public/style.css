@@ -679,34 +679,6 @@ body.login-page {
   font-size: 13px;
 }
 
-/* Dark mode */
-body.dark {
-  background: #121212;
-  color: white;
-}
-
-/* Dark login box */
-body.dark .login-box {
-  background: #1e1e1e;
-  color: white;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-}
-
-/* Dark inputs */
-.dark .login-box input,
-.dark .login-box select {
-  background: #2a2a2a;
-  color: white;
-  border: 1px solid #444;
-}
-
-/* Toggle button position */
-.dark-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
 body.login-page .header-top {
   width: 100%;
   max-width: 420px;
