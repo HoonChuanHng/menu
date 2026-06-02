@@ -603,7 +603,7 @@ body.dark .cart-item {
 }
 
 /* Management Login Design*/
-body {
+body.login-page {
   margin: 0;
   font-family: Arial, sans-serif;
   transition: 0.3s;
@@ -670,13 +670,13 @@ body {
 }
 
 /* Dark mode */
-.dark {
+body.dark {
   background: #121212;
   color: white;
 }
 
 /* Dark login box */
-.dark .login-box {
+body.dark .login-box {
   background: #1e1e1e;
   color: white;
   box-shadow: 0 10px 25px rgba(0,0,0,0.5);
