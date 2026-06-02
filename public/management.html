@@ -8,6 +8,12 @@
 
 <body class="login-page">
 
+    <h1 class="logo-title">
+        Quick Plate Cafe
+        <img src="/image/app-logo.png" alt="logo">
+    </h1>
+    <button class="dark-toggle" onclick="toggleDark()">🌙</button>
+
 <div class="login-container">
 
   <div class="login-box">
@@ -74,6 +80,10 @@ if (
 
   document.getElementById("msg").innerText = 
   "Incorrect username or password.\nPlease try again."
+}
+
+function toggleDark() {
+  document.body.classList.toggle("dark")
 }
 </script>
 
