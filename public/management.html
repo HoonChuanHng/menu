@@ -8,11 +8,17 @@
 
 <body class="login-page">
 
-    <h1 class="logo-title">
-        Quick Plate Cafe
-        <img src="/image/app-logo.png" alt="logo">
-    </h1>
-    <button class="dark-toggle" onclick="toggleDark()">🌙</button>
+<div class="header-top">
+  <h2 class="logo-title">
+    Quick Plate Cafe
+    <img src="/image/app-logo.png" alt="logo">
+  </h2>
+
+  <label class="switch">
+    <input type="checkbox" onchange="toggleDark()">
+    <span class="slider"></span>
+  </label>
+</div>
 
 <div class="login-container">
 
