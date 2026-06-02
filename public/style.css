@@ -698,17 +698,19 @@ body.dark .login-box {
 }
 
 body.login-page .header-top {
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 20px;
   padding: 16px 20px;
-  max-width: 420px;
-  margin: 0 auto;
 }
 
 body.login-page .logo-title {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
+  display: flex;
+  align-items: center;
   gap: 8px;
 }
 
@@ -718,7 +720,8 @@ body.login-page .logo-title img {
 }
 
 body.login-page .switch {
-  transform: scale(0.8);
+  width: 62px;
+  height: 32px;
 }
 
 @media (hover: hover) {
