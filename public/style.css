@@ -607,14 +607,19 @@ body.login-page {
   margin: 0;
   font-family: Arial, sans-serif;
   transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Center login page */
 .login-container {
-  height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
+  gap: 10px;
+  padding-top: 10px;
 }
 
 /* Login box */
@@ -699,10 +704,12 @@ body.dark .login-box {
 
 body.login-page .header-top {
   width: 100%;
+  max-width: 420px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 4px 16px;
+  margin: 0 auto;
 }
 
 body.login-page .logo-title {
