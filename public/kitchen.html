@@ -3,10 +3,19 @@
 <head>
 
 <script>
-  if (localStorage.getItem("role") !== "kitchen") {
+const session = JSON.parse(localStorage.getItem("session"))
+if (!session) {
   window.location.replace("management.html")
-  }
+}
+if (Date.now() > session.expiry) {
+  localStorage.removeItem("session")
+  window.location.replace("management.html")
+}
+if (session.role !== "kitchen") {
+  window.location.replace("management.html")
+}
 </script>
+
 
   <title>Kitchen Dashboard</title>
   <link rel="stylesheet" href="style.css">
