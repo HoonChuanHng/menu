@@ -3,59 +3,67 @@
 <head>
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
+   <!-- Charts library-->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 
 <body class="admin-body">
 
 <div class="kitchen-header">
   <h1 class="admin-title">🧾 Admin Dashboard</h1>
 
+    <!-- Display dark mode toggle -->
   <label class="switch">
     <input type="checkbox" id="darkToggle">
     <span class="slider"></span>
   </label>
 </div>
 
+<!-- Display total revenue -->
 <h2 id="revenue" class="revenue"></h2>
 
+<!-- Display checkout tables -->
 <h2>💳 Checkout Tables</h2>
 <div id="tables" class="grid"></div>
 
+<!-- Display order details -->
 <h2>📦 Orders</h2>
 <div id="orders"></div>
 
+<!-- Display food sold using charts -->
 <h2>📊 Food Sold</h2>
-
 <div class="chart-controls">
   <button onclick="changeChart('bar')">Bar</button>
   <button onclick="changeChart('pie')">Pie</button>
   <button onclick="changeChart('line')">Line</button>
 </div>
-
 <canvas id="foodChart"></canvas>
 
 <script>
+
+/* Declare global variable */
 let chartType = "bar"
 window.foodChartInstance = null
 window.lastAdminData = null
 
+/* Get admin dashboard function */
 async function load() {
   const res = await fetch("/api/admin")
   const data = await res.json()
-
   window.lastAdminData = data
 
+  /* Get total revenue function */
   document.getElementById("revenue").innerText =
     "Total Revenue: RM " + data.revenue.toFixed(2)
 
+  /* Get total tables function */
   let t = ""
   for (let k in data.tableTotals) {
     t += `
       <div class="card">
         <h3>Table ${k}</h3>
         <p>Total: RM ${data.tableTotals[k].toFixed(2)}</p>
-
         <button class="danger" onclick="checkoutTable('${k}')">
           Checkout
         </button>
@@ -64,6 +72,7 @@ async function load() {
   }
   document.getElementById("tables").innerHTML = t
 
+  /* Get orders details function */
   let o = ""
   data.orders.forEach(order => {
     o += `
@@ -82,22 +91,19 @@ async function load() {
       </div>
     `
   })
-
   document.getElementById("orders").innerHTML = o
 
   renderChart(data)
 }
 
+  /* Render chart */
 function renderChart(data) {
   let labels = Object.keys(data.foodCount)
   let values = Object.values(data.foodCount)
-
   const ctx = document.getElementById("foodChart").getContext("2d")
-
   if (window.foodChartInstance) {
     window.foodChartInstance.destroy()
   }
-
   window.foodChartInstance = new Chart(ctx, {
     type: chartType,
     data: {
@@ -116,6 +122,7 @@ function renderChart(data) {
   })
 }
 
+/* Change chart function */
 function changeChart(type) {
   chartType = type
   if (window.lastAdminData) {
@@ -123,11 +130,13 @@ function changeChart(type) {
   }
 }
 
+/* Delete order */
 async function delOrder(id) {
   await fetch("/api/order/" + id, { method: "DELETE" })
   load()
 }
 
+/* Checkout table */
 async function checkoutTable(tableId) {
   await fetch("/api/checkout/" + tableId, {
     method: "POST"
@@ -135,14 +144,12 @@ async function checkoutTable(tableId) {
   load()
 }
 
-/* DARK MODE */
+/* Toggle datk mode */
 const toggle = document.getElementById("darkToggle")
-
 if (localStorage.getItem("dark") === "true") {
   document.body.classList.add("dark")
   toggle.checked = true
 }
-
 toggle.addEventListener("change", () => {
   document.body.classList.toggle("dark")
   localStorage.setItem("dark", document.body.classList.contains("dark"))

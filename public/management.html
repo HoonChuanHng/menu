@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Management Login</title>
+</head>
+<body>
+
+<h2>Login</h2>
+
+<select id="role">
+<option value="admin">Admin</option>
+<option value="kitchen">Kitchen</option>
+</select>
+
+<br><br>
+
+<input id="username" placeholder="ID">
+<br><br>
+
+<input id="password" type="password" placeholder="Password">
+<br><br>
+
+<button onclick="login()">Login</button>
+
+<p id="msg"></p>
+
+<script>
+function login() {
+const role = document.getElementById("role").value
+const username = document.getElementById("username").value
+const password = document.getElementById("password").value
+const msg = document.getElementById("msg")
+
+if (role === "admin" && username === "admin" && password === "1234") {
+window.location.href = "admin.html"
+return
+}
+
+if (role === "kitchen" && username === "kitchen" && password === "1234") {
+window.location.href = "kitchen.html"
+return
+}
+
+msg.innerText = "Invalid login"
+}
+</script>
+
+</body>
+</html>
