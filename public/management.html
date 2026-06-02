@@ -34,11 +34,13 @@ const msg = document.getElementById("msg")
 
 if (role === "admin" && username === "admin" && password === "1234") {
 window.location.href = "admin.html"
+localStorage.setItem("role", "admin")
 return
 }
 
 if (role === "kitchen" && username === "kitchen" && password === "1234") {
 window.location.href = "kitchen.html"
+localStorage.setItem("role", "kitchen")
 return
 }
 

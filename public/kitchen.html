@@ -8,6 +8,12 @@
 
 <body class="kitchen-body">
 
+<script>
+if (localStorage.getItem("role") !== "kitchen") {
+window.location.href = "management.html"
+}
+</script>
+
 <div class="kitchen-header">
   <h1 class="kitchen-title">Kitchen Orders</h1>
 
