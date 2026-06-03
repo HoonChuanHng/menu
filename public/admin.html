@@ -30,7 +30,7 @@ if (session.role !== "admin") window.location.replace("management.html")
 </div>
 
 <div class="navbar">
-  <button onclick="showSection('dashboard')">Sales Summary</button>
+  <button onclick="showSection('dashboard')">Sales Statistics</button>
   <button onclick="showSection('tablesSection')">Checkout</button>
   <button onclick="showSection('ordersSection')">Orders</button>
   <button onclick="showSection('foodSection')">Edit Menu</button>
@@ -39,12 +39,12 @@ if (session.role !== "admin") window.location.replace("management.html")
 
 <section id="dashboard" class="section">
   <h2 id="revenue" class="revenue"></h2>
-  <h2 class="kitchen-title">All Food Sold</h2>
+  <h2 class="kitchen-title">Statistics Visualization</h2>
   <div id="chartBox">
     <div class="chart-controls">
-      <button onclick="changeChart('bar')">Bar</button>
-      <button onclick="changeChart('pie')">Pie</button>
-      <button onclick="changeChart('barH')">Top Seller</button>
+      <button onclick="changeChart('barH')">Best Sellers</button>
+      <button onclick="changeChart('pie')">Food Sold</button>
+      <button onclick="changeChart('line')">Daily Sales</button>
     </div>
     <canvas id="foodChart"></canvas>
   </div>
@@ -223,6 +223,25 @@ function renderChart(data) {
 
   if (window.foodChartInstance) window.foodChartInstance.destroy()
 
+  if (chartType === "line") {
+    const dailySales = {}
+
+    data.orders.forEach(order => {
+      const date = new Date(order.time).toLocaleDateString("en-MY")
+
+      let total = 0
+
+      order.items.forEach(item => {
+        total += Number(item.price || 0) * Number(item.qty || 1)
+      })
+
+      dailySales[date] = (dailySales[date] || 0) + total
+    })
+
+    labels = Object.keys(dailySales)
+    values = Object.values(dailySales)
+  }
+
   let isHorizontal = chartType === "barH"
 
   if (chartType === "barH") {
@@ -235,11 +254,22 @@ function renderChart(data) {
   }
 
   window.foodChartInstance = new Chart(ctx, {
-    type: chartType === "pie" ? "pie" : "bar",
+    type: chartType === "line"
+      ? "line"
+      : chartType === "pie"
+      ? "pie"
+      : "bar",
+
     data: {
       labels,
-      datasets: [{ label: "Food Sold", data: values }]
+      datasets: [{
+        label: chartType === "line"
+          ? "Daily Revenue (RM)"
+          : "Food Sold",
+        data: values
+      }]
     },
+
     options: {
       indexAxis: isHorizontal ? "y" : "x"
     }
