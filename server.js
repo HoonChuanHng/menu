@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 
 const app = express()
 
-mongoose.connect("mongodb+srv://admin:12345678asd@cluster0.i0rmibh.mongodb.net/quickplate")
+mongoose.connect("mongodb://admin:12345678asd@ac-t7nhegs-shard-00-00.i0rmibh.mongodb.net:27017,ac-t7nhegs-shard-00-01.i0rmibh.mongodb.net:27017,ac-t7nhegs-shard-00-02.i0rmibh.mongodb.net:27017/quickplate?ssl=true&replicaSet=atlas-bm6ri7-shard-0&authSource=admin&appName=Cluster0")
 
   .then(() => console.log("MongoDB Connected"))
 
