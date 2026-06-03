@@ -4,28 +4,22 @@
 
 <script>
 const session = JSON.parse(localStorage.getItem("session"))
-if (!session) {
-  window.location.replace("management.html")
-}
+if (!session) window.location.replace("management.html")
 if (Date.now() > session.expiry) {
   localStorage.removeItem("session")
   window.location.replace("management.html")
 }
-if (session.role !== "kitchen") {
-  window.location.replace("management.html")
-}
+if (session.role !== "kitchen") window.location.replace("management.html")
 </script>
 
+<title>Kitchen Dashboard</title>
+<link rel="stylesheet" href="style.css">
 
-  <title>Kitchen Dashboard</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 
-
-<body class="kitchen-body">
-
+<body class="admin-body">
 <div class="kitchen-header">
-  <h1 class="kitchen-title">Kitchen Orders</h1>
+  <h1 class="kitchen-title"> Kitchen Dashboard</h1>
 
   <label class="switch">
     <input type="checkbox" id="darkToggle">
@@ -33,40 +27,158 @@ if (session.role !== "kitchen") {
   </label>
 </div>
 
-<div id="orders" class="kitchen-orders"></div>
+<div class="kitchen-nav">
+  <button onclick="showTab('orders')">Kitchen Orders</button>
+  <button onclick="showTab('menu')">Menu Availability</button>
+</div>
+
+<div id="orders-section" class="section">
+  <h2 class="kitchen-title">Kitchen Orders</h1>
+  <div id="orders" class="kitchen-orders"></div>
+</div>
+
+<div id="menu-section" class="section" style="display:none;">
+  <h2 class="kitchen-title">Menu Availability</h2>
+  <div class="toolbar">
+    <select id="sortMenu" onchange="applyMenuSort()">
+      <option value="default">Default</option>
+      <option value="az">A → Z</option>
+      <option value="za">Z → A</option>
+      <option value="priceLow">Price Low → High</option>
+      <option value="priceHigh">Price High → Low</option>
+      <option value="available">Available First</option>
+      <option value="category">Category</option>
+    </select>
+  </div>
+  <div id="menu" class="kitchen-menu"></div>
+</div>
 
 <script>
-async function loadOrders() {
-  const res = await fetch("/api/dashboard")
-  const data = await res.json()
 
+let menuData = []
+let menuSortType = "default"
+
+function renderMenu() {
+  let foods = [...menuData]
+
+  if (menuSortType === "az") {
+    foods.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+  }
+
+  if (menuSortType === "za") {
+    foods.sort((a, b) => b.name.toLowerCase().localeCompare(a.name.toLowerCase()))
+  }
+
+  if (menuSortType === "priceLow") {
+    foods.sort((a, b) => (a.price || 0) - (b.price || 0))
+  }
+
+  if (menuSortType === "priceHigh") {
+    foods.sort((a, b) => (b.price || 0) - (a.price || 0))
+  }
+
+  if (menuSortType === "available") {
+    foods.sort((a, b) => (a.soldOut === b.soldOut) ? 0 : a.soldOut ? 1 : -1)
+  }
+  if (menuSortType === "category") {
+    foods.sort((a, b) =>
+      (a.category || "").toLowerCase().localeCompare((b.category || "").toLowerCase())
+    )
+  }
   let html = ""
 
-  data.activeOrders.forEach(o => {
+  foods.forEach(f => {
     html += `
-      <div class="order">
-        <h3>Table ${o.tableId} | Order #${o.orderNumber}</h3>
-        <p>Ordered at: ${o.time}</p>
-        <p>Status: <b>${o.status}</b></p>
-
-        <ul>
-          ${o.items.map(i => `<li>${i.name} x ${i.qty}</li>`).join("")}
-        </ul>
-
-        <button onclick="update(${Number(o.orderNumber)}, 'PREPARING')">Preparing</button>
-        <button onclick="update(${Number(o.orderNumber)}, 'DONE')">Done</button>
-        <button class="delete-btn" onclick="deleteOrder(${Number(o.orderNumber)})">Delete</button>
+      <div class="food-card ${f.soldOut ? "sold" : ""}">
+        <img src="${f.img}" alt="${f.name}">
+        <h3>${f.name} (${f.category})</h3>
+        <p>RM ${Number(f.price).toFixed(2)}</p>
+        ${f.soldOut ? "<div class='sold-badge'>UNAVAILABLE</div>" : ""}
+        <button class="${f.soldOut ? "btn-green" : "btn-red"}"
+          onclick="toggleSold('${f._id}')">
+          ${f.soldOut ? "Restocked" : "Out of Sales"}
+        </button>
       </div>
     `
   })
 
-  document.getElementById("orders").innerHTML = html
+  document.getElementById("menu").innerHTML = html
+}
+
+async function loadMenu() {
+  const res = await fetch("/api/menu")
+  menuData = await res.json()
+  renderMenu()
+}
+
+async function toggleSold(id) {
+  await fetch("/api/food/" + id + "/soldout", {
+    method: "PUT"
+  })
+
+  loadMenu()
+}
+
+async function loadOrders() {
+  try {
+    const res = await fetch("/api/kitchen")
+    const data = await res.json()
+
+    const orders = data.activeOrders || []
+
+    let html = ""
+
+    orders.forEach(o => {
+
+      const items = Array.isArray(o.items) ? o.items : []
+
+      html += `
+        <div class="order">
+          <h3>Table ${o.tableId} | Order #${o.orderNumber}</h3>
+          <p>Ordered at: ${o.time}</p>
+          <p>Status: <b>${o.status}</b></p>
+          <p>Remarks: ${o.remarks || "-"}</p>
+          <ul>
+            ${items.map(i => `<li>${i.name} x ${i.qty || 1}</li>`).join("")}
+          </ul>
+
+          <button onclick="update(${o.orderNumber}, 'PREPARING')">Preparing</button>
+          <button onclick="update(${o.orderNumber}, 'DONE')">Done</button>
+          <button class="delete-btn" onclick="deleteOrder(${o.orderNumber})">Delete</button>
+        </div>
+      `
+    })
+
+    document.getElementById("orders").innerHTML = html || "<p>No active orders</p>"
+
+  } catch (err) {
+    console.log("Kitchen load error:", err)
+    document.getElementById("orders").innerHTML = "<p>Failed to load orders</p>"
+  }
+}
+
+function applyMenuSort() {
+  menuSortType = document.getElementById("sortMenu").value
+  renderMenu()
+}
+
+function showTab(tab) {
+  document.getElementById("orders-section").style.display = "none"
+  document.getElementById("menu-section").style.display = "none"
+
+  if (tab === "orders") {
+    document.getElementById("orders-section").style.display = "block"
+  }
+
+  if (tab === "menu") {
+    document.getElementById("menu-section").style.display = "block"
+  }
 }
 
 async function update(orderNumber, status) {
   await fetch("/api/status", {
     method: "POST",
-    headers: {"Content-Type":"application/json"},
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ orderNumber, status })
   })
 
@@ -74,16 +186,11 @@ async function update(orderNumber, status) {
 }
 
 async function deleteOrder(orderNumber) {
-  await fetch("/api/order/" + Number(orderNumber), {
-    method: "DELETE"
-  })
-
+  await fetch("/api/order/" + orderNumber, { method: "DELETE" })
   loadOrders()
 }
 
-loadOrders()
-setInterval(loadOrders, 3000)
-
+/* dark mode */
 const toggle = document.getElementById("darkToggle")
 
 if (localStorage.getItem("dark") === "true") {
@@ -95,6 +202,16 @@ toggle.addEventListener("change", () => {
   document.body.classList.toggle("dark")
   localStorage.setItem("dark", document.body.classList.contains("dark"))
 })
+
+loadOrders()
+loadMenu()
+showTab("orders")
+
+setInterval(() => {
+  loadOrders()
+  loadMenu()
+}, 3000)
+
 </script>
 
 </body>

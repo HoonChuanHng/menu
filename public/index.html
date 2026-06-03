@@ -39,10 +39,15 @@
 
     <section class="restaurant-info">
       <h2>Restaurant Info</h2>
-      <p>🕒 Opening Hours: 9:00 AM – 9:00 PM</p>
-      <p>📍 Location: Quick Plate Cafe</p>
-      <p>📞 Contact: 012-345 6789</p>
+      <p>Opening Hours: 9:00 AM – 9:00 PM</p>
+      <p>Location: Jalan Sungai Besi</p>
+      <p>Contact: 012-345 6789</p>
     </section>
+
+  <div class="search-bar">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="searchInput" placeholder="Search food..." onkeyup="filterMenu()">
+  </div>
 
     <section id="menu" class="menu-container"></section>
 
@@ -62,7 +67,7 @@
       </div>
 
       <div id="cartItems"></div>
-
+      <textarea id="orderRemarks" placeholder="Add remarks" class="remarks-box"></textarea>
       <div class="cart-footer">
         <h3 id="cartTotal">Total: RM0</h3>
         <button class="checkout-btn" onclick="placeOrder()">

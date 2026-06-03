@@ -4,24 +4,41 @@ const tableId = urlParams.get("table") || "0"
 document.title = "Table " + tableId + " - Quick Plate"
 
 let menu = []
+let groupedMenu = {}
 let cart = JSON.parse(localStorage.getItem("cart_" + tableId)) || {}
+let searchQuery = ""
 
-fetch("/api/menu")
-  .then(res => res.json())
-  .then(data => {
-    menu = data
-    renderCategories()
-    renderMenu()
-    renderCart()
+async function loadMenu() {
+  const res = await fetch("/api/menu")
+  menu = await res.json()
+
+  groupMenuByCategory()
+  renderCategories()
+  renderMenu()
+  applyFilter()
+}
+
+loadMenu()
+setInterval(loadMenu, 3000)
+
+function groupMenuByCategory() {
+  groupedMenu = {}
+
+  menu.forEach(item => {
+    if (!groupedMenu[item.category]) {
+      groupedMenu[item.category] = []
+    }
+    groupedMenu[item.category].push(item)
   })
+}
 
 function renderCategories() {
   let html = ""
 
-  menu.forEach(section => {
+  Object.keys(groupedMenu).forEach(cat => {
     html += `
-      <button class="category-btn" onclick="scrollToCategory('${section.category}')">
-        ${section.category}
+      <button class="category-btn" onclick="scrollToCategory('${cat}')">
+        ${cat}
       </button>
     `
   })
@@ -32,24 +49,27 @@ function renderCategories() {
 function renderMenu() {
   let html = ""
 
-  menu.forEach(section => {
+  Object.keys(groupedMenu).forEach(cat => {
     html += `
-      <section class="category-section" id="${section.category}">
-        <h2 class="category-title">${section.category}</h2>
+      <section class="category-section" id="${cat}">
+        <h2 class="category-title">${cat}</h2>
         <div class="food-grid">
     `
 
-    section.items.forEach(item => {
+    groupedMenu[cat].forEach(item => {
       html += `
-        <div class="food-card">
+        <div class="food-card ${item.soldOut ? "sold" : ""}">
           <img src="${item.img}">
           <div class="food-info">
             <h3 class="food-name">${item.name}</h3>
-            <div class="food-price">RM${item.price}</div>
-            <button class="add-btn" onclick="addToCart(${item.id})">
-              Add to Cart
+            <div class="food-price">RM${Number(item.price).toFixed(2)}</div>
+            <button class="add-btn" onclick="addToCart('${item._id}')"
+              ${item.soldOut ? "disabled" : ""}>
+              ${item.soldOut ? "SOLD OUT" : "Add to Cart"}
             </button>
           </div>
+
+          ${item.soldOut ? "<div class='sold-overlay'>SOLD OUT</div>" : ""}
         </div>
       `
     })
@@ -67,10 +87,10 @@ function scrollToCategory(category) {
 function addToCart(id) {
   let foundItem = null
 
-  menu.forEach(section => {
-    section.items.forEach(item => {
-      if (item.id === id) foundItem = item
-    })
+  menu.forEach(item => {
+    if ((item._id || item.id) == id) {
+      foundItem = item
+    }
   })
 
   if (!foundItem) return
@@ -114,11 +134,11 @@ function renderCart() {
         <img src="${c.item.img}">
         <div class="cart-item-info">
           <div class="cart-item-name">${c.item.name}</div>
-          <div class="cart-item-price">RM${c.item.price}</div>
+          <div class="food-price">RM${Number(c.item.price).toFixed(2)}</div>
           <div class="qty-controls">
-            <button class="qty-btn" onclick="changeQty(${c.item.id}, -1)">-</button>
+            <button onclick="changeQty('${c.item._id}', -1)">-</button>
             <span>${c.qty}</span>
-            <button class="qty-btn" onclick="changeQty(${c.item.id}, 1)">+</button>
+            <button onclick="changeQty('${c.item._id}', 1)">+</button>
           </div>
         </div>
       </div>
@@ -138,11 +158,13 @@ function toggleCart() {
 
 function placeOrder() {
   const items = Object.values(cart).map(c => ({
-    id: c.item.id,
+    id: c.item._id || c.item.id,
     name: c.item.name,
     price: c.item.price,
     qty: c.qty
   }))
+
+  const remarks = document.getElementById("orderRemarks").value
 
   if (!items.length) return alert("Please select a food/drinks.")
 
@@ -151,7 +173,8 @@ function placeOrder() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       tableId,
-      items
+      items,
+      remarks
     })
   })
   .then(async r => {
@@ -160,9 +183,11 @@ function placeOrder() {
     return data
   })
   .then(data => {
-    alert(`Order #${data.orderId}: Table ${data.tableId} placed orders successfully!`)
+    alert(`Order #${data.orderId} placed successfully!`)
+
     cart = {}
     localStorage.removeItem("cart_" + tableId)
+    document.getElementById("orderRemarks").value = ""
     renderCart()
     toggleCart()
   })
@@ -171,3 +196,24 @@ function placeOrder() {
     alert("Order failed")
   })
 }
+
+function applyFilter() {
+  const cards = document.getElementsByClassName("food-card")
+
+  for (let i = 0; i < cards.length; i++) {
+    const name = cards[i]
+      .getElementsByClassName("food-name")[0]
+      .innerText
+      .toLowerCase()
+
+    cards[i].style.display = name.includes(searchQuery) ? "" : "none"
+  }
+}
+
+function filterMenu() {
+  searchQuery = document.getElementById("searchInput").value.toLowerCase()
+
+  applyFilter()
+}
+  
+

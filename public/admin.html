@@ -2,171 +2,324 @@
 <html>
 <head>
 
-<!-- Admin login restriction -->
 <script>
 const session = JSON.parse(localStorage.getItem("session"))
-if (!session) {
-  window.location.replace("management.html")
-}
+if (!session) window.location.replace("management.html")
 if (Date.now() > session.expiry) {
   localStorage.removeItem("session")
   window.location.replace("management.html")
 }
-if (session.role !== "admin") {
-  window.location.replace("management.html")
-}
+if (session.role !== "admin") window.location.replace("management.html")
 </script>
 
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-  
-   <!-- Charts library-->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+<title>Admin Dashboard</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+</head>
 
 <body class="admin-body">
 
 <div class="kitchen-header">
-  <h1 class="admin-title">🧾 Admin Dashboard</h1>
+  <h1 class="admin-title"> Admin Dashboard</h1>
 
-    <!-- Display dark mode toggle -->
   <label class="switch">
     <input type="checkbox" id="darkToggle">
     <span class="slider"></span>
   </label>
 </div>
 
-<!-- Display total revenue -->
-<h2 id="revenue" class="revenue"></h2>
-
-<!-- Display checkout tables -->
-<h2>💳 Checkout Tables</h2>
-<div id="tables" class="grid"></div>
-
-<!-- Display order details -->
-<h2>📦 Orders</h2>
-<div id="orders"></div>
-
-<!-- Display food sold using charts -->
-<h2>📊 Food Sold</h2>
-<div class="chart-controls">
-  <button onclick="changeChart('bar')">Bar</button>
-  <button onclick="changeChart('pie')">Pie</button>
-  <button onclick="changeChart('line')">Line</button>
+<div class="navbar">
+  <button onclick="showSection('dashboard')">Sales Summary</button>
+  <button onclick="showSection('tablesSection')">Checkout</button>
+  <button onclick="showSection('ordersSection')">Orders</button>
+  <button onclick="showSection('foodSection')">Edit Menu</button>
+  <button onclick="showSection('addFoodBox')">Add Food</button>
 </div>
-<canvas id="foodChart"></canvas>
+
+<section id="dashboard" class="section">
+  <h2 id="revenue" class="revenue"></h2>
+  <h2 class="kitchen-title">All Food Sold</h2>
+  <div id="chartBox">
+    <div class="chart-controls">
+      <button onclick="changeChart('bar')">Bar</button>
+      <button onclick="changeChart('pie')">Pie</button>
+      <button onclick="changeChart('barH')">Top Seller</button>
+    </div>
+    <canvas id="foodChart"></canvas>
+  </div>
+</section>
+
+<section id="tablesSection" class="section">
+  <h2 class="kitchen-title"> Checkout Tables</h2>
+  <div id="tables" class="grid"></div>
+</section>
+
+<section id="ordersSection" class="section">
+  <h2 class="kitchen-title"> All Orders</h2>
+  <div id="orders"></div>
+</section>
+
+<section id="foodSection" class="section">
+  <h2 class="kitchen-title"> Food Details</h2>
+  <div class="toolbar">
+    <select id="sortFood" onchange="applyFoodSort()">
+      <option value="default">Default</option>
+      <option value="az">A → Z</option>
+      <option value="za">Z → A</option>
+      <option value="priceLow">Price Low → High</option>
+      <option value="priceHigh">Price High → Low</option>
+      <option value="category">Category</option>
+    </select>
+  </div>
+  <div id="foodList"></div>
+</section>
+
+<section id="addFoodBox" class="section">
+  <h2 class="kitchen-title"> Add New Food</h2>
+
+  <input id="name" placeholder="Food Name">
+  <input id="price" type="number" placeholder="Price (RM)">
+  <input type="file" id="imgFile">
+  <input id="category" placeholder="Category">
+
+  <button onclick="addFood()">Add Food</button>
+</section>
 
 <script>
 
-/* Declare global variable */
+  
+let foodData = []
+let foodSortType = "default"
 let chartType = "bar"
 window.foodChartInstance = null
 window.lastAdminData = null
 
-/* Get admin dashboard function */
+function renderFood() {
+  let food = [...foodData]
+  if (foodSortType === "default") {
+    food.sort((a, b) => a._id.localeCompare(b._id))
+  }
+  if (foodSortType === "az") {
+    food.sort((a, b) => a.name.localeCompare(b.name))
+  }
+
+  if (foodSortType === "za") {
+    food.sort((a, b) => b.name.localeCompare(a.name))
+  }
+
+  if (foodSortType === "priceLow") {
+    food.sort((a, b) => a.price - b.price)
+  }
+
+  if (foodSortType === "priceHigh") {
+    food.sort((a, b) => b.price - a.price)
+  }
+
+  if (foodSortType === "category") {
+    food.sort((a, b) => a.category.localeCompare(b.category))
+  }
+
+  let foodHtml = ""
+
+  food.forEach(f => {
+    foodHtml += `
+      <div class="card">
+        <img src="${f.img}" width="80">
+        <h3>${f.name} (${f.category})</h3>
+        <p>RM ${Number(f.price).toFixed(2)}</p>
+        <button onclick='editFood(${JSON.stringify(f)})'>Edit</button>
+        <button onclick="deleteFood('${f._id}')">Delete</button>
+      </div>
+    `
+  })
+
+  document.getElementById("foodList").innerHTML = foodHtml
+}
+
 async function load() {
   const res = await fetch("/api/admin")
   const data = await res.json()
   window.lastAdminData = data
 
-  /* Get total revenue function */
   document.getElementById("revenue").innerText =
     "Total Revenue: RM " + data.revenue.toFixed(2)
 
-  /* Get total tables function */
   let t = ""
   for (let k in data.tableTotals) {
     t += `
       <div class="card">
         <h3>Table ${k}</h3>
         <p>Total: RM ${data.tableTotals[k].toFixed(2)}</p>
-        <button class="danger" onclick="checkoutTable('${k}')">
-          Checkout
-        </button>
+        <button class="danger" onclick="checkoutTable('${k}')">Checkout</button>
       </div>
     `
   }
   document.getElementById("tables").innerHTML = t
 
-  /* Get orders details function */
   let o = ""
   data.orders.forEach(order => {
     o += `
       <div class="card">
-        <h3>Order #${order.orderNumber} (Table ${order.tableId})</h3>
-        <p>Time: ${order.time}</p>
+        <h3>Order #${order.orderNumber}</h3>
+        <p>Table ${order.tableId}</p>
         <p>Status: ${order.status}</p>
 
-        ${order.items.map(i =>
-          `<div>${i.name} x ${i.qty || 1}</div>`
-        ).join("")}
+        ${order.items.map(i => `<div>${i.name} x ${i.qty || 1}</div>`).join("")}
 
-        <button class="danger" onclick="delOrder('${order.orderNumber}')">
-          Delete
-        </button>
+        <button class="danger" onclick="delOrder('${order.orderNumber}')">Delete</button>
       </div>
     `
   })
   document.getElementById("orders").innerHTML = o
 
+  foodData = await fetch("/api/menu").then(r => r.json())
+  renderFood()
   renderChart(data)
 }
 
-  /* Render chart */
+function applyFoodSort() {
+  foodSortType = document.getElementById("sortFood").value
+  renderFood()
+}
+
+/* SAFE PRICE */
+async function editFood(food) {
+  const name = prompt("Food name:", food.name)
+  const priceInput = prompt("Price:", food.price)
+  const category = prompt("Category:", food.category)
+  const img = prompt("Image URL:", food.img)
+
+  const price = parseFloat(priceInput)
+  if (!name || isNaN(price) || price <= 0 || !category || !img) {
+    alert("Invalid input")
+    return
+  }
+
+  await fetch("/api/food/" + food._id, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      price,
+      category,
+      img
+    })
+  })
+
+  load()
+}
+
+async function deleteFood(id) {
+  await fetch("/api/food/" + id, { method: "DELETE" })
+  load()
+}
+
 function renderChart(data) {
   let labels = Object.keys(data.foodCount)
   let values = Object.values(data.foodCount)
+
   const ctx = document.getElementById("foodChart").getContext("2d")
-  if (window.foodChartInstance) {
-    window.foodChartInstance.destroy()
+
+  if (window.foodChartInstance) window.foodChartInstance.destroy()
+
+  let isHorizontal = chartType === "barH"
+
+  if (chartType === "barH") {
+    let sorted = labels
+      .map((l, i) => ({ l, v: values[i] }))
+      .sort((a, b) => b.v - a.v)
+
+    labels = sorted.map(x => x.l)
+    values = sorted.map(x => x.v)
   }
+
   window.foodChartInstance = new Chart(ctx, {
-    type: chartType,
+    type: chartType === "pie" ? "pie" : "bar",
     data: {
       labels,
-      datasets: [{
-        label: "Food Sold",
-        data: values
-      }]
+      datasets: [{ label: "Food Sold", data: values }]
     },
     options: {
-      responsive: true,
-      scales: (chartType === "bar" || chartType === "line") ? {
-        y: { beginAtZero: true }
-      } : {}
+      indexAxis: isHorizontal ? "y" : "x"
     }
   })
 }
 
-/* Change chart function */
 function changeChart(type) {
   chartType = type
-  if (window.lastAdminData) {
-    renderChart(window.lastAdminData)
-  }
+  if (window.lastAdminData) renderChart(window.lastAdminData)
 }
 
-/* Delete order */
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(s => {
+    s.style.display = "none"
+  })
+
+  document.getElementById(id).style.display = "block"
+}
+
+/* default view */
+showSection("dashboard")
+
 async function delOrder(id) {
   await fetch("/api/order/" + id, { method: "DELETE" })
   load()
 }
 
-/* Checkout table */
 async function checkoutTable(tableId) {
-  await fetch("/api/checkout/" + tableId, {
-    method: "POST"
-  })
+  await fetch("/api/checkout/" + tableId, { method: "POST" })
   load()
 }
 
-/* Toggle datk mode */
+async function addFood() {
+  const fileInput = document.getElementById("imgFile")
+  const price = Number(document.getElementById("price").value)
+
+  if (!fileInput.files.length) return alert("Select image")
+  if (isNaN(price) || price <= 0) return alert("Invalid price")
+
+  const formData = new FormData()
+  formData.append("image", fileInput.files[0])
+
+  const uploadRes = await fetch("/api/upload", {
+    method: "POST",
+    body: formData
+  })
+
+  const uploadData = await uploadRes.json()
+
+  const res = await fetch("/api/food", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: document.getElementById("name").value,
+      price,
+      img: uploadData.url,
+      category: document.getElementById("category").value
+    })
+  })
+
+  if (res.ok) {
+    alert("Food added!")
+
+    document.getElementById("name").value = ""
+    document.getElementById("price").value = ""
+    document.getElementById("category").value = ""
+    fileInput.value = ""
+
+    load()
+  }
+}
+
+/* DARK MODE */
 const toggle = document.getElementById("darkToggle")
+
 if (localStorage.getItem("dark") === "true") {
   document.body.classList.add("dark")
   toggle.checked = true
 }
+
 toggle.addEventListener("change", () => {
   document.body.classList.toggle("dark")
   localStorage.setItem("dark", document.body.classList.contains("dark"))
@@ -174,6 +327,7 @@ toggle.addEventListener("change", () => {
 
 load()
 setInterval(load, 3000)
+
 </script>
 
 </body>
