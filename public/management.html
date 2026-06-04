@@ -33,6 +33,7 @@
         <input id="password" type="password" placeholder="Password">
 
         <button onclick="login()">Login</button>
+        <button class="customer-btn" onclick="goCustomer()">Menu</button>
 
         <p id="msg"></p>
 
@@ -91,6 +92,9 @@ document.addEventListener("keydown", function (e) {
   }
 })
 
+function goCustomer() {
+  window.location.href = "index.html"
+}
 </script>
 
 </body>

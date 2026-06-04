@@ -45,7 +45,7 @@ async function getNextOrderId() {
   const result = await Counter.findOneAndUpdate(
     { name: "order" },
     { $inc: { value: 1 } },
-    { new: true, upsert: true }
+    { returnDocument: "after", upsert: true }
   )
   return result.value
 }
@@ -132,6 +132,11 @@ app.post("/api/food", async (req, res) => {
 app.delete("/api/food/:id", async (req, res) => {
   await Food.findByIdAndDelete(req.params.id)
   res.json({ success: true })
+})
+
+app.get("/api/order/:tableId", async (req, res) => {
+  const orders = await Order.find({ tableId: req.params.tableId })
+  res.json(orders)
 })
 
 app.post("/api/upload", upload.single("image"), (req, res) => {

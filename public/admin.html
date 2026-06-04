@@ -22,11 +22,14 @@ if (session.role !== "admin") window.location.replace("management.html")
 
 <div class="kitchen-header">
   <h1 class="admin-title"> Admin Dashboard</h1>
+  <div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
 
-  <label class="switch">
-    <input type="checkbox" id="darkToggle">
-    <span class="slider"></span>
-  </label>
+    <label class="switch">
+      <input type="checkbox" id="darkToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
 </div>
 
 <div class="navbar">
@@ -91,7 +94,7 @@ if (session.role !== "admin") window.location.replace("management.html")
   
 let foodData = []
 let foodSortType = "default"
-let chartType = "bar"
+let chartType = "barH"
 window.foodChartInstance = null
 window.lastAdminData = null
 
@@ -253,32 +256,45 @@ function renderChart(data) {
     values = sorted.map(x => x.v)
   }
 
-  window.foodChartInstance = new Chart(ctx, {
-    type: chartType === "line"
-      ? "line"
-      : chartType === "pie"
-      ? "pie"
-      : "bar",
+window.foodChartInstance = new Chart(ctx, {
+  type: chartType === "line"
+    ? "line"
+    : chartType === "pie"
+    ? "pie"
+    : "bar",
 
-    data: {
-      labels,
-      datasets: [{
-        label: chartType === "line"
-          ? "Daily Revenue (RM)"
-          : "Food Sold",
-        data: values
-      }]
-    },
+  data: {
+    labels,
+    datasets: [{
+      label: chartType === "line"
+        ? "Daily Revenue (RM)"
+        : "Food Sold",
+      data: values
+    }]
+  },
 
-    options: {
-      indexAxis: isHorizontal ? "y" : "x"
+  options: {
+    indexAxis: chartType === "barH" ? "y" : "x",
+    scales: {
+      [chartType === "barH" ? "x" : "y"]: {
+        ticks: {
+          stepSize: 1
+        }
+      }
     }
-  })
+  }
+})
 }
-
 function changeChart(type) {
   chartType = type
   if (window.lastAdminData) renderChart(window.lastAdminData)
+}
+
+function logout() {
+  if (confirm("Do you sure to logout?")) {
+    localStorage.removeItem("session")
+    window.location.replace("management.html")
+  }
 }
 
 function showSection(id) {

@@ -19,6 +19,7 @@ async function loadMenu() {
 }
 
 loadMenu()
+renderCart()
 setInterval(loadMenu, 3000)
 
 function groupMenuByCategory() {
@@ -154,6 +155,30 @@ function renderCart() {
 
 function toggleCart() {
   document.getElementById("cartModal").classList.toggle("show")
+}
+
+async function trackOrder() {
+  const res = await fetch("/api/order/" + tableId)
+  const orders = await res.json()
+
+  if (!orders.length) {
+    alert("No order found. Please place an order first.")
+    return
+  }
+
+  let msg = ""
+
+  orders.forEach(o => {
+    msg += `Order #${o.orderNumber}\n`
+    msg += `Items:\n`
+    o.items.forEach(i => {
+      msg += `- ${i.name} x ${i.qty || 1}\n`
+    })
+    msg += `Status: ${o.status}\n`
+    msg += `\n\n`
+  })
+
+  alert(msg)
 }
 
 function placeOrder() {
