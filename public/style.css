@@ -253,7 +253,7 @@ body.dark .food-card {
 
 .cart-button {
   position: fixed;
-  bottom: 20px;
+  bottom: 0px;
   left: 20px;
   right: 20px;
   background: #00c853;
@@ -1098,6 +1098,7 @@ body.kitchen-body {
 
 .track-btn {
   margin-left: auto;
+  transform: translateX(-24px);
   background: goldenrod;
   color: white;
   border: none;
