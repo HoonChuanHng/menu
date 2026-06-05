@@ -1,10 +1,10 @@
 const session = JSON.parse(localStorage.getItem("session"))
-if (!session) window.location.replace("management.html")
+if (!session) window.location.replace("login.html")
 if (Date.now() > session.expiry) {
   localStorage.removeItem("session")
-  window.location.replace("management.html")
+  window.location.replace("login.html")
 }
-if (session.role !== "waiter") window.location.replace("management.html")
+if (session.role !== "waiter") window.location.replace("login.html")
 
 let seenOrders = JSON.parse(localStorage.getItem("waiterSeenOrders") || "[]")
 let hiddenNotifs = JSON.parse(localStorage.getItem("waiterHiddenNotifs") || "[]")
@@ -192,7 +192,7 @@ document.addEventListener("click", function (e) {
 function logout() {
   if (confirm("Do you sure to logout?")) {
     localStorage.removeItem("session")
-    window.location.replace("management.html")
+    window.location.replace("login.html")
   }
 }
 

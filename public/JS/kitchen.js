@@ -1,10 +1,10 @@
 const session = JSON.parse(localStorage.getItem("session"))
-if (!session) window.location.replace("management.html")
+if (!session) window.location.replace("login.html")
 if (Date.now() > session.expiry) {
   localStorage.removeItem("session")
-  window.location.replace("management.html")
+  window.location.replace("login.html")
 }
-if (session.role !== "kitchen") window.location.replace("management.html")
+if (session.role !== "kitchen") window.location.replace("login.html")
 
 let latestOrders = []
 let seenOrders = JSON.parse(localStorage.getItem("seenOrders") || "[]")
@@ -177,7 +177,7 @@ async function update(orderNumber, status) {
 function logout() {
   if (confirm("Do you sure to logout?")) {
     localStorage.removeItem("session")
-    window.location.replace("management.html")
+    window.location.replace("login.html")
   }
 }
 

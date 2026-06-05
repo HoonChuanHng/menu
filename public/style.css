@@ -519,7 +519,7 @@ body.dark .cart-item {
   bottom: 0px;
   left: 20px;
   right: 20px;
-  background: #00c853;
+  background: #00c853; 
   color: white;
   border: none;
   padding: 16px;
@@ -789,7 +789,7 @@ body.kitchen-body {
 }
 
 .btn-red {
-  background: #e53935 !important;
+  background: #e53935;
   color: white;
   padding: 10px 14px;
   border: none;
@@ -799,7 +799,7 @@ body.kitchen-body {
 }
 
 .btn-green {
-  background: #00c853 !important;
+  background: #00c853;
   color: white;
   padding: 10px 14px;
   border: none;
@@ -828,6 +828,18 @@ body.kitchen-body {
   font-size: 12px;
   font-weight: bold;
   border-radius: 4px;
+}
+
+.sold-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  font-size: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
 }
 
 /* ADMIN --------------------------------------------------------------------------------- */
@@ -915,8 +927,8 @@ body.kitchen-body {
 
 #foodChart {
   max-height: 300px;
-  width: 100% !important;
-  height: 300px !important;
+  width: 100%;
+  height: 300px;
   display: block;
 }
 
@@ -1147,9 +1159,9 @@ body.login-page .logo-title img {
   width: 100%;
   padding: 10px;
   margin-top: 10px;
-  background: orange !important;
-  color: white !important;
-  border: none !important;
+  background: orange;
+  color: white;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;

@@ -1,10 +1,10 @@
 const session = JSON.parse(localStorage.getItem("session"))
-if (!session) window.location.replace("management.html")
+if (!session) window.location.replace("login.html")
 if (Date.now() > session.expiry) {
   localStorage.removeItem("session")
-  window.location.replace("management.html")
+  window.location.replace("login.html")
 }
-if (session.role !== "admin") window.location.replace("management.html")
+if (session.role !== "admin") window.location.replace("login.html")
 
 let foodData = []
 let foodSortType = "default"
@@ -200,7 +200,7 @@ function changeChart(type) {
 function logout() {
   if (confirm("Do you sure to logout?")) {
     localStorage.removeItem("session")
-    window.location.replace("management.html")
+    window.location.replace("login.html")
   }
 }
 
