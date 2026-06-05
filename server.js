@@ -10,11 +10,12 @@ mongoose.connect("mongodb://admin:12345678asd@ac-t7nhegs-shard-00-00.i0rmibh.mon
   .catch(err => console.log(err))
 
 app.use(express.static("public"))
+app.use("/uploads", express.static("public/external/uploads"))
 app.use(express.json())
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/uploads")
+    cb(null, "public/external/uploads")
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname))
@@ -29,6 +30,8 @@ const orderSchema = new mongoose.Schema({
   status: String,
   remarks: String,
   time: Date,
+  readyAt: Date,
+  doneAt: Date,
   paid: { type: Boolean, default: false }
 })
 
@@ -96,12 +99,20 @@ app.get("/api/admin", async (req, res) => {
     }
   })
 
-  const formattedOrders = orders.map(o => ({
-    ...o._doc,
-    time: new Date(o.time).toLocaleString("en-MY", {
-      timeZone: "Asia/Kuala_Lumpur"
-    })
-  }))
+const formattedOrders = orders.map(o => ({
+  ...o._doc,
+  time: o.time
+    ? new Date(o.time).toLocaleString("en-MY", { timeZone: "Asia/Kuala_Lumpur" })
+    : null,
+
+  readyAt: o.readyAt
+    ? new Date(o.readyAt).toLocaleString("en-MY", { timeZone: "Asia/Kuala_Lumpur" })
+    : null,
+
+  doneAt: o.doneAt
+    ? new Date(o.doneAt).toLocaleString("en-MY", { timeZone: "Asia/Kuala_Lumpur" })
+    : null
+}))
 
   res.json({
     orders: formattedOrders,
@@ -139,6 +150,25 @@ app.get("/api/order/:tableId", async (req, res) => {
   res.json(orders)
 })
 
+app.get("/api/waiter/orders", async (req, res) => {
+  const orders = await Order.find({
+    status: { $in: ["READY", "SERVING"] }
+  })
+
+  const formatted = orders.map(o => ({
+    ...o._doc,
+    time: new Date(o.time).toLocaleString("en-MY", {
+      timeZone: "Asia/Kuala_Lumpur"
+    }),
+    readyAt: o.readyAt
+      ? new Date(o.readyAt).toLocaleString("en-MY", {
+          timeZone: "Asia/Kuala_Lumpur"
+        })
+      : null
+  }))
+  res.json({ activeOrders: formatted })
+})
+
 app.post("/api/upload", upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" })
@@ -150,13 +180,20 @@ app.post("/api/upload", upload.single("image"), (req, res) => {
 })
 
 app.get("/api/kitchen", async (req, res) => {
-  const orders = await Order.find()
+  const orders = await Order.find({
+    status: { $in: ["PREPARING", "NEW"] }
+  })
 
   const formatted = orders.map(o => ({
     ...o._doc,
     time: new Date(o.time).toLocaleString("en-MY", {
       timeZone: "Asia/Kuala_Lumpur"
-    })
+    }),
+    readyAt: o.readyAt
+    ? new Date(o.readyAt).toLocaleString("en-MY", {
+        timeZone: "Asia/Kuala_Lumpur"
+      })
+    : null
   }))
 
   res.json({ activeOrders: formatted })
@@ -223,9 +260,21 @@ app.get("/api/orders", async (req, res) => {
 })
 
 app.post("/api/status", async (req, res) => {
+  const update = {
+    status: req.body.status
+  }
+
+  if (req.body.status === "READY") {
+    update.readyAt = new Date()
+  }
+
+  if (req.body.status === "DONE") {
+    update.doneAt = new Date()
+  }
+
   await Order.findOneAndUpdate(
     { orderNumber: req.body.orderNumber },
-    { status: req.body.status }
+    { $set: update }
   )
 
   res.json({ success: true })

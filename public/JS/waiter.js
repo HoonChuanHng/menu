@@ -1,0 +1,219 @@
+const session = JSON.parse(localStorage.getItem("session"))
+if (!session) window.location.replace("management.html")
+if (Date.now() > session.expiry) {
+  localStorage.removeItem("session")
+  window.location.replace("management.html")
+}
+if (session.role !== "waiter") window.location.replace("management.html")
+
+let seenOrders = JSON.parse(localStorage.getItem("waiterSeenOrders") || "[]")
+let hiddenNotifs = JSON.parse(localStorage.getItem("waiterHiddenNotifs") || "[]")
+let latestOrders = []
+
+const notifySound = new Audio("/external/sound/sound-notification.mp3")
+
+function flashBell() {
+  const bell = document.getElementById("bell")
+  bell.classList.add("active")
+  setTimeout(() => bell.classList.remove("active"), 2000)
+}
+
+async function load() {
+  const res = await fetch("/api/admin")
+  if (!res.ok) return
+
+  const data = await res.json()
+  if (!data || !data.tableTotals) return
+
+  let t = ""
+
+  for (let k in data.tableTotals) {
+    t += `
+      <div class="card">
+        <h3>Table ${k}</h3>
+        <p>Total: RM ${Number(data.tableTotals[k]).toFixed(2)}</p>
+        <button class="danger" onclick="checkoutTable('${k}')">Checkout</button>
+      </div>
+    `
+  }
+
+  document.getElementById("tables").innerHTML = t || "<p>No tables</p>"
+}
+
+async function checkoutTable(tableId) {
+  await fetch("/api/checkout/" + tableId, { method: "POST" })
+  load()
+}
+
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(s => {
+    s.style.display = "none"
+  })
+
+  document.getElementById(id).style.display = "block"
+}
+
+async function loadOrders() {
+  const res = await fetch("/api/waiter/orders")
+  const data = await res.json()
+
+  const orders = data.activeOrders || []
+  latestOrders = orders
+
+  const bellDot = document.getElementById("bellDot")
+
+  const newOrders = orders.filter(o =>
+    !seenOrders.includes(String(o.orderNumber))
+  )
+
+  if (newOrders.length > 0) {
+    bellDot.style.display = "block"
+    notifySound.play()
+    flashBell()
+  } else {
+    bellDot.style.display = "none"
+  }
+
+  let html = ""
+
+  orders.forEach(o => {
+    html += `
+      <div class="order">
+        <h3>Table ${o.tableId} | Order #${o.orderNumber}</h3>
+        ${o.readyAt ? `<p>Ready at: ${o.readyAt}</p>` : ""}
+        <p>Status: <span class="status status-${o.status}">${o.status}</span></p>
+
+        <ul>
+          ${(o.items || []).map(i =>
+            `<li>${i.name} x ${i.qty || 1}</li>`
+          ).join("")}
+        </ul>
+        <button onclick="update(${o.orderNumber}, 'SERVING')">Serving</button>
+        <button onclick="update(${o.orderNumber}, 'DONE')">Done</button>
+      </div>
+    `
+  })
+
+  document.getElementById("orders").innerHTML =
+    html || "<p>No orders</p>"
+}
+
+async function deleteOrder(orderNumber) {
+  await fetch("/api/order/" + orderNumber, { method: "DELETE" })
+  loadOrders()
+}
+
+async function update(orderNumber, status) {
+  await fetch("/api/status", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      orderNumber,
+      status
+    })
+  })
+
+  loadOrders()
+}
+
+async function checkout(tableId) {
+  await fetch("/api/checkout/" + tableId, { method: "POST" })
+  loadOrders()
+}
+
+const panel = document.createElement("div")
+panel.id = "bellPanel"
+panel.style.position = "absolute"
+panel.style.top = "60px"
+panel.style.right = "20px"
+panel.style.width = "220px"
+panel.style.background = "white"
+panel.style.border = "1px solid #ddd"
+panel.style.borderRadius = "8px"
+panel.style.padding = "10px"
+panel.style.display = "none"
+panel.style.zIndex = "9999"
+
+document.body.appendChild(panel)
+
+function renderBellPanel() {
+  fetch("/api/waiter/orders")
+    .then(r => r.json())
+    .then(data => {
+      const orders = (data.activeOrders || [])
+        .filter(o => !hiddenNotifs.includes(o.orderNumber))
+
+      panel.innerHTML = orders.length
+        ? orders.map(o => `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div>
+                Order <b>#${o.orderNumber}</b><br>
+                <small>${o.time || ""}</small>
+              </div>
+              <button onclick="removeNotif(${o.orderNumber})"
+                style="border:none;background:none;cursor:pointer;">
+                🗑️
+              </button>
+            </div>
+          `).join("")
+        : "<p>No orders.</p>"
+    })
+}
+
+document.getElementById("bell").onclick = function (e) {
+  e.stopPropagation()
+
+  document.getElementById("bellDot").style.display = "none"
+
+  seenOrders = latestOrders.map(o => String(o.orderNumber))
+  localStorage.setItem("waiterSeenOrders", JSON.stringify(seenOrders))
+
+  panel.style.display = panel.style.display === "block" ? "none" : "block"
+
+  if (panel.style.display === "block") {
+    renderBellPanel()
+  }
+}
+
+function removeNotif(orderNumber) {
+  hiddenNotifs.push(orderNumber)
+  localStorage.setItem("waiterHiddenNotifs", JSON.stringify(hiddenNotifs))
+  renderBellPanel()
+}
+
+document.addEventListener("click", function (e) {
+  if (!panel.contains(e.target) && e.target.id !== "bell") {
+    panel.style.display = "none"
+  }
+})
+
+function logout() {
+  if (confirm("Do you sure to logout?")) {
+    localStorage.removeItem("session")
+    window.location.replace("management.html")
+  }
+}
+
+const toggle = document.getElementById("darkToggle")
+
+if (localStorage.getItem("dark") === "true") {
+  document.body.classList.add("dark")
+  toggle.checked = true
+}
+
+toggle.addEventListener("change", () => {
+  document.body.classList.toggle("dark")
+  localStorage.setItem("dark", document.body.classList.contains("dark"))
+})
+
+showSection("ordersSection")
+
+loadOrders()
+load()
+
+setInterval(() => {
+  load()
+  loadOrders()
+}, 3000)

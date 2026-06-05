@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Admin Dashboard</title>
+<link rel="stylesheet" href="CSS/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body class="admin-body">
+
+<div class="kitchen-header">
+  <h1 class="admin-title"> Admin Dashboard 🛠️</h1>
+  <div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <label class="switch">
+      <input type="checkbox" id="darkToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="navbar">
+  <button onclick="showSection('dashboard')">Sales Statistics</button>
+  <button onclick="showSection('ordersSection')">Orders</button>
+  <button onclick="showSection('foodSection')">Edit Menu</button>
+  <button onclick="showSection('addFoodBox')">Add Food</button>
+</div>
+
+<section id="dashboard" class="section">
+  <h2 id="revenue" class="revenue"></h2>
+  <h2 class="kitchen-title">Statistics Visualization</h2>
+  <div id="chartBox">
+    <div class="chart-controls">
+      <button onclick="changeChart('barH')">Best Sellers</button>
+      <button onclick="changeChart('pie')">Food Sold</button>
+      <button onclick="changeChart('line')">Daily Sales</button>
+    </div>
+    <canvas id="foodChart"></canvas>
+  </div>
+</section>
+
+<section id="ordersSection" class="section">
+  <h2 class="kitchen-title"> All Orders</h2>
+  <div id="orders"></div>
+</section>
+
+<section id="foodSection" class="section">
+  <h2 class="kitchen-title"> Food Details</h2>
+  <div class="toolbar">
+    <select id="sortFood" onchange="applyFoodSort()">
+      <option value="default">Default</option>
+      <option value="az">A → Z</option>
+      <option value="za">Z → A</option>
+      <option value="priceLow">Price Low → High</option>
+      <option value="priceHigh">Price High → Low</option>
+      <option value="category">Category</option>
+    </select>
+  </div>
+  <div id="foodList"></div>
+</section>
+
+<section id="addFoodBox" class="section">
+  <h2 class="kitchen-title"> Add New Food</h2>
+
+  <input id="name" placeholder="Food Name">
+  <input id="price" type="number" placeholder="Price (RM)">
+  <input type="file" id="imgFile">
+  <input id="category" placeholder="Category">
+
+  <button onclick="addFood()">Add Food</button>
+</section>
+
+  <script src="JS/admin.js"></script>
+</body>
+</html>

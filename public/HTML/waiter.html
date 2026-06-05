@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Waiter Dashboard</title>
+<link rel="stylesheet" href="CSS/style.css">
+</head>
+
+<body class="admin-body">
+<div class="kitchen-header">
+  <h1 class="admin-title"> Waiter Dashboard 🍽️</h1>
+  <div>
+    <div id="bell" class="bell">
+    🔔
+    <span id="bellDot"></span>
+  </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <label class="switch">
+      <input type="checkbox" id="darkToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="navbar">
+  <button onclick="showSection('ordersSection')">Waiter Order</button>
+  <button onclick="showSection('checkoutTable')">Checkout</button>
+
+</div>
+
+<section id="ordersSection" class="section">
+  <h2>Waiter Orders</h2>
+  <div id="orders" class="kitchen-orders"></div>
+</section>
+
+<section id="checkoutTable" class="section">
+  <h2 class="kitchen-title"> Checkout Tables</h2>
+  <div id="tables" class="grid"></div>
+</section>
+
+  <script src="JS/waiter.js"></script>
+</body>
+</html>

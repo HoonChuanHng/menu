@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-
-<script>
 const session = JSON.parse(localStorage.getItem("session"))
 if (!session) window.location.replace("management.html")
 if (Date.now() > session.expiry) {
@@ -10,61 +5,11 @@ if (Date.now() > session.expiry) {
   window.location.replace("management.html")
 }
 if (session.role !== "kitchen") window.location.replace("management.html")
-</script>
 
-<title>Kitchen Dashboard</title>
-<link rel="stylesheet" href="style.css">
-
-</head>
-
-<body class="admin-body">
-<div class="kitchen-header">
-  <h1 class="kitchen-title"> Kitchen Dashboard</h1>
-  <div>
-    <div id="bell" class="bell">
-    🔔
-    <span id="bellDot"></span>
-  </div>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-
-    <label class="switch">
-      <input type="checkbox" id="darkToggle">
-      <span class="slider"></span>
-    </label>
-  </div>
-</div>
-
-<div class="kitchen-nav">
-  <button onclick="showTab('orders')">Kitchen Orders</button>
-  <button onclick="showTab('menu')">Menu Availability</button>
-</div>
-
-<div id="orders-section" class="section">
-  <h2 class="kitchen-title">Kitchen Orders</h1>
-  <div id="orders" class="kitchen-orders"></div>
-</div>
-
-<div id="menu-section" class="section" style="display:none;">
-  <h2 class="kitchen-title">Menu Availability</h2>
-  <div class="toolbar">
-    <select id="sortMenu" onchange="applyMenuSort()">
-      <option value="default">Default</option>
-      <option value="az">A → Z</option>
-      <option value="za">Z → A</option>
-      <option value="priceLow">Price Low → High</option>
-      <option value="priceHigh">Price High → Low</option>
-      <option value="available">Available First</option>
-      <option value="category">Category</option>
-    </select>
-  </div>
-  <div id="menu" class="kitchen-menu"></div>
-</div>
-
-<script>
 let latestOrders = []
 let seenOrders = JSON.parse(localStorage.getItem("seenOrders") || "[]")
 let hiddenNotifs = JSON.parse(localStorage.getItem("hiddenNotifs") || "[]")
-const notifySound = new Audio("/sound/sound-notification.mp3")
+const notifySound = new Audio("external/sound/sound-notification.mp3")
 let lastOrderCount = 0
 let menuData = []
 let menuSortType = "default"
@@ -178,7 +123,7 @@ async function loadOrders() {
         <div class="order">
           <h3>Table ${o.tableId} | Order #${o.orderNumber}</h3>
           <p>Ordered at: ${o.time}</p>
-          <p>Status: <b>${o.status}</b></p>
+          <p>Status: <span class="status status-${o.status}">${o.status}</span></p>
           <p>Remarks: ${o.remarks || "-"}</p>
           <ul>
             ${items.map(i => `<li>${i.name} x ${i.qty || 1}</li>`).join("")}
@@ -186,7 +131,6 @@ async function loadOrders() {
 
           <button onclick="update(${o.orderNumber}, 'PREPARING')">Preparing</button>
           <button onclick="update(${o.orderNumber}, 'READY')">Ready</button>
-          <button class="delete-btn" onclick="deleteOrder(${o.orderNumber})">Delete</button>
         </div>
       `
     })
@@ -227,11 +171,6 @@ async function update(orderNumber, status) {
     body: JSON.stringify({ orderNumber, status })
   })
 
-  loadOrders()
-}
-
-async function deleteOrder(orderNumber) {
-  await fetch("/api/order/" + orderNumber, { method: "DELETE" })
   loadOrders()
 }
 
@@ -335,8 +274,3 @@ setInterval(() => {
   loadOrders()
   loadMenu()
 }, 3000)
-
-</script>
-
-</body>
-</html>

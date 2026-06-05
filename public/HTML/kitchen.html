@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Kitchen Dashboard</title>
+<link rel="stylesheet" href="CSS/style.css">
+
+</head>
+
+<body class="admin-body">
+<div class="kitchen-header">
+  <h1 class="kitchen-title"> Kitchen Dashboard 👨‍🍳</h1>
+  <div>
+    <div id="bell" class="bell">
+    🔔
+    <span id="bellDot"></span>
+  </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <label class="switch">
+      <input type="checkbox" id="darkToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="kitchen-nav">
+  <button onclick="showTab('orders')">Kitchen Orders</button>
+  <button onclick="showTab('menu')">Menu Availability</button>
+</div>
+
+<div id="orders-section" class="section">
+  <h2 class="kitchen-title">Kitchen Orders</h1>
+  <div id="orders" class="kitchen-orders"></div>
+</div>
+
+<div id="menu-section" class="section" style="display:none;">
+  <h2 class="kitchen-title">Menu Availability</h2>
+  <div class="toolbar">
+    <select id="sortMenu" onchange="applyMenuSort()">
+      <option value="default">Default</option>
+      <option value="az">A → Z</option>
+      <option value="za">Z → A</option>
+      <option value="priceLow">Price Low → High</option>
+      <option value="priceHigh">Price High → Low</option>
+      <option value="available">Available First</option>
+      <option value="category">Category</option>
+    </select>
+  </div>
+  <div id="menu" class="kitchen-menu"></div>
+</div>
+
+
+  <script src="JS/kitchen.js"></script>
+</body>
+</html>

@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-
-<script>
 const session = JSON.parse(localStorage.getItem("session"))
 if (!session) window.location.replace("management.html")
 if (Date.now() > session.expiry) {
@@ -10,88 +5,7 @@ if (Date.now() > session.expiry) {
   window.location.replace("management.html")
 }
 if (session.role !== "admin") window.location.replace("management.html")
-</script>
 
-<title>Admin Dashboard</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-</head>
-
-<body class="admin-body">
-
-<div class="kitchen-header">
-  <h1 class="admin-title"> Admin Dashboard</h1>
-  <div>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-
-    <label class="switch">
-      <input type="checkbox" id="darkToggle">
-      <span class="slider"></span>
-    </label>
-  </div>
-</div>
-
-<div class="navbar">
-  <button onclick="showSection('dashboard')">Sales Statistics</button>
-  <button onclick="showSection('tablesSection')">Checkout</button>
-  <button onclick="showSection('ordersSection')">Orders</button>
-  <button onclick="showSection('foodSection')">Edit Menu</button>
-  <button onclick="showSection('addFoodBox')">Add Food</button>
-</div>
-
-<section id="dashboard" class="section">
-  <h2 id="revenue" class="revenue"></h2>
-  <h2 class="kitchen-title">Statistics Visualization</h2>
-  <div id="chartBox">
-    <div class="chart-controls">
-      <button onclick="changeChart('barH')">Best Sellers</button>
-      <button onclick="changeChart('pie')">Food Sold</button>
-      <button onclick="changeChart('line')">Daily Sales</button>
-    </div>
-    <canvas id="foodChart"></canvas>
-  </div>
-</section>
-
-<section id="tablesSection" class="section">
-  <h2 class="kitchen-title"> Checkout Tables</h2>
-  <div id="tables" class="grid"></div>
-</section>
-
-<section id="ordersSection" class="section">
-  <h2 class="kitchen-title"> All Orders</h2>
-  <div id="orders"></div>
-</section>
-
-<section id="foodSection" class="section">
-  <h2 class="kitchen-title"> Food Details</h2>
-  <div class="toolbar">
-    <select id="sortFood" onchange="applyFoodSort()">
-      <option value="default">Default</option>
-      <option value="az">A → Z</option>
-      <option value="za">Z → A</option>
-      <option value="priceLow">Price Low → High</option>
-      <option value="priceHigh">Price High → Low</option>
-      <option value="category">Category</option>
-    </select>
-  </div>
-  <div id="foodList"></div>
-</section>
-
-<section id="addFoodBox" class="section">
-  <h2 class="kitchen-title"> Add New Food</h2>
-
-  <input id="name" placeholder="Food Name">
-  <input id="price" type="number" placeholder="Price (RM)">
-  <input type="file" id="imgFile">
-  <input id="category" placeholder="Category">
-
-  <button onclick="addFood()">Add Food</button>
-</section>
-
-<script>
-
-  
 let foodData = []
 let foodSortType = "default"
 let chartType = "barH"
@@ -148,28 +62,21 @@ async function load() {
   document.getElementById("revenue").innerText =
     "Total Revenue: RM " + data.revenue.toFixed(2)
 
-  let t = ""
-  for (let k in data.tableTotals) {
-    t += `
-      <div class="card">
-        <h3>Table ${k}</h3>
-        <p>Total: RM ${data.tableTotals[k].toFixed(2)}</p>
-        <button class="danger" onclick="checkoutTable('${k}')">Checkout</button>
-      </div>
-    `
-  }
-  document.getElementById("tables").innerHTML = t
-
   let o = ""
   data.orders.forEach(order => {
     o += `
       <div class="card">
-        <h3>Order #${order.orderNumber}</h3>
-        <p>Table ${order.tableId}</p>
-        <p>Status: ${order.status}</p>
-
-        ${order.items.map(i => `<div>${i.name} x ${i.qty || 1}</div>`).join("")}
-
+        <h3>Table ${order.tableId} | Order #${order.orderNumber}</h3>
+        ${order.time ? `<p>Ordered at: ${order.time}</p>` : ""}
+        ${order.readyAt ? `<p>Ready at: ${order.readyAt}</p>` : ""}
+        ${order.doneAt ? `<p>Done at: ${order.doneAt}</p>` : ""}
+        <p>Status: <span class="status status-${order.status}">${order.status}</span></p>
+        <p>Remarks: ${order.remarks || "-"}</p>
+        <ul>
+          ${order.items.map(i =>
+            `<li>${i.name} x ${i.qty || 1}</li>`
+          ).join("")}
+        </ul>
         <button class="danger" onclick="delOrder('${order.orderNumber}')">Delete</button>
       </div>
     `
@@ -313,11 +220,6 @@ async function delOrder(id) {
   load()
 }
 
-async function checkoutTable(tableId) {
-  await fetch("/api/checkout/" + tableId, { method: "POST" })
-  load()
-}
-
 async function addFood() {
   const fileInput = document.getElementById("imgFile")
   const price = Number(document.getElementById("price").value)
@@ -373,8 +275,3 @@ toggle.addEventListener("change", () => {
 
 load()
 setInterval(load, 3000)
-
-</script>
-
-</body>
-</html>
