@@ -241,4 +241,17 @@ function filterMenu() {
   applyFilter()
 }
   
+async function callWaiter() {
+  const urlParams = new URLSearchParams(window.location.search)
+  const tableId = urlParams.get("table")
 
+  await fetch("/api/call-waiter", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tableId })
+  })
+
+  const btn = document.getElementById("notifyBtn")
+  btn.classList.add("active")
+  setTimeout(() => btn.classList.remove("active"), 1000)
+}

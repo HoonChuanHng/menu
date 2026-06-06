@@ -1,11 +1,12 @@
 const session = JSON.parse(localStorage.getItem("session"))
-if (!session) window.location.replace("login.html")
+if (!session) window.location.replace("login")
 if (Date.now() > session.expiry) {
   localStorage.removeItem("session")
-  window.location.replace("login.html")
+  window.location.replace("login")
 }
-if (session.role !== "kitchen") window.location.replace("login.html")
+if (session.role !== "kitchen") window.location.replace("login")
 
+let bellRungForBatch = false
 let latestOrders = []
 let seenOrders = JSON.parse(localStorage.getItem("seenOrders") || "[]")
 let hiddenNotifs = JSON.parse(localStorage.getItem("hiddenNotifs") || "[]")
@@ -105,13 +106,17 @@ async function loadOrders() {
     const newOrders = orders.filter(o =>
       !seenOrders.includes(String(o.orderNumber))
     )
-
     if (newOrders.length > 0) {
       bellDot.style.display = "block"
-      notifySound.play()
-      flashBell()
+      if (!bellRungForBatch) {
+        notifySound.currentTime = 0
+        notifySound.play()
+        flashBell()
+        bellRungForBatch = true
+      }
     } else {
       bellDot.style.display = "none"
+      bellRungForBatch = false
     }
 
     let html = ""
@@ -177,7 +182,7 @@ async function update(orderNumber, status) {
 function logout() {
   if (confirm("Do you sure to logout?")) {
     localStorage.removeItem("session")
-    window.location.replace("login.html")
+    window.location.replace("login")
   }
 }
 

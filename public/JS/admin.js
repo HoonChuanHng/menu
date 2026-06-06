@@ -1,10 +1,10 @@
 const session = JSON.parse(localStorage.getItem("session"))
-if (!session) window.location.replace("login.html")
+if (!session) window.location.replace("login")
 if (Date.now() > session.expiry) {
   localStorage.removeItem("session")
-  window.location.replace("login.html")
+  window.location.replace("login")
 }
-if (session.role !== "admin") window.location.replace("login.html")
+if (session.role !== "admin") window.location.replace("login")
 
 let foodData = []
 let foodSortType = "default"
@@ -65,7 +65,7 @@ async function load() {
   let o = ""
   data.orders.forEach(order => {
     o += `
-      <div class="card">
+      <div class="admin-order">
         <h3>Table ${order.tableId} | Order #${order.orderNumber}</h3>
         ${order.time ? `<p>Ordered at: ${order.time}</p>` : ""}
         ${order.readyAt ? `<p>Ready at: ${order.readyAt}</p>` : ""}
@@ -200,7 +200,7 @@ function changeChart(type) {
 function logout() {
   if (confirm("Do you sure to logout?")) {
     localStorage.removeItem("session")
-    window.location.replace("login.html")
+    window.location.replace("login")
   }
 }
 
@@ -210,6 +210,29 @@ function showSection(id) {
   })
 
   document.getElementById(id).style.display = "block"
+
+  if (id === "usersSection") {
+    loadUsers()
+  }
+}
+
+async function createUser() {
+  const username = document.getElementById("newUsername").value
+  const password = document.getElementById("newPassword").value
+  const role = document.getElementById("newRole").value
+
+  if (!username || !password) return alert("Missing fields")
+
+  await fetch("/api/admin/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password, role })
+  })
+
+  document.getElementById("newUsername").value = ""
+  document.getElementById("newPassword").value = ""
+
+  loadUsers()
 }
 
 /* default view */
@@ -258,6 +281,30 @@ async function addFood() {
 
     load()
   }
+}
+
+async function loadUsers() {
+  const res = await fetch("/api/admin/users")
+  const users = await res.json()
+
+  document.getElementById("users").innerHTML = users.map(u => `
+    <div class="user-card">
+      <h3>User ID: ${u.username}</h3>
+      <p>Role: ${u.role}</p>
+      <button class="del-btn" onclick="deleteUser('${u._id}')">Delete</button>
+      </button>
+    </div>
+  `).join("")
+}
+
+async function deleteUser(id) {
+  if (!confirm("Delete this user permanently?")) return
+
+  await fetch("/api/admin/users/" + id, {
+    method: "DELETE"
+  })
+
+  loadUsers()
 }
 
 /* DARK MODE */

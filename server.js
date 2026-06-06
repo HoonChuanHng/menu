@@ -1,6 +1,6 @@
 const express = require("express")
 const mongoose = require("mongoose")
-
+const bcrypt = require("bcrypt")
 const app = express()
 const multer = require("multer")
 const path = require("path")
@@ -12,6 +12,22 @@ mongoose.connect("mongodb://admin:12345678asd@ac-t7nhegs-shard-00-00.i0rmibh.mon
 app.use(express.static("public"))
 app.use("/uploads", express.static("public/external/uploads"))
 app.use(express.json())
+
+app.get("/kitchen", (req, res) => {
+  res.sendFile(__dirname + "/public/kitchen.html")
+})
+
+app.get("/admin", (req, res) => {
+  res.sendFile(__dirname + "/public/admin.html")
+})
+
+app.get("/waiter", (req, res) => {
+  res.sendFile(__dirname + "/public/waiter.html")
+})
+
+app.get("/login", (req, res) => {
+  res.sendFile(__dirname + "/public/login.html")
+})
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -44,6 +60,20 @@ const counterSchema = new mongoose.Schema({
 
 const Counter = mongoose.model("Counter", counterSchema)
 
+const userSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+  role: { type: String, default: "user" },
+  createdAt: { type: Date, default: Date.now }
+})
+
+const User = mongoose.model("User", userSchema)
+
+app.delete("/api/admin/users/:id", async (req, res) => {
+  await User.findByIdAndDelete(req.params.id)
+  res.json({ success: true })
+})
+
 async function getNextOrderId() {
   const result = await Counter.findOneAndUpdate(
     { name: "order" },
@@ -63,9 +93,76 @@ const foodSchema = new mongoose.Schema({
 
 const Food = mongoose.model("Food", foodSchema)
 
+app.post("/api/login", async (req, res) => {
+  const { username, password, role } = req.body
+  const user = await User.findOne({ username, role })
+  if (!user) {
+    return res.status(401).json({ error: "Invalid credentials" })
+  }
+  const match = await bcrypt.compare(password, user.password)
+  if (!match) {
+    return res.status(401).json({ error: "Invalid credentials" })
+  }
+  res.json({
+    role: user.role,
+    username: user.username
+  })
+})
+
+const callSchema = new mongoose.Schema({
+  tableId: String,
+  time: Date,
+  seen: { type: Boolean, default: false }
+})
+
+const CallWaiter = mongoose.model("CallWaiter", callSchema)
+
+app.post("/api/call-waiter", async (req, res) => {
+  const { tableId } = req.body
+
+  await CallWaiter.create({
+    tableId,
+    time: new Date()
+  })
+
+  res.json({ success: true })
+})
+
+app.get("/api/call-waiter", async (req, res) => {
+  const calls = await CallWaiter.find({ seen: false })
+  res.json({ calls })
+})
+
+app.post("/api/call-waiter/seen", async (req, res) => {
+  const { id } = req.body
+
+  await CallWaiter.findByIdAndUpdate(id, { seen: true })
+
+  res.json({ success: true })
+})
+
 app.get("/api/menu", async (req, res) => {
   const foods = await Food.find()
   res.json(foods)
+})
+
+app.get("/api/admin/users", async (req, res) => {
+  const users = await User.find()
+  res.json(users)
+})
+
+app.post("/api/admin/users", async (req, res) => {
+  const { username, password, role } = req.body
+
+  const hashedPassword = await bcrypt.hash(password, 10)
+
+  const user = await User.create({
+    username,
+    password: hashedPassword,
+    role
+  })
+
+  res.json(user)
 })
 
 app.get("/api/admin", async (req, res) => {
@@ -149,7 +246,8 @@ app.get("/api/order/:tableId", async (req, res) => {
 
 app.get("/api/waiter/orders", async (req, res) => {
   const orders = await Order.find({
-    status: { $in: ["READY", "SERVING"] }
+    status: { $in: ["READY", "SERVING"] },
+    paid: false
   })
 
   const formatted = orders.map(o => ({

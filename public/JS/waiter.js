@@ -1,22 +1,30 @@
 const session = JSON.parse(localStorage.getItem("session"))
-if (!session) window.location.replace("login.html")
+if (!session) window.location.replace("login")
 if (Date.now() > session.expiry) {
   localStorage.removeItem("session")
-  window.location.replace("login.html")
+  window.location.replace("login")
 }
-if (session.role !== "waiter") window.location.replace("login.html")
+if (session.role !== "waiter") window.location.replace("login")
 
+let audioUnlocked = false
+let lastCallId = null
+let bellRungForBatch = false
 let seenOrders = JSON.parse(localStorage.getItem("waiterSeenOrders") || "[]")
 let hiddenNotifs = JSON.parse(localStorage.getItem("waiterHiddenNotifs") || "[]")
 let latestOrders = []
 
 const notifySound = new Audio("/external/sound/sound-notification.mp3")
+const callSound = new Audio("/external/sound/waiter-calls.mp3")
 
 function flashBell() {
   const bell = document.getElementById("bell")
   bell.classList.add("active")
   setTimeout(() => bell.classList.remove("active"), 2000)
 }
+
+document.addEventListener("click", () => {
+  audioUnlocked = true
+}, { once: true })
 
 async function load() {
   if (!latestOrders || latestOrders.length === 0) {
@@ -47,7 +55,6 @@ async function load() {
       <div class="card">
         <h3>Table ${k}</h3>
         <p>Total: RM ${tableMap[k].total.toFixed(2)}</p>
-
         <div class="card-buttons">
           <button class="danger" onclick="checkoutTable('${k}')">Checkout</button>
           <button onclick="downloadReceipt('${k}')">Receipt</button>
@@ -61,7 +68,15 @@ async function load() {
 }
 
 async function checkoutTable(tableId) {
+  document.querySelectorAll(".card").forEach(c => {
+    if (c.innerText.includes(tableId)) {
+      c.style.opacity = "0.4"
+    }
+  })
+
   await fetch("/api/checkout/" + tableId, { method: "POST" })
+
+  loadOrders()
   load()
 }
 
@@ -77,9 +92,9 @@ function downloadReceipt(tableId) {
   const orders = latestOrders.filter(o =>
     String(o.tableId) === String(tableId)
   )
-
+  const orderNumbers = orders.map(o => "#" + o.orderNumber).join(", ")
   if (!orders.length) {
-    alert("No order found for this table")
+    alert("No order found")
     return
   }
 
@@ -123,7 +138,8 @@ function downloadReceipt(tableId) {
     <body>
 
       <h2>${restaurant}</h2>
-      <p><b>Table:</b> ${tableId}</p>
+      <p><b>Table ID:</b> ${tableId}</p>
+      <p><b>Order Number:</b> ${orderNumbers}</p>
       <p><b>Date:</b> ${now}</p>
 
       <table>
@@ -137,8 +153,6 @@ function downloadReceipt(tableId) {
       </table>
 
       <h3>Total: RM ${total.toFixed(2)}</h3>
-
-      <p><b>Payment Status:</b> PAID / PENDING</p>
 
       <script>
         window.print()
@@ -166,11 +180,17 @@ async function loadOrders() {
 
   if (newOrders.length > 0) {
     bellDot.style.display = "block"
-    notifySound.play()
-    flashBell()
+    if (!bellRungForBatch) {
+      notifySound.currentTime = 0
+      notifySound.play()      
+      flashBell()
+      bellRungForBatch = true
+    }
   } else {
     bellDot.style.display = "none"
+    bellRungForBatch = false
   }
+
 
   let html = ""
 
@@ -287,10 +307,45 @@ document.addEventListener("click", function (e) {
   }
 })
 
+async function loadCalls() {
+  const res = await fetch("/api/call-waiter")
+  const data = await res.json()
+
+  const calls = data.calls || []
+  if (!calls.length) return
+
+  const latest = calls[calls.length - 1]
+  if (!latest || !latest._id) return
+
+  if (lastCallId === latest._id) return
+
+  lastCallId = latest._id
+
+  flashBell()
+
+  callSound.currentTime = 0
+  callSound.play().catch(console.log)
+
+  alert("Table " + latest.tableId + " is calling waiter!")
+
+  setTimeout(async () => {
+    await fetch("/api/call-waiter/seen", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: latest._id })
+    })
+  }, 1000)
+}
+
+function playCallSound() {
+  callSound.currentTime = 0
+  callSound.play().catch(err => console.log("Audio error:", err))
+}
+
 function logout() {
   if (confirm("Do you sure to logout?")) {
     localStorage.removeItem("session")
-    window.location.replace("login.html")
+    window.location.replace("login")
   }
 }
 
@@ -311,7 +366,11 @@ showSection("ordersSection")
 loadOrders()
 load()
 
-setInterval(() => {
-  load()
-  loadOrders()
-}, 3000)
+
+setTimeout(() => {
+  setInterval(() => {
+    load()
+    loadOrders()
+    loadCalls()
+  }, 3000)
+}, 1000)
