@@ -53,8 +53,6 @@ async function getNextOrderId() {
   return result.value
 }
 
-/* ================= FOOD SYSTEM ================= */
-
 const foodSchema = new mongoose.Schema({
   name: String,
   price: Number,
@@ -65,7 +63,6 @@ const foodSchema = new mongoose.Schema({
 
 const Food = mongoose.model("Food", foodSchema)
 
-/* GET MENU */
 app.get("/api/menu", async (req, res) => {
   const foods = await Food.find()
   res.json(foods)

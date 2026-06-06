@@ -844,12 +844,6 @@ body.kitchen-body {
 
 /* ADMIN --------------------------------------------------------------------------------- */
 /* Basic */
-.add-btn {
-  font-family: Arial;
-  padding: 20px;
-  background: #f5f5f5;
-}
-
 .admin-title {
   margin-bottom: 20px;
 }
@@ -1184,4 +1178,65 @@ body.login-page .logo-title img {
   margin-bottom: 20px;
 }
 
+/* Receipt */
+.card button {
+  padding: 8px 12px;
+  margin-top: 8px;
+  margin-right: 6px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
 
+.card button:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.card .danger {
+  background: #e74c3c;
+  color: white;
+}
+
+.card button:not(.danger) {
+  background: #2ecc71;
+  color: white;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.card-buttons button {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.card-buttons button:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.card-buttons .danger {
+  background: #e74c3c;
+  color: white;
+}
+
+.card-buttons button:not(.danger) {
+  background: #2ecc71;
+  color: white;
+}

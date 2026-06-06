@@ -19,25 +19,45 @@ function flashBell() {
 }
 
 async function load() {
-  const res = await fetch("/api/admin")
-  if (!res.ok) return
+  if (!latestOrders || latestOrders.length === 0) {
+    document.getElementById("tables").innerHTML = "<p>No tables</p>"
+    return
+  }
 
-  const data = await res.json()
-  if (!data || !data.tableTotals) return
+  const tableMap = {}
+
+  latestOrders.forEach(o => {
+    if (!tableMap[o.tableId]) {
+      tableMap[o.tableId] = {
+        total: 0
+      }
+    }
+
+    (o.items || []).forEach(i => {
+      const qty = i.qty || 1
+      const price = Number(i.price || 0)
+      tableMap[o.tableId].total += qty * price
+    })
+  })
 
   let t = ""
 
-  for (let k in data.tableTotals) {
+  Object.keys(tableMap).forEach(k => {
     t += `
       <div class="card">
         <h3>Table ${k}</h3>
-        <p>Total: RM ${Number(data.tableTotals[k]).toFixed(2)}</p>
-        <button class="danger" onclick="checkoutTable('${k}')">Checkout</button>
+        <p>Total: RM ${tableMap[k].total.toFixed(2)}</p>
+
+        <div class="card-buttons">
+          <button class="danger" onclick="checkoutTable('${k}')">Checkout</button>
+          <button onclick="downloadReceipt('${k}')">Receipt</button>
+        </div>
       </div>
     `
-  }
+  })
 
-  document.getElementById("tables").innerHTML = t || "<p>No tables</p>"
+  document.getElementById("tables").innerHTML =
+    t || "<p>No tables</p>"
 }
 
 async function checkoutTable(tableId) {
@@ -51,6 +71,84 @@ function showSection(id) {
   })
 
   document.getElementById(id).style.display = "block"
+}
+
+function downloadReceipt(tableId) {
+  const orders = latestOrders.filter(o =>
+    String(o.tableId) === String(tableId)
+  )
+
+  if (!orders.length) {
+    alert("No order found for this table")
+    return
+  }
+
+  const restaurant = "Quick Plate Cafe"
+  const now = new Date().toLocaleString()
+
+  let itemsHtml = ""
+  let total = 0
+
+  orders.forEach(o => {
+    (o.items || []).forEach(i => {
+      const qty = i.qty || 1
+      const price = Number(i.price || 0)
+      const subtotal = qty * price
+
+      total += subtotal
+
+      itemsHtml += `
+        <tr>
+          <td>${i.name}</td>
+          <td>${qty}</td>
+          <td>${price.toFixed(2)}</td>
+          <td>${subtotal.toFixed(2)}</td>
+        </tr>
+      `
+    })
+  })
+
+  const win = window.open("", "_blank")
+
+  win.document.write(`
+    <html>
+    <head>
+      <title>Receipt</title>
+      <style>
+        body { font-family: Arial; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        td, th { border: 1px solid #000; padding: 8px; text-align: left; }
+      </style>
+    </head>
+    <body>
+
+      <h2>${restaurant}</h2>
+      <p><b>Table:</b> ${tableId}</p>
+      <p><b>Date:</b> ${now}</p>
+
+      <table>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Total</th>
+        </tr>
+        ${itemsHtml}
+      </table>
+
+      <h3>Total: RM ${total.toFixed(2)}</h3>
+
+      <p><b>Payment Status:</b> PAID / PENDING</p>
+
+      <script>
+        window.print()
+      </script>
+
+    </body>
+    </html>
+  `)
+
+  win.document.close()
 }
 
 async function loadOrders() {
