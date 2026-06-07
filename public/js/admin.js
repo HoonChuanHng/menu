@@ -6,6 +6,7 @@ if (Date.now() > session.expiry) {
 }
 if (session.role !== "admin") window.location.replace("login")
 
+document.getElementById("imgFile").accept = "image/*"
 let foodData = []
 let foodSortType = "default"
 let chartType = "barH"
@@ -98,7 +99,35 @@ async function editFood(food) {
   const name = prompt("Food name:", food.name)
   const priceInput = prompt("Price:", food.price)
   const category = prompt("Category:", food.category)
-  const img = prompt("Image URL:", food.img)
+  const changeImg = confirm("Do you want to change the image?")
+
+  let img = food.img
+
+  let file = null
+
+  if (changeImg) {
+    const fileInput = document.createElement("input")
+    fileInput.type = "file"
+    fileInput.accept = "image/*"
+    fileInput.click()
+
+    file = await new Promise(resolve => {
+      fileInput.onchange = () => resolve(fileInput.files[0])
+    })
+
+    if (file) {
+      const formData = new FormData()
+      formData.append("image", file)
+
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData
+      })
+
+      const uploadData = await uploadRes.json()
+      img = uploadData.url
+    }
+  }
 
   const price = parseFloat(priceInput)
   if (!name || isNaN(price) || price <= 0 || !category || !img) {
@@ -279,9 +308,12 @@ async function delOrder(id) {
 async function addFood() {
   const fileInput = document.getElementById("imgFile")
   const price = Number(document.getElementById("price").value)
+  const name = document.getElementById("name").value
+  const category = document.getElementById("category").value
 
-  if (!fileInput.files.length) return alert("Select image")
+  if (!name) return alert("Please enter a food/drink name.")
   if (isNaN(price) || price <= 0) return alert("Invalid price")
+  if (!category) return alert("Please enter a category type")
 
   const formData = new FormData()
   formData.append("image", fileInput.files[0])
