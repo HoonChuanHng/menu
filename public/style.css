@@ -18,6 +18,15 @@ body {
   padding-bottom: 100px;
 }
 
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+}
+
 /* Header */
 .header-top {
   display: flex;
@@ -191,7 +200,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  transform: translateY(-10px);
+  align-self: center;
 }
 
 .logout-btn:hover {
@@ -423,12 +432,9 @@ body.dark .cart-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  max-width: 250px;
-  margin: 10px;
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background: white;
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
 }
 
 .search-bar input {
@@ -443,15 +449,8 @@ body.dark .cart-item {
 }
 
 /* Track */
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .track-btn {
   margin-left: auto;
-  transform: translateX(-24px);
   background: goldenrod;
   color: white;
   border: none;
@@ -1371,12 +1370,6 @@ body.login-page .logo-title img {
 }
 
 /* Call waiter */
-.top-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 #callWaiterBtn {
   padding: 10px 14px;
   border: none;
@@ -1391,13 +1384,17 @@ body.login-page .logo-title img {
 }
 
 #notifyBtn {
-  margin-left: 1540px;
   background: #ffcc00;
   border: none;
   padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
+}
+
+#notifyBtn,
+.track-btn {
+  margin-left: 0;
 }
 
 #notifyBtn.active {
