@@ -131,6 +131,9 @@ function renderChart(data) {
 
   const ctx = document.getElementById("foodChart").getContext("2d")
 
+  const textColor = document.body.classList.contains("dark")
+  ? "white"
+  : "black"
   if (window.foodChartInstance) window.foodChartInstance.destroy()
 
   if (chartType === "line") {
@@ -163,51 +166,63 @@ function renderChart(data) {
     values = sorted.map(x => x.v)
   }
 
-window.foodChartInstance = new Chart(ctx, {
-  type: chartType === "line"
-    ? "line"
-    : chartType === "pie"
-    ? "pie"
-    : "bar",
+  window.foodChartInstance = new Chart(ctx, {
+    type: chartType === "line"
+      ? "line"
+      : chartType === "pie"
+      ? "pie"
+      : "bar",
 
-  data: {
-    labels,
-    datasets: [{
-      label: chartType === "line"
-        ? "Daily Revenue (RM)"
-        : "Food Sold",
-      data: values
-    }]
-  },
-
-  options: {
-    indexAxis: chartType === "barH" ? "y" : "x",
-    responsive: true,
-    plugins: {
-      legend: {
-        labels: {
-          color: "white"
-        }
-      },
-      tooltip: {
-        titleColor: "white",
-        bodyColor: "white"
-      }
+    data: {
+      labels,
+      datasets: [{
+        label: chartType === "line"
+          ? "Daily Revenue (RM)"
+          : "Food Sold",
+        data: values
+      }]
     },
-    scales: {
-      x: {
-        ticks: {
-          color: "white"
-        }
+    
+    options: {
+      indexAxis: chartType === "barH" ? "y" : "x",
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor,
+            font: {
+              size: 12
+            }
+          }
+        },
+      tooltip: {
+        titleColor: textColor,
+        bodyColor: textColor,
+        backgroundColor: document.body.classList.contains("dark") ? "#222" : "#fff",
+        borderColor: document.body.classList.contains("dark") ? "#444" : "#ccc",
+        borderWidth: 1
+      }
       },
-      y: {
-        ticks: {
-          color: "white"
+      scales: {
+        x: {
+          ticks: {
+            color: textColor
+          },
+          grid: {
+            color: document.body.classList.contains("dark") ? "#333" : "#eee"
+          }
+        },
+        y: {
+          ticks: {
+            color: textColor
+          },
+          grid: {
+            color: document.body.classList.contains("dark") ? "#333" : "#eee"
+          }
         }
       }
     }
-  }
-})  
+  })  
 }
 
 function changeChart(type) {
@@ -335,6 +350,10 @@ if (localStorage.getItem("dark") === "true") {
 toggle.addEventListener("change", () => {
   document.body.classList.toggle("dark")
   localStorage.setItem("dark", document.body.classList.contains("dark"))
+
+  if (window.lastAdminData) {
+    renderChart(window.lastAdminData)
+  }
 })
 
 load()

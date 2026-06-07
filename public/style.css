@@ -40,6 +40,7 @@ body {
   justify-content: space-between;
   gap: 12px;
   padding: 10px 16px;
+  flex-wrap: wrap;
 }
 
 .top-bar-right {
@@ -62,12 +63,15 @@ body {
   text-align: center;
   font-size: 39px;
   font-weight: bold;
+  font-size: clamp(18px, 3vw, 39px);
+  min-width: 0
 }
 
 .header-right {
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-self: end;
 }
 
 /* Food card */
@@ -420,16 +424,24 @@ body.dark input::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  flex: 1;
-  font-size: 50px;
+  gap: 10px;
+  font-size: clamp(20px, 3vw, 40px);
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .logo-title img {
   width: 50px;
   height: 50px;
   object-fit: contain;
+  width: clamp(28px, 6vw, 50px);
+  height: clamp(28px, 6vw, 50px);
+}
+
+.logo-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 /* Install */
@@ -1534,33 +1546,9 @@ body.login-page .logo-title img {
   100% { transform: rotate(0); }
 }
 
-/* New update ---------------------------------------------------------------------------- */
+/* New update --------------------------------------------------------------------------- */
 /* Responsive */
-.logo-title {
-  font-size: clamp(22px, 4vw, 50px);
-  flex-wrap: wrap;
-}
-
-.logo-title img {
-  width: clamp(28px, 6vw, 50px);
-  height: clamp(28px, 6vw, 50px);
-}
-
-.top-bar,
-.header-top {
-  flex-wrap: wrap;
-}
-
-.header-top h1 {
-  font-size: clamp(18px, 3vw, 39px);
-  min-width: 0;
-}
-
 .food-card img,
 #foodList .card img {
   height: clamp(160px, 25vw, 250px);
 }
-
-
-
-
