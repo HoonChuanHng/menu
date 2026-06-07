@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,41 +9,45 @@
 
 <body class="login-page">
 
-<div class="page-wrapper">
-    <div class="header-top">
-    <h2 class="logo-title">
-        Quick Plate Cafe
-        <img src="/external/image/app-logo.png" alt="logo">
-    </h2>
+    <div class="page-wrapper">
+
+        <div class="header-top">
+
+            <h2 class="logo-title">
+                Quick Plate Cafe
+                <img src="/external/image/app-logo.png" alt="logo">
+            </h2>
+
+        </div>
+
+        <div class="login-container">
+
+            <div class="login-box">
+
+                <h2>Login</h2>
+
+                <select id="role">
+                    <option value="" disabled selected>Select Role</option>
+                    <option value="admin">Admin</option>
+                    <option value="kitchen">Kitchen</option>
+                    <option value="waiter">Waiter</option>
+                </select>
+
+                <input id="username" placeholder="User ID">
+                <input id="password" type="password" placeholder="Password">
+
+                <button onclick="login()">Login</button>
+                <button class="customer-btn" onclick="goCustomer()">Menu</button>
+
+                <p id="msg"></p>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="login-container">
+    <script src="/js/login.js"></script>
 
-    <div class="login-box">
-
-        <h2>Login</h2>
-
-        <select id="role">
-        <option value="" disabled selected>Select Role</option>
-        <option value="admin">Admin</option>
-        <option value="kitchen">Kitchen</option>
-        <option value="waiter">Waiter</option>
-        </select>
-
-        <input id="username" placeholder="User ID">
-
-        <input id="password" type="password" placeholder="Password">
-
-        <button onclick="login()">Login</button>
-        <button class="customer-btn" onclick="goCustomer()">Menu</button>
-
-        <p id="msg"></p>
-
-    </div>
-
-    </div>
-</div>
-
-  <script src="/js/login.js"></script>
 </body>
 </html>
