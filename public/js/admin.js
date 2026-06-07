@@ -182,16 +182,34 @@ window.foodChartInstance = new Chart(ctx, {
 
   options: {
     indexAxis: chartType === "barH" ? "y" : "x",
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: {
+          color: "white"
+        }
+      },
+      tooltip: {
+        titleColor: "white",
+        bodyColor: "white"
+      }
+    },
     scales: {
-      [chartType === "barH" ? "x" : "y"]: {
+      x: {
         ticks: {
-          stepSize: 1
+          color: "white"
+        }
+      },
+      y: {
+        ticks: {
+          color: "white"
         }
       }
     }
   }
-})
+})  
 }
+
 function changeChart(type) {
   chartType = type
   if (window.lastAdminData) renderChart(window.lastAdminData)
@@ -289,10 +307,9 @@ async function loadUsers() {
 
   document.getElementById("users").innerHTML = users.map(u => `
     <div class="user-card">
-      <h3>User ID: ${u.username}</h3>
+      <p>User ID: ${u.username}</p>
       <p>Role: ${u.role}</p>
       <button class="del-btn" onclick="deleteUser('${u._id}')">Delete</button>
-      </button>
     </div>
   `).join("")
 }
