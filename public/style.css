@@ -499,9 +499,13 @@ body.dark input::placeholder {
   display: flex;
   justify-content: center;
   gap: 12px;
-  padding: 14px;
+  background: #fafafa;;
+  padding: 14px 16px;
   overflow-x: auto;
-  background: #fafafa;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  justify-content: flex-start;
 }
 
 .category-bar::-webkit-scrollbar {
@@ -990,12 +994,15 @@ body.kitchen-body {
 .navbar {
   display: flex;
   gap: 10px;
-  padding: 10px;
   position: sticky;
   top: 0;
   background: #111;
   z-index: 999;
   border-bottom: 1px solid #333;
+  padding: 10px 16px;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
 }
 
 .navbar button {
@@ -1007,6 +1014,7 @@ body.kitchen-body {
   color: white;
   font-weight: bold;
   transition: 0.2s;
+  flex-shrink: 0;
 }
 
 .navbar button:hover {
@@ -1599,6 +1607,3 @@ body.login-page .logo-title img {
   75% { transform: rotate(10deg); }
   100% { transform: rotate(0); }
 }
-
-/* New update --------------------------------------------------------------------------- */
-/* Responsive */

@@ -22,18 +22,44 @@ Customer Side
 - Customers scan a QR code or open a table link (table 1–5)
 - They browse a digital menu
 - They add items to a cart with quantity and price calculated automatically
+Add/remove to cart can increase decrease quanitity
+can add remarks
 - They submit an order to the system
+search for food
+call waiter, waiter recive message from their side
+Navigation bar for each food ctageory
+Track order status
+no need login
+can install the app
+
+Login
+Select of waiter kicthen admin
+Password authentication 
+Session expire per 8 hr
+Show/hide password
+
+waiter
+have a notifciation sound wehn custimer cakl waiter, print up the table id pf customer
+checkout table
+display receipt in pdf, potentoonally priny if have printer
+view orders that marked (ready chef will mark it if they done prepare the food so they waiter can mark it as serving or done(done sent to customer food))
+sort
+
+
+
 
 Kitchen Side
 - Kitchen staff view all orders in real time
 - Orders are displayed with table id, order number, time ordered, and food items
-- They can change status (Preparing / Done)
+- They can change status (Preparing / ready)
+can set dood Out of sales/rstock that customer know oh its unorderable
 
 Admin Side
 - Admin can view total revenue
 - They can view payment for each table and checkout
 - View all orders details (table id, order number, time ordered, and food items)
 - Track food sold 
+can view sttaistic of visual eg best seller allfoodsold vsdaily sales timeline
 
 Backend System
 - Orders are stored permanently in MongoDB Atlas
@@ -41,12 +67,13 @@ Backend System
 - Status updates are saved real time
 
 Other Features
+all updates are auto 3sec refresh eg if user place order, kitchen see it every 3 second auto refesh
 - QR table system (table=1 to table=5)
 - Real production-style URL routing
 - Real-time order processing workflow
 - Cart persists on refresh (no reset)
 - Database (MongoDB)
-- Cross-device support (phone + laptop)
+- Cross-device support (phone + laptop) responsive design(expect categroy button issue)
 - Installable web app (PWA ready concept)
 - Dark mode toggle button
 - Data visualization using charts
