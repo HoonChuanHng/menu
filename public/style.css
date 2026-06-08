@@ -1605,7 +1605,7 @@ body.login-page .logo-title img {
 .food-card img,
 #foodList .card img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 4;
   height: auto !important;
   object-fit: cover;
   border-radius: 6px;
