@@ -1604,5 +1604,34 @@ body.login-page .logo-title img {
 /* Responsive */
 .food-card img,
 #foodList .card img {
-  height: clamp(160px, 25vw, 250px);
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  height: auto !important;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.category-bar {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+}
+
+.category-bar * {
+  flex-shrink: 0;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: clip;
+}
+
+#foodList {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+@media (max-width: 600px) {
+  #foodList {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
