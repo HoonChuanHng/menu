@@ -55,6 +55,66 @@ function renderFood() {
   document.getElementById("foodList").innerHTML = foodHtml
 }
 
+let editTarget = null
+let editStep = 0
+
+function editFood(food) {
+  editTarget = food
+
+  document.getElementById("editName").value = food.name
+  document.getElementById("editPrice").value = food.price
+  document.getElementById("editCategory").value = food.category
+
+  document.getElementById("editModal").style.display = "flex"
+  editStep = 0
+}
+
+function closeEdit() {
+  document.getElementById("editModal").style.display = "none"
+  editTarget = null
+}
+
+async function saveEdit() {
+  const name = document.getElementById("editName").value.trim()
+  const price = Number(document.getElementById("editPrice").value)
+  const category = document.getElementById("editCategory").value.trim()
+  const file = document.getElementById("editImg").files[0]
+
+  let img = editTarget.img
+
+  if (file) {
+    const formData = new FormData()
+    formData.append("image", file)
+
+    const uploadRes = await fetch("/api/upload", {
+      method: "POST",
+      body: formData
+    })
+
+    const uploadData = await uploadRes.json()
+    img = uploadData.url
+  }
+
+  if (!name || !category || isNaN(price) || price <= 0) {
+    alert("Invalid input")
+    return
+  }
+
+  await fetch("/api/food/" + editTarget._id, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      price,
+      category,
+      img
+    })
+  })
+
+  closeEdit()
+  load()
+}
+
 async function load() {
   const res = await fetch("/api/admin")
   const data = await res.json()
@@ -92,61 +152,6 @@ async function load() {
 function applyFoodSort() {
   foodSortType = document.getElementById("sortFood").value
   renderFood()
-}
-
-/* SAFE PRICE */
-async function editFood(food) {
-  const name = prompt("Food name:", food.name)
-  const priceInput = prompt("Price:", food.price)
-  const category = prompt("Category:", food.category)
-  const changeImg = confirm("Do you want to change the image?")
-
-  let img = food.img
-
-  let file = null
-
-  if (changeImg) {
-    const fileInput = document.createElement("input")
-    fileInput.type = "file"
-    fileInput.accept = "image/*"
-    fileInput.click()
-
-    file = await new Promise(resolve => {
-      fileInput.onchange = () => resolve(fileInput.files[0])
-    })
-
-    if (file) {
-      const formData = new FormData()
-      formData.append("image", file)
-
-      const uploadRes = await fetch("/api/upload", {
-        method: "POST",
-        body: formData
-      })
-
-      const uploadData = await uploadRes.json()
-      img = uploadData.url
-    }
-  }
-
-  const price = parseFloat(priceInput)
-  if (!name || isNaN(price) || price <= 0 || !category || !img) {
-    alert("Invalid input")
-    return
-  }
-
-  await fetch("/api/food/" + food._id, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name,
-      price,
-      category,
-      img
-    })
-  })
-
-  load()
 }
 
 async function deleteFood(id) {

@@ -77,6 +77,22 @@
 
     <div id="foodList"></div>
     
+    <div id="editModal" class="modal">
+
+      <div class="modal-box">
+
+        <h3>Edit Food</h3>
+
+        <input id="editName" type="text" placeholder="Name">
+        <input id="editPrice" type="number" placeholder="Price">
+        <input id="editCategory" type="text" placeholder="Category">
+        <input id="editImg" type="file" accept="image/*">
+
+        <div class="modal-actions">
+          <button onclick="saveEdit()">Save</button>
+          <button onclick="closeEdit()">Cancel</button>
+        </div>
+
   </section>
 
   <section id="addFoodBox" class="section">
