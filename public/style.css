@@ -1612,18 +1612,21 @@ body.login-page .logo-title img {
 }
 
 .category-bar {
+  display: flex;
+  gap: 10px;
+  padding: 14px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   white-space: nowrap;
 }
 
-.category-bar * {
-  flex-shrink: 0;
+.category-bar > * {
+  flex: 0 0 auto;
 }
 
 html, body {
   width: 100%;
-  overflow-x: clip;
+  overflow-x: hidden;
 }
 
 #foodList {
@@ -1634,4 +1637,10 @@ html, body {
   #foodList {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+.header-top,
+.logo-wrapper {
+  min-width: 0;
+  overflow: visible;
 }
