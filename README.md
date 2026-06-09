@@ -39,7 +39,7 @@ Features:
 - Increase or decrease quantity
 - Add remark
 - Automatic price calculation 
-- Submit orders linked to a specific table ID
+- Submit orders linked to table ID
 - Search for food items
 - Track order status
 - Call waiter feature (sends notification to waiter system)
@@ -52,9 +52,9 @@ The system includes role-based authentication for staff access.
 Features:
 - Login system for Waiter / Kitchen / Admin roles
 - Password-based authentication
-- Show / hide password toggle 
 - Session expiration (8 hours)
 - Protected routes (e.g., /admin, /waiter, /kitchen require login)
+- Supports 'Enter' key submission for login
 
 Waiter Side
 Waiters manage customer interaction, order delivery workflow, and checkout table.

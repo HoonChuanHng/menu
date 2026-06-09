@@ -7,6 +7,7 @@ if (Date.now() > session.expiry) {
 if (session.role !== "admin") window.location.replace("login")
 
 document.getElementById("imgFile").accept = "image/*"
+let orderSortType = "orderId"
 let foodData = []
 let foodSortType = "default"
 let chartType = "barH"
@@ -124,7 +125,9 @@ async function load() {
     "Total Revenue: RM " + data.revenue.toFixed(2)
 
   let o = ""
-  data.orders.forEach(order => {
+  const sortedOrders = sortOrders(data.orders)
+
+  sortedOrders.forEach(order => {
     o += `
       <div class="admin-order">
         <h3>Table ${order.tableId} | Order #${order.orderNumber}</h3>
@@ -404,6 +407,55 @@ document.getElementById("user-management-form").addEventListener("submit", funct
   e.preventDefault()
   createUser()
 })
+
+function sortOrders(orders) {
+  const sorted = [...orders]
+
+  if (orderSortType === "orderId") {
+    sorted.sort((a, b) =>
+      String(a.orderNumber).localeCompare(String(b.orderNumber))
+    )
+  }
+
+  if (orderSortType === "date") {
+    sorted.sort((a, b) =>
+      new Date(b.doneAt || b.time || 0) - new Date(a.doneAt || a.time || 0)
+    )
+  }
+
+  if (orderSortType === "totalPrice") {
+    sorted.sort((a, b) =>
+      Number(b.totalPrice || 0) - Number(a.totalPrice || 0)
+    )
+  }
+
+  if (orderSortType === "table") {
+    sorted.sort((a, b) =>
+      Number(a.tableId) - Number(b.tableId)
+    )
+  }
+
+  if (orderSortType === "status") {
+    const rank = {
+      NEW: 1,
+      PREPARING: 2,
+      READY: 3,
+      SERVING: 4,
+      DONE: 5
+    }
+
+    sorted.sort((a, b) =>
+      (rank[a.status] || 99) - (rank[b.status] || 99)
+    )
+  }
+
+  return sorted
+}
+
+function changeOrderSort() {
+  orderSortType = document.getElementById("orderSort").value
+  if (window.lastAdminData) load()
+}
 
 load()
 setInterval(load, 3000)
