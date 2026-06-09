@@ -43,12 +43,17 @@ function renderFood() {
 
   food.forEach(f => {
     foodHtml += `
-      <div class="card">
-        <img src="${f.img}" width="80">
-        <h3>${f.name} (${f.category})</h3>
-        <p>RM ${Number(f.price).toFixed(2)}</p>
-        <button onclick='editFood(${JSON.stringify(f)})'>Edit</button>
-        <button onclick="deleteFood('${f._id}')">Delete</button>
+      <div class="card food-card">
+        <img class="food-img" src="${f.img}" />
+
+        <div class="food-info">
+          <h3 class="food-name">${f.name} (${f.category})</h3>
+          <div class="food-price">RM ${Number(f.price).toFixed(2)}</div>
+          <div class="food-actions">
+            <button onclick='editFood(${JSON.stringify(f)})'>Edit</button>
+            <button onclick="deleteFood('${f._id}')">Delete</button>
+          </div>
+        </div>
       </div>
     `
   })

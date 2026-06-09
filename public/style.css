@@ -1060,6 +1060,17 @@ body.kitchen-body {
   opacity: 0.85;
 }
 
+/* Responsive Kitchen Card */
+.food-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.food-card button {
+  margin-top: auto;
+}
+
 /* Out of sales */
 .sold {
   opacity: 0.5;
@@ -1248,45 +1259,29 @@ ul {
 }
 
 /* Edit */
-#foodList {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-#foodList .card {
+#food-card {
   border: 1px solid #ddd;
   padding: 10px;
   position: relative;
   border-radius: 8px;
-
   display: flex;
   flex-direction: column;
 }
 
-#foodList .card img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 12px;
+.food-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-#foodList .card h3 {
-  margin-bottom: 12px;
-}
-
-#foodList .card button {
-  margin-top: 12px;
-  font-size: 16px;
-  padding: 10px 14px;
+.food-actions button {
   border: none;
+  padding: 10px 14px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 12px;
-  margin-right: 8px;
+  width: 100%;
 }
 
 #foodList .card button:nth-of-type(1) {
@@ -1299,7 +1294,7 @@ ul {
   color: white;
 }
 
-#foodList .card button:hover {
+.food-actions button:hover {
   opacity: 0.85;
 }
 
@@ -1731,3 +1726,43 @@ body.login-page .logo-title img {
   75% { transform: rotate(10deg); }
   100% { transform: rotate(0); }
 }
+
+/* Fesponsive ---------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .food-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  .food-card {
+    padding: 8px;
+  }
+
+  .food-card img {
+    height: 190px;
+  }
+
+  .food-name {
+    font-size: 15px;
+  }
+
+  .food-price {
+    font-size: 14px;
+  }
+
+  .add-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
