@@ -218,6 +218,7 @@ function renderChart(data) {
     },
     
     options: {
+      maintainAspectRatio: false,
       indexAxis: chartType === "barH" ? "y" : "x",
       responsive: true,
       plugins: {

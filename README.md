@@ -10,37 +10,151 @@ Customer (QR Table Access):
 - https://online-ordering-system-3il6.onrender.com/?table=4
 - https://online-ordering-system-3il6.onrender.com/?table=5
 
-Kitchen Dashboard:
-- https://online-ordering-system-3il6.onrender.com/kitchen.html
-
 Admin Dashboard:
-- https://online-ordering-system-3il6.onrender.com/admin.html
+- https://online-ordering-system-3il6.onrender.com/admin
+
+Waiter Dashboard:
+- https://online-ordering-system-3il6.onrender.com/admin
+
+Kitchen Dashboard:
+- https://online-ordering-system-3il6.onrender.com/kitchen
+
+## Demo Access
+
+| Role   | Username | Password |
+|--------|--------  |----------|
+| Admin  | a1       | 123      |
+| Waiter | w1       | 123      |
+| Kitchen| k1       | 123      |
 
 ---
 ## What This System Does
 Customer Side
-- Customers scan a QR code or open a table link (table 1–5)
-- They can view diital menu consist of many food 
-Navigation bar for each food ctageory 
-- They add items to a cart that can Add/remove to cart can increase decrease quanitity
-with quantity and price calculated automatically
-can add remarks
-- They submit an order to the system, where its table id is recorded for later checkout and sepearte with other tbale(customer)
-search for food
-call waiter, waiter recive message from their side
-Track order status
-no need login
-can install the app
- 
-Login
-Select of waiter kicthen admin
-Password authentication 
-Session expire per 8 hr
-if user direct go /admin or /waiter etc, forced to login page
-Show/hide password
+Customers can access the system by scanning a QR code or opening a table-specific link (Table 1–5).
 
-waiter
-have a notifciation sound wehn custimer cakl waiter, print up the table id pf that who is called customer
+Features:
+- View a digital menu with categorized food listings
+- Navigate menu via category-based navigation bar
+- Add items to cart
+- Increase or decrease quantity
+- Add remark
+- Automatic price calculation 
+- Submit orders linked to a specific table ID
+- Search for food items
+- Track order status
+- Call waiter feature (sends notification to waiter system)
+- Installable as an application (PWA support)
+- No login required for customers
+ 
+Login Page
+The system includes role-based authentication for staff access.
+
+Features:
+- Login system for Waiter / Kitchen / Admin roles
+- Password-based authentication
+- Show / hide password toggle 
+- Session expiration (8 hours)
+- Protected routes (e.g., /admin, /waiter, /kitchen require login)
+
+Waiter Side
+Waiters manage customer interaction, order delivery workflow, and checkout table.
+
+Features:
+- Receive notifications message, notification sound, and table ID when customers call waiter
+- View and manage orders marked as 'Ready' by the kitchen.
+- Receive another notification sound when there is new 'Ready' orders.
+- Update order status to Serving and Done.
+- Handle table checkout for orders marked 'Ready'.
+- New 'Ready' Orders notification message is display inside the bell icon.
+- Bell icon with red dot indicator for new events
+- Clicking clears notification state
+- Clearing table session after checkout (historical data retained in database)
+- View receipt (PDF format)
+
+### Waiter Features
+
+#### Customer Call Waiter Notification
+
+* Receive notification messages, notification sound, and table IDs when customers call waiter..
+
+#### Ready Order Notification
+
+* Receive a separate notification sound when the kitchen marks an order as **Ready**.
+* View newly received **Ready** orders through the notification bell.
+* Unread **Ready** order notifications are indicated by a red dot on the notification bell.
+* Clicking the notification bell displays new **Ready** orders and clears the unread indicator.
+* Option to delete **Ready** orders in the notification bell.
+
+#### Order Delivering
+
+* View orders marked as **Ready** by the kitchen.
+* Update order status to **Serving** when food is delivering to the customer.
+* Mark orders as **Done** after food is delivered to the customer. 
+
+#### Checkout & Receipt Management
+
+* Process table checkout after orders that have been marked .
+* Clear active table sessions after checkout while preserving historical records in the database.
+* View and generate receipts in PDF format.
+
+
+👨‍🍳 Kitchen Side
+
+Kitchen staff manage order preparation and food availability.
+
+Features:
+View all incoming customer orders
+Orders displayed with:
+Table ID
+Order number
+Time ordered
+Food items
+Special remarks
+Order status
+Update order status:
+Preparing
+Ready (completed cooking)
+Sort orders (e.g., A–Z, availability priority)
+Mark items as out of stock / unavailable
+Notification system:
+Alert sound for new orders
+Bell icon with red dot indicator for new incoming orders
+🛠️ Admin Side
+
+Administrators manage the entire system, menu, users, and analytics.
+
+Features:
+Dashboard analytics:
+Total revenue
+Daily sales overview
+Best-selling items
+Sales timeline visualization
+Full order history access:
+Table ID
+Order number
+Timestamps (ordered / ready / completed)
+Status tracking
+Remarks and item details
+Menu management:
+Add new food items (name, price, image, category)
+Edit existing items
+Remove items
+Update availability (in stock / out of stock)
+Sorting and filtering menu items (A–Z, price, category)
+User management system:
+Create new staff accounts (waiter/kitchen/admin)
+Assign roles
+Update credentials
+Remove accounts when staff leave
+Fully dynamic (no hardcoded users)
+⚙️ System Highlights
+Fully role-based system (Customer / Waiter / Kitchen / Admin)
+Real-time notification system for operational efficiency
+Table-based ordering system (multi-table isolation)
+Dynamic menu management (no hardcoded food data)
+Session-secured authentication system
+PWA installable support for customer convenience
+
 They can view payment for each table and checkoutand checkout table, if checkout eg table 1, all the record of table1 orders are gone(but databse arent deleted this is for the net customer eat table1 = new record to ehckout, wont addups)
 display receipt in pdf, potentoonally priny if have printer
 view orders that marked ready (ready chef will mark it if they done prepare the food so they waiter can mark it as serving or done(done sent to customer food))
@@ -81,6 +195,7 @@ all updates are auto 3sec refresh eg if user place order, kitchen see it every 3
 - Installable web app (PWA ready concept)
 - Dark mode toggle button
 - Data visualization using charts
+auto generated order id. eg order 178 indicate its the 178th orders
 
 ---
 ## System Workflow

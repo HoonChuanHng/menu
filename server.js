@@ -324,6 +324,14 @@ app.put("/api/food/:id/soldout", async (req, res) => {
 })
 
 /* ================= ORDERS (UNCHANGED) ================= */
+app.get("/api/waiter/billing", async (req, res) => {
+  const orders = await Order.find({
+    status: "DONE",
+    paid: false
+  })
+
+  res.json({ activeOrders: orders })
+})
 
 app.post("/api/order", async (req, res) => {
   const { tableId, items, remarks } = req.body
@@ -382,7 +390,9 @@ app.delete("/api/order/:orderNumber", async (req, res) => {
 
 app.post("/api/checkout/:tableId", async (req, res) => {
   await Order.updateMany(
-    { tableId: req.params.tableId },
+    { tableId: req.params.tableId,
+      status: "DONE" 
+     },
     { $set: { paid: true } }
   )
   res.json({ success: true })

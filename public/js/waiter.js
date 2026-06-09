@@ -6,6 +6,7 @@ if (Date.now() > session.expiry) {
 }
 if (session.role !== "waiter") window.location.replace("login")
 
+let billingOrders = []
 let audioUnlocked = false
 let lastCallId = null
 let bellRungForBatch = false
@@ -27,14 +28,17 @@ document.addEventListener("click", () => {
 }, { once: true })
 
 async function load() {
-  if (!latestOrders || latestOrders.length === 0) {
+  const res = await fetch("/api/waiter/billing")
+  const data = await res.json()
+  billingOrders = data.activeOrders || []
+  if (!billingOrders || billingOrders.length === 0) {
     document.getElementById("tables").innerHTML = "<p>No tables</p>"
     return
   }
 
   const tableMap = {}
 
-  latestOrders.forEach(o => {
+  billingOrders.forEach(o => {
     if (!tableMap[o.tableId]) {
       tableMap[o.tableId] = {
         total: 0
@@ -89,7 +93,7 @@ function showSection(id) {
 }
 
 function downloadReceipt(tableId) {
-  const orders = latestOrders.filter(o =>
+  const orders = billingOrders.filter(o =>
     String(o.tableId) === String(tableId)
   )
   const orderNumbers = orders.map(o => "#" + o.orderNumber).join(", ")
