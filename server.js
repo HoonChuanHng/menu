@@ -48,6 +48,7 @@ const orderSchema = new mongoose.Schema({
   time: Date,
   readyAt: Date,
   doneAt: Date,
+  totalPrice: Number,
   paid: { type: Boolean, default: false }
 })
 
@@ -333,18 +334,30 @@ app.get("/api/waiter/billing", async (req, res) => {
   res.json({ activeOrders: orders })
 })
 
+app.get("/api/order/:tableId/track", async (req, res) => {
+  const orders = await Order.find({
+    tableId: req.params.tableId,
+    paid: false
+  })
+
+  res.json(orders)
+})
+
 app.post("/api/order", async (req, res) => {
   const { tableId, items, remarks } = req.body
-
+  let totalPrice = 0
+  items.forEach(i => {
+    totalPrice += (Number(i.price) || 0) * (Number(i.qty) || 1)
+  })
   const numericId = await getNextOrderId()
-
   const order = await Order.create({
     tableId,
     items,
     remarks,
     status: "NEW",
     time: new Date(),
-    orderNumber: numericId
+    orderNumber: numericId,
+    totalPrice
   })
   res.json({ orderId: numericId, tableId })
 })

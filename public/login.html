@@ -22,26 +22,30 @@
 
         <div class="login-container">
 
-            <div class="login-box">
+            <form id ="login-enter">
+            
+                <div class="login-box">
 
-                <h2>Login</h2>
+                    <h2>Login</h2>
 
-                <select id="role">
-                    <option value="" disabled selected>Select Role</option>
-                    <option value="admin">Admin</option>
-                    <option value="kitchen">Kitchen</option>
-                    <option value="waiter">Waiter</option>
-                </select>
+                    <select id="role">
+                        <option value="" disabled selected>Select Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="kitchen">Kitchen</option>
+                        <option value="waiter">Waiter</option>
+                    </select>
 
-                <input id="username" placeholder="User ID">
-                <input id="password" type="password" placeholder="Password">
+                    <input id="username" placeholder="User ID">
+                    <input id="password" type="password" placeholder="Password">
 
-                <button onclick="login()">Login</button>
-                <button class="customer-btn" onclick="goCustomer()">Menu</button>
+                    <button onclick="login()">Login</button>
+                    <button class="customer-btn" onclick="goCustomer()">Menu</button>
 
-                <p id="msg"></p>
+                    <p id="msg"></p>
 
-            </div>
+                </div>
+            
+            </form>
 
         </div>
 

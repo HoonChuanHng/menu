@@ -133,6 +133,7 @@ async function load() {
         ${order.doneAt ? `<p>Done at: ${order.doneAt}</p>` : ""}
         <p>Status: <span class="status status-${order.status}">${order.status}</span></p>
         <p>Remarks: ${order.remarks || "-"}</p>
+        <p>Total Price: RM ${Number(order.totalPrice || 0).toFixed(2)}</p>
         <ul>
           ${order.items.map(i =>
             `<li>${i.name} x ${i.qty || 1}</li>`
@@ -392,6 +393,16 @@ toggle.addEventListener("change", () => {
   if (window.lastAdminData) {
     renderChart(window.lastAdminData)
   }
+})
+
+document.getElementById("add-food-form").addEventListener("submit", function (e) {
+  e.preventDefault()
+  addFood()
+})
+
+document.getElementById("user-management-form").addEventListener("submit", function (e) {
+  e.preventDefault()
+  createUser()
 })
 
 load()

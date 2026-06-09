@@ -29,6 +29,11 @@ async function login() {
   window.location.href = data.role
 }
 
+document.getElementById("login-enter").addEventListener("submit", function (e) {
+  e.preventDefault()
+  login()
+})
+
 function goCustomer() {
   window.location.href = "index.html"
 }

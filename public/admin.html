@@ -59,12 +59,17 @@
   </section>
 
   <section id="addFoodBox" class="section">
+
     <h2 class="kitchen-title"> Add Food</h2>
-    <input id="name" placeholder="Food Name">
-    <input id="price" type="number" placeholder="Price (RM)">
-    <input type="file" id="imgFile">
-    <input id="category" placeholder="Category">
-    <button onclick="addFood()">Add Food</button>
+
+    <form id="add-food-form">
+      <input id="name" placeholder="Food Name">
+      <input id="price" type="number" placeholder="Price (RM)">
+      <input type="file" id="imgFile">
+      <input id="category" placeholder="Category">
+      <button onclick="addFood()">Add Food</button>
+    </form>
+
   </section>
 
   <section id="foodSection" class="section">
@@ -108,21 +113,25 @@
 
     <h2 class="user-management">User Management</h2>
 
-    <div class="add-user-box">
+    <form id="user-management-form">
 
-      <input id="newUsername" placeholder="User ID">
-      <input id="newPassword" placeholder="Password">
+      <div class="add-user-box">
 
-      <select id="newRole">
-        <option value="" disabled selected>Select User</option>
-        <option value="admin">Admin</option>
-        <option value="kitchen">Kitchen</option>
-        <option value="waiter">Waiter</option>
-      </select>
+        <input id="newUsername" placeholder="User ID">
+        <input id="newPassword" placeholder="Password">
 
-      <button onclick="createUser()">Add User</button>
+        <select id="newRole">
+          <option value="" disabled selected>Select User</option>
+          <option value="admin">Admin</option>
+          <option value="kitchen">Kitchen</option>
+          <option value="waiter">Waiter</option>
+        </select>
 
-    </div>
+        <button onclick="createUser()">Add User</button>
+
+      </div>
+
+    </form>
 
     <h2 class="user-list">User List</h2>
     <div id="users" class="user"></div>

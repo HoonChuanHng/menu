@@ -158,28 +158,50 @@ function toggleCart() {
 }
 
 async function trackOrder() {
-  const res = await fetch("/api/order/" + tableId)
+  const modal = document.getElementById("trackModal")
+  const content = document.getElementById("trackContent")
+
+  modal.style.display = "flex"
+
+  const res = await fetch("/api/order/" + tableId + "/track")
   const orders = await res.json()
 
   if (!orders.length) {
-    alert("No order found. Please place an order first.")
+    content.innerHTML = "<p>No order found.</p>"
     return
   }
 
-  let msg = ""
+  let html = ""
 
   orders.forEach(o => {
-    msg += `Order #${o.orderNumber}\n`
-    msg += `Items:\n`
+    html += `<div style="margin-bottom:10px;">`
+    html += `<b>Order #${o.orderNumber}</b><br>`
+    html += `Items:<br>`
+
     o.items.forEach(i => {
-      msg += `- ${i.name} x ${i.qty || 1}\n`
+      html += `- ${i.name} x ${i.qty || 1}<br>`
     })
-    msg += `Status: ${o.status}\n`
-    msg += `\n\n`
+
+    html += `<b>Status:</b> ${o.status}`
+    html += `</div><hr>`
   })
 
-  alert(msg)
+  content.innerHTML = html
 }
+
+function closeTrack() {
+  document.getElementById("trackModal").style.display = "none"
+}
+
+document.addEventListener("click", function(e) {
+  const modal = document.getElementById("trackModal")
+  const box = document.querySelector(".track-box")
+
+  if (modal && e.target === modal) {
+    modal.style.display = "none"
+  }
+})
+
 
 function placeOrder() {
   const items = Object.values(cart).map(c => ({
