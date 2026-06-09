@@ -1607,8 +1607,3 @@ body.login-page .logo-title img {
   75% { transform: rotate(10deg); }
   100% { transform: rotate(0); }
 }
-
-
-body.dark .logo-title img {
-  filter: brightness(0.9) invert(1);
-}

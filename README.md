@@ -20,46 +20,50 @@ Admin Dashboard:
 ## What This System Does
 Customer Side
 - Customers scan a QR code or open a table link (table 1–5)
-- They browse a digital menu
-- They add items to a cart with quantity and price calculated automatically
-Add/remove to cart can increase decrease quanitity
+- They can view diital menu consist of many food 
+Navigation bar for each food ctageory 
+- They add items to a cart that can Add/remove to cart can increase decrease quanitity
+with quantity and price calculated automatically
 can add remarks
-- They submit an order to the system
+- They submit an order to the system, where its table id is recorded for later checkout and sepearte with other tbale(customer)
 search for food
 call waiter, waiter recive message from their side
-Navigation bar for each food ctageory
 Track order status
 no need login
 can install the app
-
+ 
 Login
 Select of waiter kicthen admin
 Password authentication 
 Session expire per 8 hr
+if user direct go /admin or /waiter etc, forced to login page
 Show/hide password
 
 waiter
-have a notifciation sound wehn custimer cakl waiter, print up the table id pf customer
-checkout table
+have a notifciation sound wehn custimer cakl waiter, print up the table id pf that who is called customer
+They can view payment for each table and checkoutand checkout table, if checkout eg table 1, all the record of table1 orders are gone(but databse arent deleted this is for the net customer eat table1 = new record to ehckout, wont addups)
 display receipt in pdf, potentoonally priny if have printer
-view orders that marked (ready chef will mark it if they done prepare the food so they waiter can mark it as serving or done(done sent to customer food))
-sort
-
+view orders that marked ready (ready chef will mark it if they done prepare the food so they waiter can mark it as serving or done(done sent to customer food))
+jave a notification bell, it will sounds and bell will have a red dot if a ready order arrives waiter can click the bell (click = red dot no more) to see the orders that kcthen cooked
 
 
 
 Kitchen Side
-- Kitchen staff view all orders in real time
-- Orders are displayed with table id, order number, time ordered, and food items
-- They can change status (Preparing / ready)
+- Kitchen staff view all orders by custmer
+- Orders are displayed with table id, order number, remark, status time ordered, and food items
+- They can change status (Preparing / ready) ready= cokked, prepatng = prepare
+can sort the food by availanle first, a-z etc
 can set dood Out of sales/rstock that customer know oh its unorderable
+jave a notification bell, it will sounds and bell will have a red dot if a new order arrives, can click the bell (click = red dot no more) to see the orders
 
 Admin Side
-- Admin can view total revenue
-- They can view payment for each table and checkout
-- View all orders details (table id, order number, time ordered, and food items)
-- Track food sold 
+- Admin can view total revenu
+- View all orders details (table id, order number, torderat readyat doneat, status, rematks and food items)
+add new food items, name price uplaod pic category(instead of hardcode all food item, admin can add itself)
+edit existed food chnage name price new pic categroy oreven remove entirely
 can view sttaistic of visual eg best seller allfoodsold vsdaily sales timeline
+can sort the food by  a-z etc price
+instead of hardcodethe fk user password, admin design the passowrd and user, eg a new waiter hiredm so admin create a new user acc name password role, a waiter resigned, admin remove the acc deleetd it these account is used in login page, very bad no harrddcore sory
 
 Backend System
 - Orders are stored permanently in MongoDB Atlas
