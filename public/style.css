@@ -413,6 +413,53 @@ body.dark input::placeholder {
   opacity: 0.8;
 }
 
+body.dark .track-box {
+  background: #1e1e1e;
+  color: #ffffff;
+}
+
+body.dark .track-header {
+  border-bottom: 1px solid #333;
+}
+
+body.dark .track-header h2 {
+  color: #ffffff;
+}
+
+body.dark .track-header button {
+  color: #ffffff;
+}
+
+body.dark #trackResult {
+  color: #ffffff;
+}
+
+body.dark #trackResult hr {
+  border-top: 1px solid #333;
+}
+
+body.dark .modal-box {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+body.dark .modal-box input {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+body.dark .modal-box input::placeholder {
+  color: #aaa;
+}
+
+body.dark .modal-actions button {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
 /* INDEX --------------------------------------------------------------------------------- */
 /* Restaurant info */
 .restaurant-info {
@@ -834,7 +881,6 @@ body.dark input::placeholder {
   box-shadow: 0 6px 18px rgba(0,200,83,0.4);
 }
  
-/* Close */
 .close-btn {
   width: 36px;
   height: 36px;
@@ -922,7 +968,6 @@ body.kitchen-body {
   flex-direction: column;
   gap: 12px;
 }
-
 
 .order {
   background: white;

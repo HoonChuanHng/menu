@@ -15,6 +15,7 @@
     <h1 class="admin-title"> Admin Dashboard 🛠️</h1>
 
     <div>
+
       <button class="logout-btn" onclick="logout()">Logout</button>
 
       <label class="switch">
@@ -58,7 +59,6 @@
     <h2 class="kitchen-title">All Orders</h2>
   
     <div class="toolbar">
-
       <select id="orderSort" onchange="changeOrderSort()">
         <option value="orderId">By Order ID</option>
         <option value="date">By Date</option>
@@ -66,7 +66,6 @@
         <option value="table">By Table</option>
         <option value="status">By Status</option>
       </select>
-
     </div>
 
     <div id="orders"></div>
@@ -92,7 +91,6 @@
     <h2 class="kitchen-title">Food Details</h2>
 
     <div class="toolbar">
-
       <select id="sortFood" onchange="applyFoodSort()">
         <option value="default">Default</option>
         <option value="az">A → Z</option>
@@ -101,7 +99,6 @@
         <option value="priceHigh">Price High → Low</option>
         <option value="category">Category (A → Z)</option>
       </select>
-
     </div>
 
     <div id="foodList"></div>
@@ -149,6 +146,7 @@
     </form>
 
     <h2 class="user-list">User List</h2>
+    
     <div id="users" class="user"></div>
 
   </section>
