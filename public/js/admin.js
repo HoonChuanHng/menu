@@ -462,5 +462,19 @@ function changeOrderSort() {
   if (window.lastAdminData) load()
 }
 
+const modal = document.getElementById("imgModal")
+const modalImg = document.getElementById("imgModalContent")
+
+document.addEventListener("click", (e) => {
+  if (e.target.tagName === "IMG" && e.target.closest(".food-card")) {
+    modal.style.display = "flex"
+    modalImg.src = e.target.src
+  }
+
+  if (e.target === modal) {
+    modal.style.display = "none"
+  }
+})
+
 load()
 setInterval(load, 3000)
