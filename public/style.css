@@ -336,6 +336,24 @@ body {
   transform: translateX(30px);
 }
 
+/* Image preview*/
+.img-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.img-modal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
 /* DARK MODE */
 body.dark {
   background: #121212;
@@ -772,24 +790,6 @@ body.dark .modal-actions button {
 /* Menu */
 .menu-container {
   padding: 16px;
-}
-
-/* Image preview*/
-.img-modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-}
-
-.img-modal img {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 10px;
-  object-fit: contain;
 }
 
 /* Add orders */
