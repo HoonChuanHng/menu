@@ -95,6 +95,7 @@ body {
   flex-direction: column;
   width: 220px;
   flex-shrink: 0;
+  display: flex;
 }
 
 .food-card button {
@@ -108,17 +109,22 @@ body {
   aspect-ratio: 4/3.8;
   object-fit: cover;
   border-radius: 6px;
+  margin-bottom: 6px;
 }
 
 .food-card h3 {
-  margin-bottom: 12px;
+  margin-bottom: 6px;
+}
+
+.food-card p{
+  margin-bottom: 6px;
 }
 
 .food-card:hover {
   transform: translateY(-3px);
 }
 
-/* Food card, food grid */
+/* Food grid */
 .food-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, 220px);
@@ -147,6 +153,7 @@ body {
   font-size: clamp(13px, 1.8vw, 16px);
   overflow-wrap: break-word;
   word-break: break-word;
+  margin-top: auto;
 }
 
 @media (max-width: 768px) {
@@ -166,6 +173,57 @@ body {
     font-size: 14px;
     padding: 10px;
   }
+}
+
+/* Orders */
+.order {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: 0.2s;
+}
+
+.order button {
+  padding: 6px 12px;
+  margin-right: 6px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.order button:hover {
+  opacity: 0.85;
+}
+
+.order button:nth-of-type(1) {
+  background: #ffb020;
+  color: black;
+}
+
+.order button:nth-of-type(2) {
+  background: #00c853;
+  color: white;
+}
+
+.order h3 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.order p {
+  color: inherit;
+  margin-bottom: 2px;
+}
+
+ul {
+  padding-left: 20px;
+  margin-left: 10px;
+}
+
+.order li {
+  margin-bottom: 2px;
 }
 
 /* Sort */
@@ -845,8 +903,6 @@ body.dark .modal-actions button {
   height: 80px;
   object-fit: cover;
   border-radius: 14px;
-  width: 100%;
-  max-width: 100%;
 }
 
 .cart-modal {
@@ -988,6 +1044,7 @@ body.dark .modal-actions button {
 /* Basic */
 .kitchen-title {
   margin-bottom: 20px;
+  margin-left: 10px;
 }
 
 .kitchen-header {
@@ -1042,60 +1099,11 @@ body.kitchen-body {
   transform: scale(0.98);
 }
 
-/* Orders */
+/* Kitchen order */
 .kitchen-orders {
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.order {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: 0.2s;
-}
-
-.order button {
-  padding: 6px 12px;
-  margin-right: 6px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.order button:hover {
-  opacity: 0.85;
-}
-
-.order button:nth-of-type(1) {
-  background: #ffb020;
-  color: black;
-}
-
-.order button:nth-of-type(2) {
-  background: #00c853;
-  color: white;
-}
-
-.order h3 {
-  margin-bottom: 8px;
-  font-size: 16px;
-}
-
-.order p {
-  color: inherit;
-}
-
-.order ul {
-  margin-left: 18px;
-  margin-bottom: 12px;
-}
-
-.order li {
-  margin-bottom: 4px;
 }
 
 /* Menu availability*/
@@ -1248,7 +1256,7 @@ body.kitchen-body {
   }
 }
 
-/* Orders */
+/* Admin orders */
 .admin-order {
   background: white;
   padding: 10px;
@@ -1261,6 +1269,10 @@ body.kitchen-body {
   width: 100%;
   max-width: 300px;
   flex: 0 0 auto;
+}
+
+.admin-order li {
+  margin-bottom: 2px;
 }
 
 .admin-order .danger {
@@ -1287,11 +1299,6 @@ body.kitchen-body {
   margin-bottom: 8px;
   overflow-wrap: break-word;
   word-break: break-word;
-}
-
-ul {
-  padding-left: 20px;
-  margin-left: 10px;
 }
 
 .danger {
@@ -1680,6 +1687,7 @@ body.login-page .logo-title img {
 /* Basic */
 #ordersSection h2 {
   margin-bottom: 20px;
+  margin-left: 10px;
 }
 
 /* Receipt */

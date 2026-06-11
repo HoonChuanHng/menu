@@ -130,6 +130,7 @@ async function loadOrders() {
           <p>Ordered at: ${o.time}</p>
           <p>Status: <span class="status status-${o.status}">${o.status}</span></p>
           <p>Remarks: ${o.remarks || "-"}</p>
+          <p>Food Items:</p>
           <ul>
             ${items.map(i => `<li>${i.name} x ${i.qty || 1}</li>`).join("")}
           </ul>

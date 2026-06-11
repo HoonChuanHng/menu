@@ -204,7 +204,7 @@ async function loadOrders() {
         <h3>Table ${o.tableId} | Order #${o.orderNumber}</h3>
         ${o.readyAt ? `<p>Ready at: ${o.readyAt}</p>` : ""}
         <p>Status: <span class="status status-${o.status}">${o.status}</span></p>
-
+        <p>Food Items:</p>
         <ul>
           ${(o.items || []).map(i =>
             `<li>${i.name} x ${i.qty || 1}</li>`

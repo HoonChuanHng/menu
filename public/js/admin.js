@@ -142,6 +142,7 @@ async function load() {
         <p>Status: <span class="status status-${order.status}">${order.status}</span></p>
         <p>Remarks: ${order.remarks || "-"}</p>
         <p>Total Price: RM ${Number(order.totalPrice || 0).toFixed(2)}</p>
+        <p>Food Items:</p>
         <ul>
           ${order.items.map(i =>
             `<li>${i.name} x ${i.qty || 1}</li>`
