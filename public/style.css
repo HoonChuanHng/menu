@@ -1,4 +1,4 @@
-/* PUBLIC -------------------------------------------------------------------------------- */
+/* PUBLIC -------------------------------------------------------------------------------------------- */
 /* Basic */ 
 * {
   margin: 0;
@@ -16,21 +16,24 @@ button, input, select, textarea {
   font-family: inherit;
 }
 
-html, body {
-  width: 100%;
-  overflow-x: hidden;
+button {
+  font-size: clamp(13px, 2vw, 16px);
 }
 
 html {
+  width: 100%;
+  overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
 body {
+  width: 100%;
+  overflow-x: hidden;
   font-family: Arial, sans-serif;
   background: #f5f5f5;
   color: #222;
   transition: 0.3s;
-  padding-bottom: 100px;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
 }
 
 /* Top bar */
@@ -63,7 +66,6 @@ body {
 .header-top h1 {
   flex: 1;
   text-align: center;
-  font-size: 39px;
   font-weight: bold;
   font-size: clamp(18px, 3vw, 39px);
   min-width: 0
@@ -91,6 +93,8 @@ body {
   transition: 0.2s;
   display: flex;
   flex-direction: column;
+  width: 220px;
+  flex-shrink: 0;
 }
 
 .food-card button {
@@ -101,12 +105,9 @@ body {
 
 .food-card img {
   width: 100%;
-  height: 250px;
+  aspect-ratio: 4/3.8;
   object-fit: cover;
   border-radius: 6px;
-  margin-bottom: 12px;
-  background: #f5f5f5;
-  aspect-ratio: 4 / 3;
 }
 
 .food-card h3 {
@@ -120,8 +121,9 @@ body {
 /* Food card, food grid */
 .food-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, 220px);
+  gap: 16px;
+  justify-content: start;
 }
 
 .food-info {
@@ -134,26 +136,22 @@ body {
 .food-name {
   font-size: 18px;
   margin-bottom: 8px;
+  font-size: clamp(14px, 2vw, 18px);
+  overflow-wrap: break-word;
 }
 
 .food-price {
   color: #00a63e;
   font-weight: bold;
   margin-bottom: 12px;
+  font-size: clamp(13px, 1.8vw, 16px);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 @media (max-width: 768px) {
-  .food-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
-  }
-
   .food-card {
     padding: 8px;
-  }
-
-  .food-card img {
-    height: 290px;
   }
 
   .food-name {
@@ -169,7 +167,6 @@ body {
     padding: 10px;
   }
 }
-
 
 /* Sort */
 .toolbar {
@@ -209,7 +206,6 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
   border-radius: 40px;
   cursor: pointer;
   background: #f5f5f5;
@@ -535,7 +531,7 @@ body.dark .modal-actions button {
   border: 1px solid #555;
 }
 
-/* INDEX --------------------------------------------------------------------------------- */
+/* INDEX --------------------------------------------------------------------------------------------- */
 /* Restaurant info */
 .restaurant-info {
   background: white;
@@ -640,7 +636,6 @@ body.dark .modal-actions button {
 .category-bar {
   margin-top: 10px;
   display: flex;
-  justify-content: center;
   gap: 12px;
   background: #fafafa;;
   padding: 14px 16px;
@@ -663,10 +658,8 @@ body.dark .modal-actions button {
   cursor: pointer;
   white-space: nowrap;
   font-weight: bold;
-  min-width: 150px;
   text-align: center;
   flex-shrink: 0;
-  font-size: 15px;
   min-width: 120px;
   padding: 12px 20px;
   font-size: clamp(12px, 2.5vw, 15px);
@@ -703,6 +696,20 @@ body.dark .modal-actions button {
 
 .search-icon {
   font-size: 16px;
+}
+
+@media (max-width: 320px) {
+  .search-bar {
+    width: 100%;
+  }
+
+  .search-bar input {
+    min-width: 0;
+  }
+  
+  .header-top {
+    flex-wrap: wrap;
+  }
 }
 
 /* Track */
@@ -798,11 +805,12 @@ body.dark .modal-actions button {
   border: none;
   background: #00c853;
   color: white;
-  padding: 12px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
   margin-top: auto;
+  font-size: clamp(13px, 2vw, 16px);
+  padding: clamp(8px, 2vw, 12px);
 }
 
 /* Cart */
@@ -834,10 +842,11 @@ body.dark .modal-actions button {
 }
 
 .cart-item img {
-  width: 80px;
   height: 80px;
   object-fit: cover;
   border-radius: 14px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .cart-modal {
@@ -975,7 +984,7 @@ body.dark .modal-actions button {
   transform: scale(1.05);
 }
 
-/* KITCHEN ------------------------------------------------------------------------------- */
+/* KITCHEN ------------------------------------------------------------------------------------------- */
 /* Basic */
 .kitchen-title {
   margin-bottom: 20px;
@@ -1144,7 +1153,7 @@ body.kitchen-body {
   font-weight: bold;
 }
 
-/* ADMIN --------------------------------------------------------------------------------- */
+/* ADMIN --------------------------------------------------------------------------------------------- */
 /* Basic */
 .admin-title {
   margin-bottom: 20px;
@@ -1249,8 +1258,8 @@ body.kitchen-body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  width: 100%;
   max-width: 300px;
-  width: 280px;
   flex: 0 0 auto;
 }
 
@@ -1276,6 +1285,8 @@ body.kitchen-body {
 
 .card h3 {
   margin-bottom: 8px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 ul {
@@ -1362,6 +1373,12 @@ ul {
   gap: 10px;
 }
 
+.modal-box,
+.track-box,
+.cart-content {
+  max-width: 100%;
+}
+
 .modal-box input {
   padding: 8px;
   border: 1px solid #ddd;
@@ -1436,6 +1453,8 @@ ul {
   flex-direction: column;
   gap: 6px;
   transition: 0.2s;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .user-card:hover {
@@ -1444,13 +1463,16 @@ ul {
 
 #users {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(160px, 45vw, 250px), 1fr)
+  );
 }
 
 .user-card h3 {
   margin-bottom: 6px;
   font-size: 16px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .user-card p {
@@ -1535,7 +1557,7 @@ ul {
   margin-top: 17px;
 }
 
-/* LOGIN --------------------------------------------------------------------------------- */
+/* LOGIN --------------------------------------------------------------------------------------------- */
 /* Basic */
 .login-page {
   margin: 0;
@@ -1589,7 +1611,6 @@ body.login-page .logo-title img {
 }
 
 .login-box {
-  width: 340px;
   padding: 30px;
   border-radius: 14px;
   background: #ffffff;
@@ -1655,7 +1676,7 @@ body.login-page .logo-title img {
   font-size: 13px;
 }
 
-/* WAITER -------------------------------------------------------------------------------- */
+/* WAITER -------------------------------------------------------------------------------------------- */
 /* Basic */
 #ordersSection h2 {
   margin-bottom: 20px;
@@ -1687,6 +1708,7 @@ body.login-page .logo-title img {
   background: #2ecc71;
   color: white;
 }
+
 .card {
   display: flex;
   flex-direction: column;
@@ -1758,20 +1780,6 @@ body.login-page .logo-title img {
   transform: scale(1.1);
   transition: 0.2s;
 }
-
-.bell.active {
-  animation: shake 0.5s;
-}
-
-@keyframes shake {
-  0% { transform: rotate(0); }
-  25% { transform: rotate(15deg); }
-  50% { transform: rotate(-15deg); }
-  75% { transform: rotate(10deg); }
-  100% { transform: rotate(0); }
-}
-
-
 
 
 
