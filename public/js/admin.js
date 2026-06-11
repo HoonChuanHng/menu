@@ -165,6 +165,7 @@ function applyFoodSort() {
 }
 
 async function deleteFood(id) {
+  if (!confirm("Do you sure to delete the food item?")) return
   await fetch("/api/food/" + id, { method: "DELETE" })
   load()
 }
@@ -317,6 +318,7 @@ async function createUser() {
 showSection("dashboard")
 
 async function delOrder(id) {
+  if (!confirm("Do you sure to delete the order?")) return
   await fetch("/api/order/" + id, { method: "DELETE" })
   load()
 }

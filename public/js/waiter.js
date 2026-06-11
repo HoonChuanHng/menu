@@ -72,6 +72,7 @@ async function load() {
 }
 
 async function checkoutTable(tableId) {
+  if (!confirm("Do you sure to checkout this table?")) return
   document.querySelectorAll(".card").forEach(c => {
     if (c.innerText.includes(tableId)) {
       c.style.opacity = "0.4"
