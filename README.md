@@ -29,24 +29,24 @@ Kitchen Dashboard:
 
 ---
 ## What This System Does
-Customer Side
+### Customer Side
 Customers can access the system by scanning a QR code or opening a table-specific link (Table 1–5).
 
 Features:
 - View a digital menu with categorized food listings
-- Navigate menu via category-based navigation bar
+- Navigate food items via category-based navigation bar
 - Add items to cart
 - Increase or decrease quantity
 - Add remark
 - Automatic price calculation 
-- Submit orders linked to table ID
+- Submit orders linked to table number
 - Search for food items
 - Track order status
 - Call waiter feature (sends notification to waiter system)
 - Installable as an application (PWA support)
 - No login required for customers
  
-Login Page
+### Login Page
 The system includes role-based authentication for staff access.
 
 Features:
@@ -56,97 +56,74 @@ Features:
 - Protected routes (e.g., /admin, /waiter, /kitchen require login)
 - Supports 'Enter' key submission for login
 
-Waiter Side
-Waiters manage customer interaction, order delivery workflow, and checkout table.
+### Admin Side
+Administrators manage analytics, orders, food, and users. 
 
-Features:
-- Receive notifications message, notification sound, and table ID when customers call waiter
-- View and manage orders marked as 'Ready' by the kitchen.
-- Receive another notification sound when there is new 'Ready' orders.
-- Update order status to Serving and Done.
-- Handle table checkout for orders marked 'Ready'.
-- New 'Ready' Orders notification message is display inside the bell icon.
-- Bell icon with red dot indicator for new events
-- Clicking clears notification state
-- Clearing table session after checkout (historical data retained in database)
-- View receipt (PDF format)
+#### Sales Statistics Visualization
+* View total revenue
+* View Charts (Best Seller, All Food Sold, and Daily Sales)
 
-### Waiter Features
+#### Order Details 
+* View all orders details (table number, order id, ordered at(time), ready at(time), done at(time), status, remarks, total price, food items.)
+* Option to delete orders (Deleted record will be removed from database and affect total revenue record and sales stats)
+* Sort orders
+
+#### Food Management
+* Can add new food item with name, price, upload image and categories, all details are display in customer page real time
+* Edit food details (name, price, reupload image and category)
+* Option to delete existed food
+* Sort Food
+
+#### User Management
+* Can add new user account with username, password and role when a new staff is hired
+* New staff can use that new created account at login page
+* Can delete account when the staff resigns
+
+### Kitchen Side
+Kitchen staff manage order preparation and food availability.
+
+#### New Order Notification
+* Receive a notification sound when a customer place order, the order is marked as **New** automatically.
+* Unread **New** order notifications are indicated by a red dot on the notification bell.
+* Clicking the notification bell displays new **New** orders and clears the unread indicator
+
+#### Order Preparing
+* View orders placed by customers.
+* Update order status to **Preparing** when food is cooking.
+* Mark orders as **Ready** after food is cooked. 
+* Orders marked as **Ready*** are hidden automatically from kitchen side.
+
+#### Menu Avalability
+* Mark food items as Out of Sales / Restocked 
+* Items marked as **Out of Sales** will be shown in customer page, disallow place order for that item.
+* Sort orders 
+
+### Waiter Side
+Waiters manage customer calling, order delivery workflow, and checkout table.
 
 #### Customer Call Waiter Notification
 
-* Receive notification messages, notification sound, and table IDs when customers call waiter..
+* Receive notification messages, notification sound, and table number when customers call waiter.
 
 #### Ready Order Notification
 
 * Receive a separate notification sound when the kitchen marks an order as **Ready**.
-* View newly received **Ready** orders through the notification bell.
 * Unread **Ready** order notifications are indicated by a red dot on the notification bell.
 * Clicking the notification bell displays new **Ready** orders and clears the unread indicator.
-* Option to delete **Ready** orders in the notification bell.
 
 #### Order Delivering
 
 * View orders marked as **Ready** by the kitchen.
 * Update order status to **Serving** when food is delivering to the customer.
 * Mark orders as **Done** after food is delivered to the customer. 
+* Orders marked as **Done** are hidden automatically from waiter side.
 
 #### Checkout & Receipt Management
 
-* Process table checkout after orders that have been marked .
-* Clear active table sessions after checkout while preserving historical records in the database.
+* Process table checkout for orders marked as **Done**.
+* Checkout clears session for specific table number while preserving historical records in the database.
 * View and generate receipts in PDF format.
 
-
-👨‍🍳 Kitchen Side
-
-Kitchen staff manage order preparation and food availability.
-
-Features:
-View all incoming customer orders
-Orders displayed with:
-Table ID
-Order number
-Time ordered
-Food items
-Special remarks
-Order status
-Update order status:
-Preparing
-Ready (completed cooking)
-Sort orders (e.g., A–Z, availability priority)
-Mark items as out of stock / unavailable
-Notification system:
-Alert sound for new orders
-Bell icon with red dot indicator for new incoming orders
-🛠️ Admin Side
-
-Administrators manage the entire system, menu, users, and analytics.
-
-Features:
-Dashboard analytics:
-Total revenue
-Daily sales overview
-Best-selling items
-Sales timeline visualization
-Full order history access:
-Table ID
-Order number
-Timestamps (ordered / ready / completed)
-Status tracking
-Remarks and item details
-Menu management:
-Add new food items (name, price, image, category)
-Edit existing items
-Remove items
-Update availability (in stock / out of stock)
-Sorting and filtering menu items (A–Z, price, category)
-User management system:
-Create new staff accounts (waiter/kitchen/admin)
-Assign roles
-Update credentials
-Remove accounts when staff leave
-Fully dynamic (no hardcoded users)
 ⚙️ System Highlights
 Fully role-based system (Customer / Waiter / Kitchen / Admin)
 Real-time notification system for operational efficiency
@@ -162,13 +139,7 @@ jave a notification bell, it will sounds and bell will have a red dot if a ready
 
 
 
-Kitchen Side
-- Kitchen staff view all orders by custmer
-- Orders are displayed with table id, order number, remark, status time ordered, and food items
-- They can change status (Preparing / ready) ready= cokked, prepatng = prepare
-can sort the food by availanle first, a-z etc
-can set dood Out of sales/rstock that customer know oh its unorderable
-jave a notification bell, it will sounds and bell will have a red dot if a new order arrives, can click the bell (click = red dot no more) to see the orders
+
 
 Admin Side
 - Admin can view total revenu
@@ -191,11 +162,14 @@ all updates are auto 3sec refresh eg if user place order, kitchen see it every 3
 - Real-time order processing workflow
 - Cart persists on refresh (no reset)
 - Database (MongoDB)
-- Cross-device support (phone + laptop) responsive design(expect categroy button issue)
+- Cross-device support (phone + laptop) 
 - Installable web app (PWA ready concept)
 - Dark mode toggle button
 - Data visualization using charts
 auto generated order id. eg order 178 indicate its the 178th orders
+
+Click image to zoom
+
 
 ---
 ## System Workflow

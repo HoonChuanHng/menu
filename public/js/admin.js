@@ -300,7 +300,7 @@ async function createUser() {
   const password = document.getElementById("newPassword").value
   const role = document.getElementById("newRole").value
 
-  if (!username || !password) return alert("Missing fields")
+  if (!username || !password || !role) return alert("Please enter all fields.")
 
   await fetch("/api/admin/users", {
     method: "POST",
@@ -427,13 +427,13 @@ function sortOrders(orders) {
 
   if (orderSortType === "date") {
     sorted.sort((a, b) =>
-      new Date(b.doneAt || b.time || 0) - new Date(a.doneAt || a.time || 0)
+      new Date(a.doneAt || a.time || 0) - new Date(b.doneAt || b.time || 0)
     )
   }
 
   if (orderSortType === "totalPrice") {
     sorted.sort((a, b) =>
-      Number(b.totalPrice || 0) - Number(a.totalPrice || 0)
+      Number(a.totalPrice || 0) - Number(b.totalPrice || 0)
     )
   }
 
