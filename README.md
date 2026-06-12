@@ -315,42 +315,6 @@ online-ordering-system/
 ├── .env
 ├── .gitignore
 └── README.md
-```
-
-
-online-ordering-system/
-│
-├── public/
-│   ├── admin.html
-│   ├── kitchen.html
-│   ├── waiter.html
-│   ├── login.html
-│   ├── index.html
-│   │
-│   ├── style.css
-│   │
-│   ├── manifest.json
-│   │
-│   ├── js/
-│   │   ├── admin.js
-│   │   ├── app.js
-│   │   ├── index.js
-│   │   ├── kitchen.js
-│   │   ├── waiter.js
-│   │   └── login.js
-│   │
-│   ├── external/
-│   │   ├── uploads/
-│   │   ├── image/
-│   │   ├── QR/
-│   │   └── sound/
-│
-├── server.js
-├── package.json
-├── package-lock.json
-├── .env
-├── .gitignore
-└── README.md
 
 ---
 
