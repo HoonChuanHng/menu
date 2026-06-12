@@ -252,7 +252,7 @@ MongoDB Atlas cloud database that stores:
 ### Install Steps
 ```bash
 git clone <your-repo-url>
-cd online-ordering-system
+cd menu
 npm install
 ```
 
