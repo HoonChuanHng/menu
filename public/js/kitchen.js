@@ -1,3 +1,17 @@
+const socket = new WebSocket("ws://localhost:3000")
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data)
+
+  if (
+    data.type === "NEW_ORDER" ||
+    data.type === "ORDER_STATUS" ||
+    data.type === "FOOD_UPDATE"
+  ) {
+    load()
+  }
+}
+
 const session = JSON.parse(localStorage.getItem("session"))
 if (!session) window.location.replace("login")
 if (Date.now() > session.expiry) {
@@ -290,7 +304,3 @@ loadOrders()
 loadMenu()
 showTab("orders")
 
-setInterval(() => {
-  loadOrders()
-  loadMenu()
-}, 3000)

@@ -1,3 +1,17 @@
+const socket = new WebSocket("ws://localhost:3000")
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data)
+
+  if (
+    data.type === "NEW_ORDER" ||
+    data.type === "ORDER_STATUS" ||
+    data.type === "CALL_WAITER" ||
+    data.type === "CHECKOUT_UPDATE"
+  ) {
+    loadOrders()
+  }
+}
 const session = JSON.parse(localStorage.getItem("session"))
 if (!session) window.location.replace("login")
 if (Date.now() > session.expiry) {
@@ -372,10 +386,3 @@ loadOrders()
 load()
 
 
-setTimeout(() => {
-  setInterval(() => {
-    load()
-    loadOrders()
-    loadCalls()
-  }, 3000)
-}, 1000)

@@ -1,3 +1,16 @@
+const socket = new WebSocket("ws://localhost:3000")
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data)
+
+  if (
+    data.type === "FOOD_UPDATE" ||
+    data.type === "ORDER_STATUS"
+  ) {
+    loadMenu()
+  }
+}
+
 const urlParams = new URLSearchParams(window.location.search)
 const tableId = urlParams.get("table") || "0"
 
@@ -20,7 +33,6 @@ async function loadMenu() {
 
 loadMenu()
 renderCart()
-setInterval(loadMenu, 3000)
 
 function groupMenuByCategory() {
   groupedMenu = {}

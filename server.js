@@ -1,13 +1,31 @@
+require("dotenv").config()
+
 const express = require("express")
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
-const app = express()
 const multer = require("multer")
 const path = require("path")
+const http = require("http")
+const { WebSocketServer } = require("ws")
+const app = express()
+const server = http.createServer(app)
+const wss = new WebSocketServer({ server })
 
-mongoose.connect("mongodb://admin:12345678asd@ac-t7nhegs-shard-00-00.i0rmibh.mongodb.net:27017,ac-t7nhegs-shard-00-01.i0rmibh.mongodb.net:27017,ac-t7nhegs-shard-00-02.i0rmibh.mongodb.net:27017/quickplate?ssl=true&replicaSet=atlas-bm6ri7-shard-0&authSource=admin&appName=Cluster0")
+wss.on("connection", (ws) => {
+  ws.send(JSON.stringify({ type: "connected" }))
+})
+
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err))
+
+function broadcast(data) {
+  wss.clients.forEach(client => {
+    if (client.readyState === 1) {
+      client.send(JSON.stringify(data))
+    }
+  })
+}
 
 app.use(express.static("public"))
 app.use("/uploads", express.static("public/external/uploads"))
@@ -126,6 +144,11 @@ app.post("/api/call-waiter", async (req, res) => {
     time: new Date()
   })
 
+   broadcast({
+    type: "CALL_WAITER",
+    tableId,
+    id: call._id
+  })
   res.json({ success: true })
 })
 
@@ -232,11 +255,18 @@ app.post("/api/food", async (req, res) => {
     category
   })
 
+  broadcast({
+    type: "FOOD_UPDATE",
+    action: "CREATE",
+    food
+  })
+
   res.json(food)
 })
 
 app.delete("/api/food/:id", async (req, res) => {
   await Food.findByIdAndDelete(req.params.id)
+  
   res.json({ success: true })
 })
 
@@ -321,6 +351,11 @@ app.put("/api/food/:id/soldout", async (req, res) => {
   const food = await Food.findById(req.params.id)
   food.soldOut = !food.soldOut
   await food.save()
+  broadcast({
+    type: "FOOD_UPDATE",
+    foodId: req.params.id,
+    soldOut: food.soldOut
+  })
   res.json(food)
 })
 
@@ -349,7 +384,9 @@ app.post("/api/order", async (req, res) => {
   items.forEach(i => {
     totalPrice += (Number(i.price) || 0) * (Number(i.qty) || 1)
   })
+  
   const numericId = await getNextOrderId()
+
   const order = await Order.create({
     tableId,
     items,
@@ -358,6 +395,11 @@ app.post("/api/order", async (req, res) => {
     time: new Date(),
     orderNumber: numericId,
     totalPrice
+  })
+  broadcast({
+    type: "NEW_ORDER",
+    tableId,
+    orderNumber: numericId
   })
   res.json({ orderId: numericId, tableId })
 })
@@ -392,7 +434,13 @@ app.post("/api/status", async (req, res) => {
     { orderNumber: req.body.orderNumber },
     { $set: update }
   )
-
+  
+  broadcast({
+    type: "ORDER_STATUS",
+    orderNumber: req.body.orderNumber,
+    status: req.body.status
+  })
+  
   res.json({ success: true })
 })
 
@@ -408,8 +456,12 @@ app.post("/api/checkout/:tableId", async (req, res) => {
      },
     { $set: { paid: true } }
   )
+  broadcast({
+    type: "CHECKOUT_UPDATE",
+    tableId: req.params.tableId
+  })
   res.json({ success: true })
 })
 
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () => console.log("Server running on port " + PORT))
+server.listen(PORT, () => console.log("Server running on port " + PORT))
