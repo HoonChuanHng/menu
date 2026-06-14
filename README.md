@@ -282,8 +282,6 @@ http://localhost:3000/login
 
 ## Project Structure
 
-## Project Structure
-
 ```
 online-ordering-system/
 ├── public/
