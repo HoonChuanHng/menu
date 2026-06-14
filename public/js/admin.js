@@ -3,13 +3,19 @@ const socket = new WebSocket("ws://localhost:3000")
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data)
 
-  if (
-    data.type === "NEW_ORDER" ||
-    data.type === "ORDER_STATUS" ||
-    data.type === "FOOD_UPDATE" ||
-    data.type === "CHECKOUT_UPDATE"
-  ) {
-    load()
+  switch (data.type) {
+    case "NEW_ORDER":
+    case "ORDER_STATUS":
+    case "FOOD_UPDATE":
+    case "CHECKOUT_UPDATE":
+    case "ORDER_DELETE":
+      load()
+      break
+
+    case "USER_UPDATE":
+    case "USER_DELETE":
+      loadUsers()
+      break
   }
 }
 
@@ -200,7 +206,7 @@ function renderChart(data) {
     const dailySales = {}
 
     data.orders.forEach(order => {
-      const date = new Date(order.time).toLocaleDateString("en-MY")
+      const date = new Date(order.timeRaw).toLocaleDateString("en-MY")
 
       let total = 0
 
@@ -317,12 +323,18 @@ async function createUser() {
 
   if (!username || !password || !role) return alert("Please enter all fields.")
 
-  await fetch("/api/admin/users", {
+   const res = await fetch("/api/admin/users", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password, role })
   })
 
+  const data = await res.json()
+
+  if (!res.ok) {
+    return alert(data.error)
+  }
+  
   document.getElementById("newUsername").value = ""
   document.getElementById("newPassword").value = ""
 

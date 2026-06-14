@@ -3,13 +3,22 @@ const socket = new WebSocket("ws://localhost:3000")
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data)
 
-  if (
-    data.type === "NEW_ORDER" ||
-    data.type === "ORDER_STATUS" ||
-    data.type === "CALL_WAITER" ||
-    data.type === "CHECKOUT_UPDATE"
-  ) {
+  switch (data.type) {
+    case "NEW_ORDER":
+    case "ORDER_STATUS":
     loadOrders()
+    break
+    
+    case "CALL_WAITER":
+    loadOrders()
+    loadCalls()
+    break
+
+    case "CHECKOUT_UPDATE":
+    case "ORDER_DELETE":
+      loadOrders()
+      load()
+      break
   }
 }
 const session = JSON.parse(localStorage.getItem("session"))
@@ -25,6 +34,7 @@ let audioUnlocked = false
 let lastCallId = null
 let bellRungForBatch = false
 let seenOrders = JSON.parse(localStorage.getItem("waiterSeenOrders") || "[]")
+let notifiedOrders = JSON.parse(localStorage.getItem("waiterNotifiedOrders") || "[]")
 let hiddenNotifs = JSON.parse(localStorage.getItem("waiterHiddenNotifs") || "[]")
 let latestOrders = []
 
@@ -39,6 +49,32 @@ function flashBell() {
 
 document.addEventListener("click", () => {
   audioUnlocked = true
+}, { once: true })
+
+const unlockOverlay = document.createElement("div")
+unlockOverlay.id = "audioUnlockOverlay"
+unlockOverlay.innerText = "🔔 Click here to enable sound alerts"
+unlockOverlay.style.position = "fixed"
+unlockOverlay.style.top = "0"
+unlockOverlay.style.left = "0"
+unlockOverlay.style.width = "100%"
+unlockOverlay.style.padding = "12px"
+unlockOverlay.style.background = "#333"
+unlockOverlay.style.color = "#fff"
+unlockOverlay.style.textAlign = "center"
+unlockOverlay.style.cursor = "pointer"
+unlockOverlay.style.zIndex = "99999"
+unlockOverlay.style.fontWeight = "bold"
+document.body.appendChild(unlockOverlay)
+
+document.body.style.paddingTop = unlockOverlay.offsetHeight + "px"
+
+unlockOverlay.addEventListener("click", () => {
+  audioUnlocked = true
+  notifySound.play().then(() => { notifySound.pause(); notifySound.currentTime = 0 }).catch(() => {})
+  callSound.play().then(() => { callSound.pause(); callSound.currentTime = 0 }).catch(() => {})
+  unlockOverlay.remove()
+  document.body.style.paddingTop = ""
 }, { once: true })
 
 async function load() {
@@ -193,21 +229,24 @@ async function loadOrders() {
 
   const bellDot = document.getElementById("bellDot")
 
-  const newOrders = orders.filter(o =>
+  const unreadOrders = orders.filter(o =>
     !seenOrders.includes(String(o.orderNumber))
   )
+  bellDot.style.display = unreadOrders.length > 0 ? "block" : "none"
 
+  const newOrders = orders.filter(o =>
+    !notifiedOrders.includes(String(o.orderNumber))
+  )
   if (newOrders.length > 0) {
-    bellDot.style.display = "block"
-    if (!bellRungForBatch) {
-      notifySound.currentTime = 0
-      notifySound.play()      
-      flashBell()
-      bellRungForBatch = true
-    }
-  } else {
-    bellDot.style.display = "none"
-    bellRungForBatch = false
+    notifySound.currentTime = 0
+    notifySound.play()
+    flashBell()
+
+    newOrders.forEach(o => {
+      notifiedOrders.push(String(o.orderNumber))
+    })
+
+    localStorage.setItem("waiterNotifiedOrders", JSON.stringify(notifiedOrders))
   }
 
 
@@ -287,7 +326,7 @@ function renderBellPanel() {
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
               <div>
                 Order <b>#${o.orderNumber}</b><br>
-                <small>${o.time || ""}</small>
+                <small>${o.readyAt || ""}</small>
               </div>
               <button onclick="removeNotif(${o.orderNumber})"
                 style="border:none;background:none;cursor:pointer;">
@@ -295,7 +334,7 @@ function renderBellPanel() {
               </button>
             </div>
           `).join("")
-        : "<p>No orders.</p>"
+        : "<p>No new order.</p>"
     })
 }
 

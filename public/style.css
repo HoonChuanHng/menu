@@ -589,6 +589,20 @@ body.dark .modal-actions button {
   border: 1px solid #555;
 }
 
+body.dark #bellPanel {
+  background: #1e1e1e !important;
+  color: #f5f5f5;
+  border: 1px solid #333;
+}
+
+body.dark #bellPanel small {
+  color: #aaa;
+}
+
+body.dark #bellPanel button {
+  color: #f5f5f5;
+}
+
 /* INDEX --------------------------------------------------------------------------------------------- */
 /* Restaurant info */
 .restaurant-info {

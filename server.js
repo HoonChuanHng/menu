@@ -89,7 +89,15 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema)
 
 app.delete("/api/admin/users/:id", async (req, res) => {
-  await User.findByIdAndDelete(req.params.id)
+  const userId = req.params.id
+  await User.findByIdAndDelete(userId)
+
+  broadcast({
+    type: "USER_UPDATE",
+    action: "DELETE",
+    userId
+  })
+
   res.json({ success: true })
 })
 
@@ -139,7 +147,7 @@ const CallWaiter = mongoose.model("CallWaiter", callSchema)
 app.post("/api/call-waiter", async (req, res) => {
   const { tableId } = req.body
 
-  await CallWaiter.create({
+  const call = await CallWaiter.create({
     tableId,
     time: new Date()
   })
@@ -178,12 +186,25 @@ app.get("/api/admin/users", async (req, res) => {
 app.post("/api/admin/users", async (req, res) => {
   const { username, password, role } = req.body
 
+  const existing = await User.findOne({ username, role })
+
+  if (existing) {
+    return res.status(400).json({
+      error: "Username of the role already exists"
+    })
+  }
   const hashedPassword = await bcrypt.hash(password, 10)
 
   const user = await User.create({
     username,
     password: hashedPassword,
     role
+  })
+
+  broadcast({
+    type: "USER_UPDATE",
+    action: "CREATE",
+    user
   })
 
   res.json(user)
@@ -219,6 +240,7 @@ app.get("/api/admin", async (req, res) => {
 
 const formattedOrders = orders.map(o => ({
   ...o._doc,
+  timeRaw: o.time,
   time: o.time
     ? new Date(o.time).toLocaleString("en-MY", { timeZone: "Asia/Kuala_Lumpur" })
     : null,
@@ -265,7 +287,14 @@ app.post("/api/food", async (req, res) => {
 })
 
 app.delete("/api/food/:id", async (req, res) => {
-  await Food.findByIdAndDelete(req.params.id)
+  const foodId = req.params.id
+  await Food.findByIdAndDelete(foodId)
+
+  broadcast({
+    type: "FOOD_UPDATE",
+    action: "DELETE",
+    foodId
+  })
   
   res.json({ success: true })
 })
@@ -343,6 +372,12 @@ app.put("/api/food/:id", async (req, res) => {
     { new: true }
   )
 
+  broadcast({
+    type: "FOOD_UPDATE",
+    action: "UPDATE",
+    food
+  })
+
   res.json(food)
 })
 
@@ -396,11 +431,13 @@ app.post("/api/order", async (req, res) => {
     orderNumber: numericId,
     totalPrice
   })
+
   broadcast({
     type: "NEW_ORDER",
     tableId,
     orderNumber: numericId
   })
+
   res.json({ orderId: numericId, tableId })
 })
 
@@ -430,9 +467,10 @@ app.post("/api/status", async (req, res) => {
     update.doneAt = new Date()
   }
 
-  await Order.findOneAndUpdate(
+  const order = await Order.findOneAndUpdate(
     { orderNumber: req.body.orderNumber },
-    { $set: update }
+    { $set: update },
+    { new: true }
   )
   
   broadcast({
@@ -441,11 +479,34 @@ app.post("/api/status", async (req, res) => {
     status: req.body.status
   })
   
+  if (req.body.status === "DONE") {
+    broadcast({
+      type: "CHECKOUT_UPDATE",
+      tableId: order.tableId,
+      orderNumber: order.orderNumber
+    })
+  }
+  
   res.json({ success: true })
 })
 
 app.delete("/api/order/:orderNumber", async (req, res) => {
+  const orderNumber = req.params.orderNumber
+
+  const order = await Order.findOne({ orderNumber })
+  
   await Order.findOneAndDelete({ orderNumber: req.params.orderNumber })
+
+  broadcast({
+    type: "ORDER_DELETE",
+    orderNumber
+  })
+
+  broadcast({
+    type: "CHECKOUT_UPDATE",
+    tableId: order.tableId
+  })
+
   res.json({ success: true })
 })
 
@@ -456,10 +517,12 @@ app.post("/api/checkout/:tableId", async (req, res) => {
      },
     { $set: { paid: true } }
   )
+
   broadcast({
     type: "CHECKOUT_UPDATE",
     tableId: req.params.tableId
   })
+  
   res.json({ success: true })
 })
 

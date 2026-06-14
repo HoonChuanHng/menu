@@ -3,11 +3,18 @@ const socket = new WebSocket("ws://localhost:3000")
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data)
 
-  if (
-    data.type === "FOOD_UPDATE" ||
-    data.type === "ORDER_STATUS"
-  ) {
-    loadMenu()
+  switch (data.type) {
+
+    case "FOOD_UPDATE":
+    case "ORDER_STATUS":
+    case "FOOD_SOLDOUT":
+      loadMenu()
+      break
+
+    case "ORDER_DELETE":
+    case "CHECKOUT_UPDATE":
+      removeTrackedOrders(data)
+      break
   }
 }
 
@@ -276,9 +283,6 @@ function filterMenu() {
 }
   
 async function callWaiter() {
-  const urlParams = new URLSearchParams(window.location.search)
-  const tableId = urlParams.get("table")
-
   await fetch("/api/call-waiter", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -303,3 +307,25 @@ document.addEventListener("click", (e) => {
     modal.style.display = "none"
   }
 })
+
+function removeTrackedOrders(data) {
+  const orderElements = document.querySelectorAll(".order-item")
+
+  orderElements.forEach(el => {
+    const orderNumber = el.dataset.orderNumber
+
+    if (
+      data.orderNumber &&
+      orderNumber == data.orderNumber
+    ) {
+      el.remove()
+    }
+
+    if (
+      data.tableId &&
+      el.dataset.tableId == data.tableId
+    ) {
+      el.remove()
+    }
+  })
+}

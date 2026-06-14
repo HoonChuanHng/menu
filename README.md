@@ -59,7 +59,7 @@ Customers can access the system by scanning a QR code or opening a table-specifi
 * Track order status
 * Call a waiter directly from the system (notification sent to waiter system)
 * Install the system as an application (PWA support)
-* No customer login required
+* No login required for customers
 
 ### Login Page
 
@@ -362,6 +362,9 @@ online-ordering-system/
 * POST /api/upload → Upload food image 
 
 ---
+
+## Known Limitations
+* Notification sound sometimes may not be working. It require a one-time click on page load due to browser autoplay policy. The page displays a "Click to enable sound alerts" button to handle this.
 
 ## Future Improvements
 * Payment integration

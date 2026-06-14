@@ -3,12 +3,19 @@ const socket = new WebSocket("ws://localhost:3000")
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data)
 
-  if (
-    data.type === "NEW_ORDER" ||
-    data.type === "ORDER_STATUS" ||
-    data.type === "FOOD_UPDATE"
-  ) {
-    load()
+  switch (data.type) {
+    case "NEW_ORDER":
+    case "ORDER_STATUS":
+    case "FOOD_UPDATE":
+      loadOrders()
+      loadMenu()
+      break
+
+
+    case "ORDER_DELETE":
+    case "CHECKOUT_UPDATE":
+      loadOrders()
+      break
   }
 }
 
@@ -21,18 +28,45 @@ if (Date.now() > session.expiry) {
 if (session.role !== "kitchen") window.location.replace("login")
 
 let bellRungForBatch = false
+let audioUnlocked = false
 let latestOrders = []
 let seenOrders = JSON.parse(localStorage.getItem("seenOrders") || "[]")
+let notifiedOrders = JSON.parse(localStorage.getItem("notifiedOrders") || "[]")
 let hiddenNotifs = JSON.parse(localStorage.getItem("hiddenNotifs") || "[]")
-const notifySound = new Audio("external/sound/sound-notification.mp3")
 let lastOrderCount = 0
 let menuData = []
 let menuSortType = "default"
 
-document.addEventListener("DOMContentLoaded", () => {
-  const bellDot = document.getElementById("bellDot")
-  bellDot.style.display = "none"
-})
+const notifySound = new Audio("external/sound/sound-notification.mp3")
+
+document.addEventListener("click", () => {
+  audioUnlocked = true
+}, { once: true })
+
+const unlockOverlay = document.createElement("div")
+unlockOverlay.id = "audioUnlockOverlay"
+unlockOverlay.innerText = "🔔 Click here to enable sound alerts"
+unlockOverlay.style.position = "fixed"
+unlockOverlay.style.top = "0"
+unlockOverlay.style.left = "0"
+unlockOverlay.style.width = "100%"
+unlockOverlay.style.padding = "12px"
+unlockOverlay.style.background = "#333"
+unlockOverlay.style.color = "#fff"
+unlockOverlay.style.textAlign = "center"
+unlockOverlay.style.cursor = "pointer"
+unlockOverlay.style.zIndex = "99999"
+unlockOverlay.style.fontWeight = "bold"
+document.body.appendChild(unlockOverlay)
+
+document.body.style.paddingTop = unlockOverlay.offsetHeight + "px"
+
+unlockOverlay.addEventListener("click", () => {
+  audioUnlocked = true
+  notifySound.play().then(() => { notifySound.pause(); notifySound.currentTime = 0 }).catch(() => {})
+  unlockOverlay.remove()
+  document.body.style.paddingTop = ""
+}, { once: true })
 
 function renderMenu() {
   let foods = [...menuData]
@@ -117,20 +151,26 @@ async function loadOrders() {
 
     const currentIds = orders.map(o => String(o.orderNumber))
 
-    const newOrders = orders.filter(o =>
+    const unreadOrders = orders.filter(o =>
       !seenOrders.includes(String(o.orderNumber))
     )
-    if (newOrders.length > 0) {
-      bellDot.style.display = "block"
-      if (!bellRungForBatch) {
-        notifySound.currentTime = 0
-        notifySound.play()
-        flashBell()
-        bellRungForBatch = true
-      }
-    } else {
-      bellDot.style.display = "none"
-      bellRungForBatch = false
+
+    bellDot.style.display = unreadOrders.length > 0 ? "block" : "none"
+
+    const newOrders = orders.filter(o =>
+      !notifiedOrders.includes(String(o.orderNumber))
+    )
+
+    if (newOrders.length > 0) { 
+      notifySound.currentTime = 0
+      notifySound.play()
+      flashBell()
+
+    newOrders.forEach(o => {
+        notifiedOrders.push(String(o.orderNumber))
+      })
+
+      localStorage.setItem("notifiedOrders", JSON.stringify(notifiedOrders))
     }
 
     let html = ""
@@ -224,7 +264,6 @@ function renderBellPanel() {
     .then(data => {
       const orders = (data.activeOrders || [])
         .filter(o => !hiddenNotifs.includes(o.orderNumber))
-
       panel.innerHTML = orders.length
         ? orders.map(o => `
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
@@ -239,7 +278,7 @@ function renderBellPanel() {
               </button>
             </div>
           `).join("")
-        : "<p>No orders currently.</p>"
+        : "<p>No new orders</p>"
     })
 }
 
