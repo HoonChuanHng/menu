@@ -281,7 +281,7 @@ http://localhost:3000/login
 ---
 
 ## Project Structure
-
+```bash
 online-ordering-system/
 ├── public/
 │   ├── admin.html
@@ -312,7 +312,7 @@ online-ordering-system/
 ├── .env
 ├── .gitignore
 └── README.md
-
+```
 ---
 
 ## API / Backend Endpoints
