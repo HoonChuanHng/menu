@@ -80,7 +80,7 @@ Administrators manage sales analytics, orders, food items, and user accounts.
 #### Sales Statistics Visualization
 
 * View total revenue
-* View sales charts, including Best Sellers, All Food Sold, and Daily Sales
+* View sales charts, including Best Sellers (Top 10), All Food Sold, and Daily Sales
 
 #### Order Management
 
@@ -91,8 +91,8 @@ Administrators manage sales analytics, orders, food items, and user accounts.
 #### Food Management
 
 * Add new food items with name, price, category, and upload image from device.
-* Newly added food items are displayed on the customer page.
 * Edit food details, including name, price, image, and category
+* Newly added or modified food are updated on the customer and kitchen page.
 * Delete existing food items
 * Sort food items by name (A–Z, Z–A), category (A–Z), and price (low to high, high to low)
 
@@ -110,7 +110,7 @@ Kitchen staff manage order preparation and menu availability.
 
 * Receive a notification sound when a customer places an order; the order is automatically marked as **New**
 * A red dot on the notification bell indicates unread **New** order notifications
-* Clicking the notification bell displays orders marked as **New** and clears the unread indicator
+* Clicking the notification bell displays orders and clears the unread indicator
 
 #### Order Preparation
 
@@ -131,13 +131,13 @@ Waiters manage customer requests, order delivery, and table checkout.
 
 #### Customer Call Notification
 
-* Receive notification messages, sound alerts, and table information when customers request waiter assistance on customer page
+* Receive notification messages, sound alerts, and table number when customers request waiter assistance on customer page
 
 #### Ready Order Notification
 
 * Receive a separate notification sound when the kitchen marks an order as **Ready**
 * A red dot on the notification bell indicates unread **Ready** order notifications
-* Clicking the notification bell displays orders marked as **Ready** and clears the unread indicator
+* Clicking the notification bell displays orders and clears the unread indicator
 
 #### Order Delivery
 
@@ -171,7 +171,7 @@ Waiters manage customer requests, order delivery, and table checkout.
 3. Customer add remarks and adjust food quantity (optional)
 4. Customer places order
 5. Kitchen receives placed order and prepares order
-6. Waiter receives prepared order delivers order
+6. Waiter receives prepared order and delivers order
 7. Waiter processes checkout for the specific table after food is delivered
 8. The table is marked as paid and session cleared
 9. Admin monitors orders, revenue, and analytics
