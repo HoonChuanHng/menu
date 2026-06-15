@@ -1,6 +1,6 @@
 const protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
 const socket = new WebSocket(`${protocol}//${window.location.host}`)
-socket.onmessage = (event) => {
+socket.onmessage = (event) => { 
   const data = JSON.parse(event.data)
 
   switch (data.type) {
