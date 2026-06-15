@@ -228,6 +228,7 @@ function renderChart(data) {
     let sorted = labels
       .map((l, i) => ({ l, v: values[i] }))
       .sort((a, b) => b.v - a.v)
+      .slice(0, 10)
 
     labels = sorted.map(x => x.l)
     values = sorted.map(x => x.v)
